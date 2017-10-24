@@ -31,10 +31,7 @@ public class AppHttpClient extends BaseHttpClient {
 
     @Override
     public String getBaseUrl() {
-        // 崩溃后baseUrl会为null
-        if (baseUrl == null) {
-            baseUrl = UrlProvider.getNormalBaseUrl();
-        }
+        baseUrl = BaseUrl.getInstance().getBaseUrl();
         return baseUrl;
     }
 

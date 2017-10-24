@@ -35,6 +35,27 @@
     <string name="server_not_conf">Please set server url!</string>
     <string name="app_update_found">Found new application version %s, click ok to update.</string>
 
+    <!--************************** setting preference **************************-->
+    <string name="pref_header_safety">Safety</string>
+    <string name="pref_header_general">General</string>
+    <string name="pref_safety_fingerprint_title">Fingerprint</string>
+    <string name="pref_safety_fingerprint_desc">Use fingerprint</string>
+    <string name="pref_general_home_title">Home</string>
+    <string name="setting_gdb_title" translatable="false">GDB</string>
+    <string name="setting_http_title">Network</string>
+    <string name="setting_http_server">Config server</string>
+    <string name="setting_http_download_max">Max download item in same time</string>
+    <string name="setting_http_update">Check update</string>
+    <string name="setting_http_update_gdb">Check GDB database update</string>
+    <string name="setting_http_backup">Backup</string>
+    <string name="setting_http_backup_summary">preference, database, GDB, colors</string>
+
+    <string name="setting_gdb_latest_num">Latest records number</string>
+    <string name="setting_gdb_no_image">No image mode</string>
+    <string name="pref_gdb_surf_relate" translatable="false">Auto-relate surf files to record</string>
+
+    <string name="login_finger_not_support">Fingerprint is not supported on current device!</string>
+
     <!--************************** gdb **************************-->
     <string name="gdb_star_file_numbers">%d video files</string>
     <string name="gdb_no_conf">No database found in conf folder.</string>

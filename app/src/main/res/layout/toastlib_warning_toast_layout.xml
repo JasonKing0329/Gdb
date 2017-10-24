@@ -25,7 +25,7 @@
             android:layout_height="match_parent"
             android:gravity="center">
 
-            <com.jing.app.jjgallery.viewsystem.publicview.toast.WarningToastView
+            <com.jing.app.jjgallery.gdb.view.toast.WarningToastView
                 android:id="@+id/warningView"
                 android:layout_width="50dp"
                 android:layout_height="50dp"

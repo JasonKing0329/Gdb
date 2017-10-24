@@ -57,7 +57,11 @@ public class FingerPrintController implements IdentifyListener {
 
 	public void cancelCheck() {
 		if (isSupported) {
-			mSpassFingerprint.cancelIdentify();
+			try {
+				mSpassFingerprint.cancelIdentify();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 	}
 	

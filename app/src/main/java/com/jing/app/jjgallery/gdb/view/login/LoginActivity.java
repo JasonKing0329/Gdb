@@ -1,6 +1,5 @@
 package com.jing.app.jjgallery.gdb.view.login;
 
-import android.app.Application;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -24,6 +23,7 @@ import com.jing.app.jjgallery.gdb.util.PermissionUtil;
 import com.jing.app.jjgallery.gdb.view.pub.ProgressButton;
 import com.jing.app.jjgallery.gdb.view.pub.ProgressProvider;
 import com.jing.app.jjgallery.gdb.view.pub.dialog.DefaultDialogManager;
+import com.jing.app.jjgallery.gdb.view.settings.SettingsActivity;
 import com.jing.app.jjgallery.gdb.view.update.UpdateListener;
 import com.jing.app.jjgallery.gdb.view.update.UpdateManager;
 
@@ -224,8 +224,8 @@ public class LoginActivity extends GBaseActivity implements ILoginView {
     }
 
     private void startSetting() {
-//                Intent intent = new Intent().setClass(this, SettingsActivity.class);
-//                startActivity(intent);
+        Intent intent = new Intent().setClass(this, SettingsActivity.class);
+        startActivity(intent);
     }
 
     private void showPage() {
@@ -261,7 +261,7 @@ public class LoginActivity extends GBaseActivity implements ILoginView {
     }
 
     private void showLoginForm() {
-        groupInit.setVisibility(View.VISIBLE);
+        groupInput.setVisibility(View.VISIBLE);
     }
 
     @Override

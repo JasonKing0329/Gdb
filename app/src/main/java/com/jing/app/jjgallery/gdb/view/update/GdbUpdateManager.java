@@ -5,47 +5,45 @@ import android.content.DialogInterface;
 import android.support.v4.app.FragmentManager;
 import android.text.TextUtils;
 
-import com.jing.app.jjgallery.gdb.GdbApplication;
 import com.jing.app.jjgallery.gdb.R;
 import com.jing.app.jjgallery.gdb.http.Command;
 import com.jing.app.jjgallery.gdb.http.bean.data.DownloadItem;
 import com.jing.app.jjgallery.gdb.http.bean.response.AppCheckBean;
 import com.jing.app.jjgallery.gdb.model.SettingProperties;
 import com.jing.app.jjgallery.gdb.model.bean.DownloadDialogBean;
+import com.jing.app.jjgallery.gdb.model.conf.ConfManager;
 import com.jing.app.jjgallery.gdb.model.conf.Configuration;
-import com.jing.app.jjgallery.gdb.presenter.UpdatePresenter;
+import com.jing.app.jjgallery.gdb.presenter.GdbUpdatePresenter;
 import com.jing.app.jjgallery.gdb.util.DebugLog;
 import com.jing.app.jjgallery.gdb.view.download.DownloadDialogFragment;
 import com.jing.app.jjgallery.gdb.view.download.v4.DownloadDialogFragmentV4;
 import com.jing.app.jjgallery.gdb.view.pub.ProgressProvider;
 import com.jing.app.jjgallery.gdb.view.pub.dialog.DefaultDialogManager;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by Administrator on 2016/9/6.
  */
-public class UpdateManager implements IUpdateView {
+public class GdbUpdateManager implements IGdbUpdateView {
 
-    private UpdatePresenter mPresenter;
+    private GdbUpdatePresenter mPresenter;
     private Context mContext;
     private FragmentManager fragmentManagerV4;
     private android.app.FragmentManager fragmentManager;
-    private UpdateListener updateListener;
+    private GdbUpdateListener updateListener;
 
     private boolean isUpdating;
     private boolean isShowing;
 
     private boolean showMessageWarning;
 
-    public UpdateManager(Context context) {
+    public GdbUpdateManager(Context context, GdbUpdateListener listener) {
         mContext = context;
-        mPresenter = new UpdatePresenter(this);
-    }
-
-    public void setUpdateListener(UpdateListener updateListener) {
-        this.updateListener = updateListener;
+        this.updateListener = listener;
+        mPresenter = new GdbUpdatePresenter(this);
     }
 
     public void setFragmentManagerV4(FragmentManager fragmentManagerV4) {
@@ -62,14 +60,25 @@ public class UpdateManager implements IUpdateView {
 
     public void startCheck() {
         if (!TextUtils.isEmpty(SettingProperties.getGdbServerBaseUrl(mContext))) {
-            // 检测App更新，必须在配置过服务器以后
-            mPresenter.checkAppUpdate();
+            // 检测更新，必须在配置过服务器以后
+            mPresenter.checkGdbDatabase();
+        }
+        else {
+            if (mContext instanceof ProgressProvider) {
+                ((ProgressProvider) mContext).showToastLong(mContext.getString(R.string.server_not_conf), ProgressProvider.TOAST_WARNING);
+            }
+            else {
+                DebugLog.e(mContext.getString(R.string.server_not_conf));
+            }
+            if (updateListener != null) {
+                updateListener.onUpdateCancel();
+            }
         }
     }
     @Override
-    public void onAppUpdateFound(final AppCheckBean bean) {
+    public void onGdbDatabaseFound(final AppCheckBean bean) {
         isShowing = true;
-        String msg = String.format(mContext.getString(R.string.app_update_found), bean.getAppVersion());
+        String msg = String.format(mContext.getString(R.string.gdb_update_found), bean.getGdbDabaseVersion());
         new DefaultDialogManager().showOptionDialog(mContext, null, msg
                 , mContext.getResources().getString(R.string.yes)
                 , null
@@ -88,26 +97,33 @@ public class UpdateManager implements IUpdateView {
                     @Override
                     public void onDismiss(DialogInterface dialog) {
                         if (updateListener != null) {
-                            updateListener.onUpdateDialogDismiss();
+                            if (!isUpdating) {
+                                if (updateListener != null) {
+                                    updateListener.onUpdateCancel();
+                                }
+                            }
                         }
                     }
                 }
         );
-        if (updateListener != null) {
-            updateListener.onUpdateDialogShow();
-        }
     }
 
     @Override
-    public void onAppIsLatest() {
+    public void onGdbDatabaseIsLatest() {
+        if (updateListener != null) {
+            updateListener.onUpdateCancel();
+        }
         if (showMessageWarning) {
-            ((ProgressProvider) mContext).showToastLong(mContext.getString(R.string.app_is_latest), ProgressProvider.TOAST_INFOR);
+            ((ProgressProvider) mContext).showToastLong(mContext.getString(R.string.gdb_is_latest), ProgressProvider.TOAST_INFOR);
         }
     }
 
     @Override
     public void onServiceDisConnected() {
         DebugLog.e("服务器连接失败");
+        if (updateListener != null) {
+            updateListener.onUpdateCancel();
+        }
         if (showMessageWarning) {
             ((ProgressProvider) mContext).showToastLong(mContext.getString(R.string.gdb_server_offline), ProgressProvider.TOAST_ERROR);
         }
@@ -116,6 +132,9 @@ public class UpdateManager implements IUpdateView {
     @Override
     public void onRequestError() {
         DebugLog.e("更新app失败");
+        if (updateListener != null) {
+            updateListener.onUpdateCancel();
+        }
         if (showMessageWarning) {
             ((ProgressProvider) mContext).showToastLong(mContext.getString(R.string.gdb_request_fail), ProgressProvider.TOAST_ERROR);
         }
@@ -126,9 +145,6 @@ public class UpdateManager implements IUpdateView {
     }
 
     private void startDownloadNewApp(AppCheckBean bean) {
-
-        // 下载之前删掉以前下载的APK
-        mPresenter.clearAppFolder();
 
         if (fragmentManager != null) {
             showDownloadDialogFragment(bean);
@@ -144,11 +160,11 @@ public class UpdateManager implements IUpdateView {
 
         DownloadDialogBean dialogBean = new DownloadDialogBean();
         dialogBean.setShowPreview(false);
-        dialogBean.setSavePath(Configuration.APP_DIR_CONF_APP);
+        dialogBean.setSavePath(Configuration.APP_DIR_CONF);
         DownloadItem item = new DownloadItem();
-        item.setFlag(Command.TYPE_APP);
-        item.setSize(bean.getAppSize());
-        item.setName(bean.getAppName());
+        item.setFlag(Command.TYPE_GDB_DATABASE);
+        item.setSize(bean.getGdbDabaseSize());
+        item.setName(bean.getGdbDabaseName());
         List<DownloadItem> list = new ArrayList<>();
         list.add(item);
         dialogBean.setDownloadList(list);
@@ -156,10 +172,13 @@ public class UpdateManager implements IUpdateView {
         dialog.setOnDownloadListener(new DownloadDialogFragment.OnDownloadListener() {
             @Override
             public void onDownloadFinish(DownloadItem item) {
+                new File(ConfManager.GDB_DB_JOURNAL).delete();
                 isUpdating = false;
-                mPresenter.installApp(mContext, item.getPath());
                 dialog.dismiss();
-                GdbApplication.getInstance().closeAll();
+                if (updateListener != null) {
+                    // 采用自动更新替代gdata.db的方法，因为jornal的存在，会使重新使用这个db出现问题。需要删掉这个文件。
+                    updateListener.onUpdateFinish();
+                }
             }
 
             @Override
@@ -176,11 +195,11 @@ public class UpdateManager implements IUpdateView {
 
         DownloadDialogBean dialogBean = new DownloadDialogBean();
         dialogBean.setShowPreview(false);
-        dialogBean.setSavePath(Configuration.APP_DIR_CONF_APP);
+        dialogBean.setSavePath(Configuration.APP_DIR_CONF);
         DownloadItem item = new DownloadItem();
-        item.setFlag(Command.TYPE_APP);
-        item.setSize(bean.getAppSize());
-        item.setName(bean.getAppName());
+        item.setFlag(Command.TYPE_GDB_DATABASE);
+        item.setSize(bean.getGdbDabaseSize());
+        item.setName(bean.getGdbDabaseName());
         List<DownloadItem> list = new ArrayList<>();
         list.add(item);
         dialogBean.setDownloadList(list);
@@ -188,10 +207,13 @@ public class UpdateManager implements IUpdateView {
         dialog.setOnDownloadListener(new DownloadDialogFragmentV4.OnDownloadListener() {
             @Override
             public void onDownloadFinish(DownloadItem item) {
+                new File(ConfManager.GDB_DB_JOURNAL).delete();
                 isUpdating = false;
-                mPresenter.installApp(mContext, item.getPath());
                 dialog.dismiss();
-                GdbApplication.getInstance().closeAll();
+                if (updateListener != null) {
+                    // 采用自动更新替代gdata.db的方法，因为jornal的存在，会使重新使用这个db出现问题。需要删掉这个文件。
+                    updateListener.onUpdateFinish();
+                }
             }
 
             @Override
@@ -202,9 +224,4 @@ public class UpdateManager implements IUpdateView {
 
         dialog.show(fragmentManagerV4, "DownloadDialogFragmentV4");
     }
-
-    public boolean isUpdating() {
-        return isUpdating;
-    }
-
 }

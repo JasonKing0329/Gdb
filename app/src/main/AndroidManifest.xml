@@ -41,6 +41,7 @@
                 <category android:name="android.intent.category.MULTIWINDOW_LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".view.settings.SettingsActivity"/>
 
         <provider
             android:name="android.support.v4.content.FileProvider"
