@@ -1,1 +1,1 @@
-include ':app', ':gdbservice'
+include ':app', ':gdbservice', ':libresmanager'

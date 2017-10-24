@@ -3,4 +3,15 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+
+    <color name="white">#FFFFFF</color><!--白色 -->
+    <color name="lightgrey">#dddddd</color>
+    <color name="darkgrey">#A9A9A9</color><!--暗灰色 -->
+
+    <color name="dialog_background">#eeeeeeee</color>
+    <color name="actionbar_bk_blue">#00a5c4</color>
+    <color name="actionbar_bk_light">#dfdfdf</color>
+    <color name="custom_dialog_icon_bk_frame">#ffffff</color>
+    <color name="custom_dialog_icon_bk_normal">#00a5e4</color>
+    <color name="custom_dialog_icon_bk_pressed">#cc6600</color>
 </resources>
