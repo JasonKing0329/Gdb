@@ -95,6 +95,9 @@ public class SwipeAdapter extends BaseAdapter {
                     .into(holder.ivRecord);
 
         }
+        else {
+            holder.ivRecord.setImageResource(R.drawable.default_cover);
+        }
 
         if (star.getFavorBean() != null) {
             holder.ivFavor.setVisibility(View.VISIBLE);
