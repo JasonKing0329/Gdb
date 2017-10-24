@@ -1,5 +1,9 @@
 apply plugin: 'com.android.application'
 
+ext.appVersionName = "1.1"
+ext.appVersionCode = 2
+ext.appReleaseDir = "E:/temp/release/gdb"
+
 android {
     compileSdkVersion 25
     buildToolsVersion "25.0.3"
@@ -7,23 +11,111 @@ android {
         applicationId "com.jing.app.jjgallery.gdb"
         minSdkVersion 21
         targetSdkVersion 25
-        versionCode 1
-        versionName "1.0"
+        versionCode appVersionCode
+        versionName appVersionName
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
+
+    signingConfigs {
+        debugConfig {
+            storeFile file("../keystore/myapp_key.keystore")
+            storePassword "1010520"
+            keyAlias "myapp"
+            keyPassword "1010520"
+        }
+        releaseConfig {
+            storeFile file("../keystore/myapp_key.keystore")
+            storePassword "1010520"
+            keyAlias "myapp"
+            keyPassword "1010520"
+        }
+    }
+
+    //修改生成的apk名字
+    applicationVariants.all { variant ->
+        variant.outputs.each { output ->
+            def oldFile = output.outputFile
+            def newName = '';
+            if (variant.buildType.name.equals('release')) {
+                // APK输出文件名规则：aiyou-版本名-市场-release.apk
+                // def releaseApkName = 'Gdb-' + appVersionName + '-' + variant.productFlavors[0].name + '-release-' + getDate() + '.apk'
+                def releaseApkName = 'Gdb-' + appVersionName + '-release-' + getDate() + '.apk'
+                // appReleaseDir对应local.properties里面定义的路径，再加上日期（格式：201503011230）文件夹
+                output.outputFile = new File(appReleaseDir + '/' + getDay(), releaseApkName)
+            }
+            if (variant.buildType.name.equals('beta')) {
+            }
+            if (variant.buildType.name.equals('debug')) {
+
+            }
+        }
+    }
     buildTypes {
+        debug {
+            signingConfig signingConfigs.debugConfig
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.releaseConfig
         }
     }
+
+    lintOptions {
+        disable 'MissingTranslation'
+        abortOnError false
+    }
+
+}
+
+//获取时间戳
+def getDay() {
+    def date = new Date()
+    def formattedDate = date.format('yyyyMMdd')
+    return formattedDate
+}
+//获取时间戳
+def getDate() {
+    def date = new Date()
+    def formattedDate = date.format('yyyyMMddHHmmss')
+    return formattedDate
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile 'com.android.support:appcompat-v7:25.3.1'
     testCompile 'junit:junit:4.12'
+
+    compile "com.android.support:appcompat-v7:${SUPPORT_V7_VERSION}"
+    compile "com.android.support:support-v4:${SUPPORT_V4_VERSION}"
+    compile "com.android.support:recyclerview-v7:${SUPPORT_V7_VERSION}"
+    compile "com.android.support:design:${SUPPORT_V7_VERSION}"
+    compile "com.android.support:cardview-v7:${SUPPORT_V7_VERSION}"
+    /*butterknife*/
+    compile "com.jakewharton:butterknife:${BUTTERKNIFE_VERSION}"
+    annotationProcessor "com.jakewharton:butterknife-compiler:${BUTTERKNIFE_VERSION}"
+    /*LMBanners 轮播视图  require min sdk 15*/
+    compile "com.allure0:LMBanners:${LMBANNER_VERSION}"
+    /*glide*/
+    compile "com.github.bumptech.glide:glide:${GLIDE_VERSION}"
+    annotationProcessor "com.github.bumptech.glide:compiler:${GLIDE_VERSION}"
+    /*gson*/
+    compile "com.google.code.gson:gson:${GSON_VERSION}"
+    /*rxjava  rxbinding  sqlbrite*/
+    compile "io.reactivex.rxjava2:rxjava:${RXJAVA_VERSION}"
+    compile "io.reactivex.rxjava2:rxandroid:${RXANDROID_VERSION}"
+    /*retrofit2*/
+    compile "com.squareup.retrofit2:retrofit:${RETROFIT_VERSION}"
+    compile "com.squareup.retrofit2:converter-gson:${RETROFIT_VERSION}"
+    compile "com.squareup.retrofit2:adapter-rxjava2:${RETROFIT_VERSION}"
+    compile "com.squareup.okhttp3:logging-interceptor:${OKHTTP_VERSION}"
+    /*okhttp*/
+    compile "com.squareup.okhttp3:okhttp:${OKHTTP_VERSION}"
+    compile "com.squareup.okio:okio:${OKIO_VERSION}"
+    /*logger*/
+    compile "com.orhanobut:logger:${LOGGER_VERSION}"
+
+    compile project(':gdbservice')
 }
