@@ -10,6 +10,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 
+import com.jing.app.jjgallery.gdb.ActivityManager;
 import com.jing.app.jjgallery.gdb.GBaseActivity;
 import com.jing.app.jjgallery.gdb.GdbApplication;
 import com.jing.app.jjgallery.gdb.R;
@@ -326,6 +327,7 @@ public class LoginActivity extends GBaseActivity implements ILoginView {
 
     public void onServiceDone() {
 //        new HomeSelecter(this).startDefaultHome(this, null);
+        ActivityManager.startStarSwipeActivity(this);
         finish();
     }
 

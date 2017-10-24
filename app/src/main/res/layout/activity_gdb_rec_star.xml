@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.jing.app.jjgallery.gdb.view.pub.swipeview.SwipeFlingAdapterView
+        android:id="@+id/sfv_stars"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/gdb_swipe_head_height"
+        android:background="@color/transparent"
+        app:max_visible="1"
+        app:min_adapter_stack="3"
+        app:rotation_degrees="16"
+        app:y_offset_step="0dp" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_records"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/sfv_stars" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_records_hor"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/sfv_stars" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/gdb_swipe_action_height"
+        android:layout_alignBottom="@id/sfv_stars">
+
+        <ImageView
+            android:id="@+id/iv_list"
+            style="@style/IvGdpSwipeIcon"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="20dp"
+            android:src="@drawable/ic_apps_purple_200_36dp" />
+
+        <ImageView
+            android:id="@+id/iv_orientation"
+            style="@style/IvGdpSwipeIcon"
+            android:layout_toLeftOf="@id/iv_list"
+            android:layout_marginRight="10dp"
+            android:src="@drawable/ic_panorama_horizontal_3f51b5_36dp" />
+
+        <ImageView
+            android:id="@+id/iv_back"
+            style="@style/IvGdpSwipeIcon"
+            android:layout_marginLeft="20dp"
+            android:src="@drawable/ic_arrow_back_purple_36dp" />
+
+        <ImageView
+            android:id="@+id/iv_sort"
+            style="@style/IvGdpSwipeIcon"
+            android:layout_toRightOf="@id/iv_back"
+            android:layout_marginLeft="10dp"
+            android:src="@drawable/ic_sort_by_alpha_purple_200_36dp" />
+
+    </RelativeLayout>
+
+</RelativeLayout>

@@ -4,9 +4,11 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
 
+    <color name="transparent">#00ffffff</color>
     <color name="white">#FFFFFF</color><!--白色 -->
     <color name="lightgrey">#dddddd</color>
     <color name="darkgrey">#A9A9A9</color><!--暗灰色 -->
+    <color name="gray">#808080</color>
 
     <color name="dialog_background">#eeeeeeee</color>
     <color name="actionbar_bk_blue">#00a5c4</color>
@@ -14,4 +16,9 @@
     <color name="custom_dialog_icon_bk_frame">#ffffff</color>
     <color name="custom_dialog_icon_bk_normal">#00a5e4</color>
     <color name="custom_dialog_icon_bk_pressed">#cc6600</color>
+    <color name="gdb_record_text_normal_light">#3c3c3c</color>
+    <color name="gdb_record_text_normal_light_dim">#909090</color>
+    <color name="record_deprecated_bg">#c3c3c3</color>
+    <color name="gdb_record_text_bareback_light">#00a5c4</color>
+
 </resources>
