@@ -81,7 +81,7 @@ public class GdbImageProvider {
         String path;
         if (hasFolder(parent, name)) {
             File file = new File(parent + "/" + name);
-            File[] files = file.listFiles();
+            File[] files = file.listFiles(fileFilter);
             if (files.length == 0) {
                 path = parent + "/" + name;
                 if (!name.endsWith(".png")) {
@@ -110,15 +110,17 @@ public class GdbImageProvider {
         return path;
     }
 
+    private static FileFilter fileFilter = new FileFilter() {
+        @Override
+        public boolean accept(File file) {
+            return !file.getName().endsWith(".nomedia");
+        }
+    };
+
     private static List<String> getImagePathList(String parent, String name) {
         List<String> list = new ArrayList<>();
         File file = new File(parent + "/" + name);
-        File[] files = file.listFiles(new FileFilter() {
-            @Override
-            public boolean accept(File file) {
-                return !file.getName().endsWith(".nomedia");
-            }
-        });
+        File[] files = file.listFiles(fileFilter);
         if (files != null) {
             for (File f:files) {
                 if (SettingProperties.isGdbNoImageMode()) {

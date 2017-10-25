@@ -444,32 +444,10 @@ public class StarRecordsAdapter extends RecyclerListAdapter {
                     public void onClickCardItem(View v, Record record) {
                         if (itemClickListener != null) {
                             Pair<View, String>[] pairs;
-                            if (record instanceof RecordOneVOne) {
-                                // set anchor views of transition animation
-                                // in card view type, add two more view than list type
-                                pairs = new Pair[5];
-                                pairs[0] = Pair.create(v.findViewById(R.id.iv_record), v.getContext().getString(R.string.anim_record_page_img));
-                                pairs[1] = Pair.create(v.findViewById(R.id.tv_score), v.getContext().getString(R.string.anim_record_page_score));
-                                pairs[2] = Pair.create(v.findViewById(R.id.tv_scene), v.getContext().getString(R.string.anim_record_page_scene));
-
-                                RecordOneVOne ovo = (RecordOneVOne) record;
-                                // current star is star1
-                                if (currentIsStar1(star.getStar(), ovo)) {
-                                    pairs[3] = Pair.create((View) zoomHeaderContainer, v.getContext().getString(R.string.anim_record_page_star1_img));
-                                    pairs[4] = Pair.create(v.findViewById(R.id.iv_star), v.getContext().getString(R.string.anim_record_page_star2_img));
-                                }
-                                // current star is star2
-                                else {
-                                    pairs[3] = Pair.create(v.findViewById(R.id.iv_star), v.getContext().getString(R.string.anim_record_page_star1_img));
-                                    pairs[4] = Pair.create((View) zoomHeaderContainer, v.getContext().getString(R.string.anim_record_page_star2_img));
-                                }
-                            }
-                            else {
-                                pairs = new Pair[3];
-                                pairs[0] = Pair.create(v.findViewById(R.id.iv_record), v.getContext().getString(R.string.anim_record_page_img));
-                                pairs[1] = Pair.create(v.findViewById(R.id.tv_score), v.getContext().getString(R.string.anim_record_page_score));
-                                pairs[2] = Pair.create(v.findViewById(R.id.tv_scene), v.getContext().getString(R.string.anim_record_page_scene));
-                            }
+                            pairs = new Pair[3];
+                            pairs[0] = Pair.create(v.findViewById(R.id.iv_record), v.getContext().getString(R.string.anim_record_page_img));
+                            pairs[1] = Pair.create(v.findViewById(R.id.tv_score), v.getContext().getString(R.string.anim_record_page_score));
+                            pairs[2] = Pair.create(v.findViewById(R.id.tv_scene), v.getContext().getString(R.string.anim_record_page_scene));
                             itemClickListener.onClickRecordItem(pairs, record);
                         }
                     }

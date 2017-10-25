@@ -169,7 +169,7 @@ public class StarFragment extends BaseFragmentV4 implements IStarView, StarRecor
     @Override
     public void onClickRecordItem(Pair<View, String>[] pairs, Record record) {
         // set anchor views of transition animation
-        ActivityManager.startGdbRecordActivity(getActivity(), record, pairs);
+        ActivityManager.startRecordActivity(getActivity(), record, pairs);
     }
 
     @Override

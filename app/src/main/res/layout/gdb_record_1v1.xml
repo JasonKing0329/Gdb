@@ -1,0 +1,708 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white_bg">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <RelativeLayout
+                    android:id="@+id/group_record"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/gdb_star_header_height">
+                    <com.allure.lbanners.LMBanners
+                        android:id="@+id/lmbanner"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@android:color/transparent"
+                        android:visibility="invisible"
+                        android:transitionName="@string/anim_record_page_img"
+                        app:isGuide="false"
+                        app:auto_play="true"
+                        app:canLoop="true"
+                        app:durtion="5000"
+                        app:horizontal_transitionEffect="accordion"
+                        app:indicatorBottomPadding="10"
+                        app:indicator_position="bottom_mid"
+                        app:isVertical="false"
+                        app:scroll_duration="1000"/>
+                    <ImageView
+                        android:id="@+id/iv_record"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/gdb_star_header_height"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/default_cover"
+                        android:transitionName="@string/anim_record_page_img" />
+                </RelativeLayout>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignBottom="@id/group_record"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginRight="10dp"
+                    android:orientation="horizontal">
+                    <ImageView
+                        android:id="@+id/iv_play"
+                        android:layout_width="@dimen/gdb_record_icon_size"
+                        android:layout_height="@dimen/gdb_record_icon_size"
+                        android:padding="@dimen/gdb_record_icon_padding"
+                        android:src="@drawable/ic_play_arrow_white_36dp"
+                        android:background="@drawable/shape_oval_transgrey"
+                        android:scaleType="fitCenter"/>
+                    <ImageView
+                        android:id="@+id/iv_setting"
+                        android:layout_width="@dimen/gdb_record_icon_size"
+                        android:layout_height="@dimen/gdb_record_icon_size"
+                        android:padding="@dimen/gdb_record_icon_padding"
+                        android:src="@drawable/ic_settings_white_36dp"
+                        android:background="@drawable/shape_oval_transgrey"
+                        android:scaleType="fitCenter"
+                        android:layout_marginLeft="10dp"/>
+                </LinearLayout>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <LinearLayout
+                    android:id="@+id/group_star_1v1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:id="@+id/group_star1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp">
+
+                        <com.github.siyamed.shapeimageview.CircularImageView
+                            android:id="@+id/iv_star1"
+                            android:layout_width="@dimen/gdb_record_page_star1_img_height"
+                            android:layout_height="@dimen/gdb_record_page_star1_img_height"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/default_coach"
+                            android:transitionName="@string/anim_record_page_star1_img" />
+
+                        <TextView
+                            android:id="@+id/tv_star1"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:gravity="center"
+                            android:text="Nixon"
+                            android:transitionName="@string/anim_record_page_star1_name" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/group_star2"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp">
+
+                        <com.github.siyamed.shapeimageview.CircularImageView
+                            android:id="@+id/iv_star2"
+                            android:layout_width="@dimen/gdb_record_page_star1_img_height"
+                            android:layout_height="@dimen/gdb_record_page_star1_img_height"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/default_coach"
+                            android:transitionName="@string/anim_record_page_star2_img" />
+
+                        <TextView
+                            android:id="@+id/tv_star2"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:gravity="center"
+                            android:text="Robbie Rojo"
+                            android:transitionName="@string/anim_record_page_star2_name" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/group_star_3w"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:id="@+id/group_3w_star1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp">
+
+                        <com.github.siyamed.shapeimageview.CircularImageView
+                            android:id="@+id/iv_3w_star1"
+                            android:layout_width="@dimen/gdb_record_page_star3w_img_height"
+                            android:layout_height="@dimen/gdb_record_page_star3w_img_height"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/default_coach" />
+
+                        <TextView
+                            android:id="@+id/tv_3w_flag1"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:gravity="center"
+                            android:text="top" />
+
+                        <TextView
+                            android:id="@+id/tv_3w_star1"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="0dp"
+                            android:gravity="center"
+                            android:text="Nixon" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/group_3w_star2"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp">
+
+                        <com.github.siyamed.shapeimageview.CircularImageView
+                            android:id="@+id/iv_3w_star2"
+                            android:layout_width="@dimen/gdb_record_page_star3w_img_height"
+                            android:layout_height="@dimen/gdb_record_page_star3w_img_height"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/default_coach" />
+
+                        <TextView
+                            android:id="@+id/tv_3w_flag2"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:gravity="center"
+                            android:text="top" />
+
+                        <TextView
+                            android:id="@+id/tv_3w_star2"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="0dp"
+                            android:gravity="center"
+                            android:text="Robbie Rojo" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/group_3w_star3"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp">
+
+                        <com.github.siyamed.shapeimageview.CircularImageView
+                            android:id="@+id/iv_3w_star3"
+                            android:layout_width="@dimen/gdb_record_page_star3w_img_height"
+                            android:layout_height="@dimen/gdb_record_page_star3w_img_height"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/default_coach" />
+
+                        <TextView
+                            android:id="@+id/tv_3w_flag3"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:gravity="center"
+                            android:text="top" />
+
+                        <TextView
+                            android:id="@+id/tv_3w_star3"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="0dp"
+                            android:gravity="center"
+                            android:text="Robbie Rojo" />
+                    </LinearLayout>
+                </LinearLayout>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/tv_score_total"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="10dp"
+                    android:text="518"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="46dp"
+                    android:textStyle="bold"
+                    android:transitionName="@string/anim_record_page_score" />
+
+                <TextView
+                    android:id="@+id/tv_deprecated"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@id/tv_score_total"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginRight="10dp"
+                    android:text="Deprecated"
+                    android:textColor="@color/darkgrey"
+                    android:textSize="26dp"
+                    android:textStyle="bold" />
+            </RelativeLayout>
+
+            <LinearLayout style="@style/GroupWhiteSecOnBg">
+
+                <RelativeLayout
+                    android:id="@+id/group_scene"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/gdb_record_line_height">
+
+                    <TextView
+                        android:id="@+id/tv_scene"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:transitionName="@string/anim_record_page_scene" />
+
+                    <TextView
+                        android:id="@+id/tv_scene_score"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true" />
+                    <!--ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:src="@drawable/ic_keyboard_arrow_right_grey_700_36dp" /-->
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/group_bareback"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/gdb_record_line_height">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:text="bareback" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/vertical_divider"
+                        android:background="@color/divider" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minHeight="@dimen/gdb_record_line_height">
+
+                    <TextView
+                        android:id="@+id/tv_path"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:paddingBottom="8dp"
+                        android:paddingTop="8dp" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/vertical_divider"
+                        android:background="@color/divider" />
+                </RelativeLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                style="@style/GroupWhiteSecOnBg"
+                android:layout_marginTop="15dp">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/gdb_record_line_height">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:text="cum" />
+
+                    <TextView
+                        android:id="@+id/tv_cum"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/gdb_record_line_height">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:text="currentStar" />
+
+                    <TextView
+                        android:id="@+id/tv_star"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/vertical_divider"
+                        android:background="@color/divider" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/gdb_record_line_height">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:text="starC" />
+
+                    <TextView
+                        android:id="@+id/tv_starc"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/vertical_divider"
+                        android:background="@color/divider" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/gdb_record_line_height">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:text="special" />
+
+                    <TextView
+                        android:id="@+id/tv_special"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/vertical_divider"
+                        android:background="@color/divider" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/group_special"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minHeight="@dimen/gdb_record_line_height">
+
+                    <TextView
+                        android:id="@+id/tv_special_content"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:paddingBottom="8dp"
+                        android:paddingTop="8dp" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/vertical_divider"
+                        android:background="@color/divider" />
+                </RelativeLayout>
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tv_fk"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="15dp"
+                android:text="FK(98)"
+                android:textSize="26dp" />
+
+            <com.jing.app.jjgallery.gdb.view.pub.PointDescLayout
+                android:id="@+id/group_fk"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp" />
+
+            <LinearLayout
+                style="@style/GroupWhiteSecOnBg"
+                android:layout_marginTop="15dp">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/gdb_record_line_height">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:text="HD level" />
+
+                    <TextView
+                        android:id="@+id/tv_hd"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/gdb_record_line_height">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:text="basic" />
+
+                    <TextView
+                        android:id="@+id/tv_basic"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/vertical_divider"
+                        android:background="@color/divider" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/gdb_record_line_height">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:text="feel" />
+
+                    <TextView
+                        android:id="@+id/tv_feel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/vertical_divider"
+                        android:background="@color/divider" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/gdb_record_line_height">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:text="bjob" />
+
+                    <TextView
+                        android:id="@+id/tv_bjob"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/vertical_divider"
+                        android:background="@color/divider" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/gdb_record_line_height">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:text="rhythm" />
+
+                    <TextView
+                        android:id="@+id/tv_rhythm"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/vertical_divider"
+                        android:background="@color/divider" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/gdb_record_line_height">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:text="foreplay" />
+
+                    <TextView
+                        android:id="@+id/tv_foreplay"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/vertical_divider"
+                        android:background="@color/divider" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/gdb_record_line_height">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:text="story" />
+
+                    <TextView
+                        android:id="@+id/tv_story"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/vertical_divider"
+                        android:background="@color/divider" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/gdb_record_line_height">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:text="Extra(bareback+cShow+rim)" />
+
+                    <TextView
+                        android:id="@+id/tv_extra"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/vertical_divider"
+                        android:background="@color/divider" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/gdb_record_line_height">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:text="rim" />
+
+                    <TextView
+                        android:id="@+id/tv_rim"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/vertical_divider"
+                        android:background="@color/divider" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/gdb_record_line_height">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:text="cShow" />
+
+                    <TextView
+                        android:id="@+id/tv_cshow"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/vertical_divider"
+                        android:background="@color/divider" />
+                </RelativeLayout>
+            </LinearLayout>
+
+        </LinearLayout>
+    </RelativeLayout>
+</ScrollView>

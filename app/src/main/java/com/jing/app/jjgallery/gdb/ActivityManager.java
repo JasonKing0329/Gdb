@@ -1,11 +1,14 @@
 package com.jing.app.jjgallery.gdb;
 
 import android.app.Activity;
+import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
+import com.jing.app.jjgallery.gdb.model.ObjectCache;
+import com.jing.app.jjgallery.gdb.view.record.RecordActivity;
 import com.jing.app.jjgallery.gdb.view.settings.SettingsActivity;
 import com.jing.app.jjgallery.gdb.view.star.StarActivity;
 import com.jing.app.jjgallery.gdb.view.star.StarListActivity;
@@ -108,7 +111,7 @@ public class ActivityManager {
     }
 
     public static void startGdbRecordActivity(Context from, Record record) {
-        startGdbRecordActivity(from, record, null);
+        startRecordActivity(from, record, null);
     }
 
     /**
@@ -117,19 +120,18 @@ public class ActivityManager {
      * @param record
      * @param pairs transition转场动画
      */
-    public static void startGdbRecordActivity(Context from, Record record, android.util.Pair<View, String>[] pairs) {
-//        ObjectCache.putData(record);
-//        Intent intent = new Intent().setClass(from, RecordActivity.class);
-//        if (from instanceof Activity) {
-//            if (pairs == null) {
-//                from.startActivity(intent);
-//                applyAnimation((Activity) from);
-//            }
-//            else {
-//                ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation((Activity) from, pairs);
-//                from.startActivity(intent, options.toBundle());
-//            }
-//        }
+    public static void startRecordActivity(Context from, Record record, android.util.Pair<View, String>[] pairs) {
+        ObjectCache.putData(record);
+        Intent intent = new Intent().setClass(from, RecordActivity.class);
+        if (from instanceof Activity) {
+            if (pairs == null) {
+                from.startActivity(intent);
+            }
+            else {
+                ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation((Activity) from, pairs);
+                from.startActivity(intent, options.toBundle());
+            }
+        }
     }
 
     public static boolean startGDBGameActivity(Activity from, Bundle bundle) {

@@ -74,4 +74,28 @@
         <item name="android:paddingBottom">@dimen/actionbar_padding</item>
     </style>
 
+    <style name="GroupWhiteSecOnBg">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:background">@color/white</item>
+        <item name="android:paddingLeft">15dp</item>
+        <item name="android:paddingRight">15dp</item>
+    </style>
+
+    <style name="TvDlgVideoAction">
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:paddingLeft">@dimen/video_actionbar_text_padding</item>
+        <item name="android:paddingRight">@dimen/video_actionbar_text_padding</item>
+        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:textSize">14dp</item>
+    </style>
+
+    <style name="IvTransDialogAction">
+        <item name="android:layout_width">@dimen/actionbar_icon_width</item>
+        <item name="android:layout_height">@dimen/actionbar_icon_width</item>
+        <item name="android:padding">@dimen/actionbar_padding</item>
+        <item name="android:background">@drawable/ripple_fullscreen_bk</item>
+    </style>
+
 </resources>

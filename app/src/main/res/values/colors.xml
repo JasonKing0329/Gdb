@@ -9,8 +9,10 @@
     <color name="lightgrey">#dddddd</color>
     <color name="darkgrey">#A9A9A9</color><!--暗灰色 -->
     <color name="gray">#808080</color>
+    <color name="black">#000000</color>
 
     <color name="white_bg">#efefef</color>
+    <color name="divider">#7c7c7c</color>
 
     <color name="actionbar_text_light">#3f37a1</color>
     <color name="dialog_background">#eeeeeeee</color>
