@@ -10,9 +10,17 @@
     <color name="darkgrey">#A9A9A9</color><!--暗灰色 -->
     <color name="gray">#808080</color>
 
+    <color name="white_bg">#efefef</color>
+
+    <color name="actionbar_text_light">#3f37a1</color>
     <color name="dialog_background">#eeeeeeee</color>
     <color name="actionbar_bk_blue">#00a5c4</color>
     <color name="actionbar_bk_light">#dfdfdf</color>
+    <color name="actionbar_bk_green">#419814</color>
+    <color name="actionbar_bk_lightgreen">#19a993</color>
+    <color name="actionbar_bk_orange">#ef9801</color>
+    <color name="actionbar_bk_deepblue">#197ba9</color>
+    <color name="actionbar_bk_purple">#a91980</color>
     <color name="custom_dialog_icon_bk_frame">#ffffff</color>
     <color name="custom_dialog_icon_bk_normal">#00a5e4</color>
     <color name="custom_dialog_icon_bk_pressed">#cc6600</color>

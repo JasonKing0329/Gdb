@@ -117,7 +117,7 @@ public class GDataProvider implements GDBProvider {
 
     @Override
     public List<Star> getStars(String starMode) {
-        return null;
+        return starDao.getStars(starMode);
     }
 
     @Override
@@ -209,7 +209,7 @@ public class GDataProvider implements GDBProvider {
 
     @Override
     public StarCountBean queryStarCount() {
-        return null;
+        return starDao.queryStarCount();
     }
 
     @Override

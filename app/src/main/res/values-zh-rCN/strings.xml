@@ -19,6 +19,8 @@
     <string name="warning">警告</string>
     <string name="select_all">全选</string>
     <string name="unselect_all">取消全选</string>
+    <string name="success">成功</string>
+    <string name="failed">失败</string>
 
     <!-- login -->
     <string name="username">用户名</string>
@@ -78,7 +80,8 @@
     <string name="gdb_rec_filter_max">最高</string>
     <string name="gdb_rec_filter_title">推荐过滤器</string>
     <string name="gdb_rec_no_match">没有找到匹配的记录</string>
-
+    <string name="menu_gdb_download">打开下载管理器</string>
+    <string name="menu_gdb_check_server">检查更新</string>
     <!--************************** download **************************-->
     <string name="download_title">下载</string>
     <string name="download_empty">没有待下载内容</string>

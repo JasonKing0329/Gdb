@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.jing.app.jjgallery.gdb.view.settings.SettingsActivity;
+import com.jing.app.jjgallery.gdb.view.star.StarListActivity;
 import com.jing.app.jjgallery.gdb.view.star.StarSwipeActivity;
 import com.king.service.gdb.bean.Record;
 import com.king.service.gdb.bean.Star;
@@ -41,15 +42,9 @@ public class ActivityManager {
         return true;
     }
 
-    public static boolean startGDBStarListActivity(Activity from, Bundle bundle) {
-//        Intent intent = new Intent().setClass(from, StarListActivity.class);
-//        if (bundle == null) {
-//            from.startActivity(intent);
-//            applyAnimation(from);
-//        }
-//        else {
-//            ActivityCompat.startActivity(from, intent, bundle);
-//        }
+    public static boolean startStarListActivity(Activity from) {
+        Intent intent = new Intent().setClass(from, StarListActivity.class);
+        from.startActivity(intent);
         return true;
     }
 

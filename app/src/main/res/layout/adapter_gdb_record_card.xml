@@ -23,22 +23,36 @@
             android:paddingLeft="@dimen/gdb_record_card_bottom_margin_hor"
             android:paddingRight="@dimen/gdb_record_card_bottom_margin_hor">
 
-            <com.jing.app.jjgallery.gdb.view.pub.CircleImageView
-                android:id="@+id/iv_star"
-                android:layout_width="@dimen/gdb_record_card_icon_size"
-                android:layout_height="@dimen/gdb_record_card_icon_size"
+            <LinearLayout
+                android:id="@+id/group_star"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="@dimen/gdb_record_card_icon_top"
-                android:src="@drawable/icon_download"
-                app:civ_border_color="@color/white"
-                app:civ_border_width="4dp"/>
+                android:layout_marginTop="@dimen/gdb_record_card_icon_top">
+                <com.jing.app.jjgallery.gdb.view.pub.CircleImageView
+                    android:id="@+id/iv_star1"
+                    android:layout_width="@dimen/gdb_record_card_icon_size"
+                    android:layout_height="@dimen/gdb_record_card_icon_size"
+                    android:src="@drawable/icon_download"
+                    app:civ_border_color="@color/white"
+                    app:civ_border_width="4dp"/>
+                <com.jing.app.jjgallery.gdb.view.pub.CircleImageView
+                    android:id="@+id/iv_star2"
+                    android:layout_width="@dimen/gdb_record_card_icon_size"
+                    android:layout_height="@dimen/gdb_record_card_icon_size"
+                    android:layout_marginLeft="15dp"
+                    android:src="@drawable/icon_download"
+                    app:civ_border_color="@color/white"
+                    app:civ_border_width="4dp"/>
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/tv_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
-                android:layout_below="@id/iv_star"
+                android:layout_below="@id/group_star"
                 android:layout_marginTop="8dp"
                 android:gravity="center"
                 android:ellipsize="end"

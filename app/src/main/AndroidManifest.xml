@@ -43,6 +43,7 @@
         </activity>
         <activity android:name=".view.settings.SettingsActivity"/>
         <activity android:name=".view.star.StarSwipeActivity"/>
+        <activity android:name=".view.star.StarListActivity"/>
 
         <provider
             android:name="android.support.v4.content.FileProvider"

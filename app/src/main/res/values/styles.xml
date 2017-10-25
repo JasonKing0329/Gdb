@@ -39,4 +39,39 @@
         <item name="android:layout_centerVertical">true</item>
     </style>
 
+    <style name="StarListTheme" parent="AppTheme">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="android:textColorPrimary">@color/white</item>
+        <item name="android:textColorSecondary">#eeeeee</item>
+        <item name="android:actionMenuTextColor">@color/white</item>
+    </style>
+
+    <style name="StarListTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="colorPrimary">@color/white_bg</item>
+        <item name="colorPrimaryDark">@color/white_bg</item>
+        <item name="android:textColorPrimary">@color/white</item>
+        <item name="android:textColorSecondary">#eeeeee</item>
+        <item name="android:actionMenuTextColor">@color/white</item>
+    </style>
+
+    <style name="StarListTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light">
+    </style>
+
+    <style name="ActionbarIcon_L">
+        <item name="android:background">?android:attr/selectableItemBackgroundBorderless</item>
+        <item name="android:clickable">true</item>
+        <item name="android:scaleType">fitCenter</item>
+        <item name="android:padding">@dimen/actionbar_icon_padding</item>
+    </style>
+
+    <style name="ActionbarCloseIcon">
+        <item name="android:clickable">true</item>
+        <item name="android:scaleType">fitCenter</item>
+        <item name="android:paddingTop">@dimen/actionbar_padding</item>
+        <item name="android:paddingBottom">@dimen/actionbar_padding</item>
+    </style>
+
 </resources>

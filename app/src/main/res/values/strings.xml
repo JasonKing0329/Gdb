@@ -20,6 +20,8 @@
     <string name="warning">Warning</string>
     <string name="select_all">Select all</string>
     <string name="unselect_all">Unelect all</string>
+    <string name="success">Success</string>
+    <string name="failed">Failed</string>
 
     <!--************************** login **************************-->
     <string name="login_user">User</string>
@@ -76,6 +78,9 @@
     <string name="gdb_title_record" translatable="false">Records</string>
     <string name="gdb_title_scene" translatable="false">Scenes</string>
     <string name="gdb_nav_setting" translatable="false">Navigation setting</string>
+
+    <string name="menu_gdb_download">Open download manager</string>
+    <string name="menu_gdb_check_server">Check update</string>
 
     <!--************************** transition **************************-->
     <string name="trans_surf_center" translatable="false">trans_surf_center</string>

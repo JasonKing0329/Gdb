@@ -18,9 +18,13 @@ import com.jing.app.jjgallery.gdb.util.GlideUtil;
 import com.jing.app.jjgallery.gdb.view.pub.CircleImageView;
 import com.king.service.gdb.bean.Record;
 import com.king.service.gdb.bean.RecordOneVOne;
+import com.king.service.gdb.bean.RecordThree;
 import com.king.service.gdb.bean.Star;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import static android.R.attr.id;
 
 /**
  * 描述: record的卡片布局
@@ -30,7 +34,8 @@ import java.util.List;
 public class RecordCardHolder {
     private CardView groupCard;
     private ImageView ivRecord;
-    private CircleImageView ivStar;
+    private CircleImageView ivStar1;
+    private CircleImageView ivStar2;
     private TextView tvName;
     private TextView tvScore;
     private TextView tvPath;
@@ -47,7 +52,8 @@ public class RecordCardHolder {
     public void init(View itemView) {
         groupCard = (CardView) itemView.findViewById(R.id.group_card);
         ivRecord = (ImageView) itemView.findViewById(R.id.iv_record);
-        ivStar = (CircleImageView) itemView.findViewById(R.id.iv_star);
+        ivStar1 = (CircleImageView) itemView.findViewById(R.id.iv_star1);
+        ivStar2 = (CircleImageView) itemView.findViewById(R.id.iv_star2);
         tvName = (TextView) itemView.findViewById(R.id.tv_name);
         tvScore = (TextView) itemView.findViewById(R.id.tv_score);
         tvPath = (TextView) itemView.findViewById(R.id.tv_path);
@@ -91,8 +97,41 @@ public class RecordCardHolder {
             Glide.with(GdbApplication.getInstance())
                     .load(GdbImageProvider.getStarRandomPath(name, null))
                     .apply(GlideUtil.getStarOptions())
-                    .into(ivStar);
+                    .into(ivStar1);
+            ivStar2.setVisibility(View.GONE);
         }
+        else if (record instanceof RecordThree) {
+            RecordThree rRecord = (RecordThree) record;
+            List<Star> starList = new ArrayList<>();
+            if (rRecord.getStarTopList() != null) {
+                starList.addAll(rRecord.getStarTopList());
+            }
+            if (rRecord.getStarBottomList() != null) {
+                starList.addAll(rRecord.getStarBottomList());
+            }
+            if (rRecord.getStarMixList() != null) {
+                starList.addAll(rRecord.getStarMixList());
+            }
+
+            ImageView[] views = new ImageView[]{ivStar1, ivStar2};
+            int imageViewIndex = 0;
+            for (Star star:starList) {
+                if (star.getId() == currentStar.getId()) {
+                    continue;
+                }
+
+                Glide.with(GdbApplication.getInstance())
+                        .load(GdbImageProvider.getStarRandomPath(star.getName(), null))
+                        .apply(GlideUtil.getStarOptions())
+                        .into(views[imageViewIndex]);
+
+                imageViewIndex ++;
+                if (imageViewIndex > 1) {
+                    break;
+                }
+            }
+        }
+
         RequestOptions recordOptions = GlideUtil.getRecordOptions();
         Glide.with(GdbApplication.getInstance())
                 .load(GdbImageProvider.getRecordRandomPath(record.getName(), null))

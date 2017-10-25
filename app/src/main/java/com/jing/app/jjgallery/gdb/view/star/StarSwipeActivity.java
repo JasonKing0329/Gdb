@@ -330,7 +330,7 @@ public class StarSwipeActivity extends GBaseActivity implements IStarSwipeView {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.iv_list:
-                ActivityManager.startGDBStarListActivity(this, null);
+                ActivityManager.startStarListActivity(this);
                 finish();
                 break;
             case R.id.iv_back:

@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:elevation="0dp"
+        app:elevation="0dp"
+        android:theme="@style/StarListTheme.AppBarOverlay">
+
+        <android.support.design.widget.CollapsingToolbarLayout
+            android:id="@+id/ctl_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:contentScrim="@color/actionbar_bk_light"
+            app:scrimVisibleHeightTrigger="@dimen/home_scrim_visible_height"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/gdb_star_header_height">
+
+                <com.allure.lbanners.LMBanners
+                    android:id="@+id/lmbanner"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@android:color/transparent"
+                    android:visibility="invisible"
+                    app:isGuide="false"
+                    app:auto_play="true"
+                    app:canLoop="true"
+                    app:durtion="5000"
+                    app:horizontal_transitionEffect="accordion"
+                    app:indicatorBottomPadding="10"
+                    app:indicator_position="bottom_mid"
+                    app:isVertical="false"
+                    app:scroll_duration="1000"/>
+                <ProgressBar
+                    android:id="@+id/progress"
+                    style="@android:style/Widget.ProgressBar.Inverse"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"/>
+                <RelativeLayout
+                    android:id="@+id/group_setting"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginRight="10dp"
+                    android:background="@drawable/shape_oval_transgrey">
+                    <ImageView
+                        android:layout_width="@dimen/gdb_star_header_icon_size"
+                        android:layout_height="@dimen/gdb_star_header_icon_size"
+                        android:layout_margin="10dp"
+                        android:padding="5dp"
+                        android:src="@drawable/ic_settings_white_36dp"
+                        android:scaleType="fitCenter"/>
+                </RelativeLayout>
+            </RelativeLayout>
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/actionbar_height"
+                app:title="Glory"
+                app:layout_collapseMode="pin"
+                app:popupTheme="@style/StarListTheme.PopupOverlay"
+                app:contentInsetStart="0dp"
+                app:contentInsetLeft="0dp">
+                <include layout="@layout/actionbar_l"/>
+            </android.support.v7.widget.Toolbar>
+        </android.support.design.widget.CollapsingToolbarLayout>
+
+        <android.support.design.widget.TabLayout
+            android:id="@+id/tabLayout"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/actionbar_height"
+            android:background="@color/actionbar_bk_light"
+            app:tabGravity="fill"
+            app:tabMode="fixed"
+            app:tabSelectedTextColor="@color/colorAccent"
+            app:tabTextColor="@color/colorPrimary"
+            app:tabIndicatorColor="@color/colorAccent"/>
+
+    </android.support.design.widget.AppBarLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:scrollbars="none"
+        app:layout_behavior="com.jing.app.jjgallery.gdb.view.star.StarListBehavior">
+        <android.support.v4.view.ViewPager
+            android:id="@+id/viewpager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </LinearLayout>
+
+    <com.jing.app.jjgallery.gdb.view.pub.WaveSideBarView
+        android:id="@+id/side_bar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="right"
+        android:visibility="gone"
+        android:layout_marginBottom="50dp"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+</android.support.design.widget.CoordinatorLayout>

@@ -31,6 +31,7 @@
     <dimen name="mainview_menu_height">400dp</dimen>
     <dimen name="actionbar_search_width">150dp</dimen>
     <dimen name="showimagedialog_icon_width">40dp</dimen>
+    <dimen name="actionbar_title_max_width">160dp</dimen>
 
     <!-- customdialog  -->
     <dimen name="custom_dialog_toolbar_icon">30dp</dimen>
@@ -62,6 +63,11 @@
     <dimen name="nav_header_height">160dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="nav_width">280dp</dimen>
+
+    <!-- wave side bar -->
+    <dimen name="textSize_sidebar">10sp</dimen>
+    <dimen name="textSize_sidebar_choose">12sp</dimen>
+    <dimen name="textSize_sidebar_padding">20sp</dimen>
 
     <!-- gdb -->
     <dimen name="gdb_star_header_height">210dp</dimen>
