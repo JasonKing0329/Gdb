@@ -5,6 +5,7 @@ import android.app.Application;
 import android.os.Build;
 import android.os.Bundle;
 
+import com.jing.app.jjgallery.gdb.model.db.GdbProviderHelper;
 import com.jing.app.jjgallery.gdb.util.DebugLog;
 import com.orhanobut.logger.AndroidLogAdapter;
 import com.orhanobut.logger.Logger;
@@ -77,7 +78,7 @@ public class GdbApplication extends Application {
 
                 // 最后一个activity结束
                 if (activityList.size() == 1 && activityList.get(0) == activity) {
-                    stopAllService(activity);
+                    onLastActivityFinished(activity);
                 }
 
                 activityList.remove(activity);
@@ -90,6 +91,15 @@ public class GdbApplication extends Application {
                 }
             }
         });
+    }
+
+    /**
+     * 最后一个activity退出，关闭相应服务以及数据库连接
+     * @param activity
+     */
+    private void onLastActivityFinished(Activity activity) {
+        GdbProviderHelper.close();
+        stopAllService(activity);
     }
 
     public Activity getCurrentActivity() {

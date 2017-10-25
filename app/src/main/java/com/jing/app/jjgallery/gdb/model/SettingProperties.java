@@ -220,8 +220,8 @@ public class SettingProperties {
     /**
      * latest records number
      */
-    public static boolean isGdbNoImageMode(Context context) {
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+    public static boolean isGdbNoImageMode() {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(GdbApplication.getInstance());
         return preferences.getBoolean(PreferenceKey.PREF_GDB_NO_IMAGE, true);
     }
 

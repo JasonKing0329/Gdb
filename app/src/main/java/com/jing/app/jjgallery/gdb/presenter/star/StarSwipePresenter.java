@@ -3,10 +3,10 @@ package com.jing.app.jjgallery.gdb.presenter.star;
 import com.jing.app.jjgallery.gdb.model.GdbImageProvider;
 import com.jing.app.jjgallery.gdb.model.RecordComparator;
 import com.jing.app.jjgallery.gdb.model.bean.StarProxy;
-import com.jing.app.jjgallery.gdb.model.conf.DBInfor;
 import com.jing.app.jjgallery.gdb.model.conf.PreferenceValue;
+import com.jing.app.jjgallery.gdb.model.db.GdbProviderHelper;
+import com.jing.app.jjgallery.gdb.util.DebugLog;
 import com.jing.app.jjgallery.gdb.view.star.IStarSwipeView;
-import com.king.service.gdb.GDBProvider;
 import com.king.service.gdb.bean.FavorBean;
 import com.king.service.gdb.bean.Record;
 import com.king.service.gdb.bean.Star;
@@ -35,15 +35,11 @@ public class StarSwipePresenter {
     private final int LOAD_NUM = 4;
 
     private IStarSwipeView swipeView;
-    private GDBProvider gdbProvider;
-    private GDBProvider favorProvider;
 
     private Map<Integer, FavorBean> favorMap;
 
     public StarSwipePresenter(IStarSwipeView swipeView) {
         this.swipeView = swipeView;
-        gdbProvider = new GDBProvider(DBInfor.GDB_DB_PATH);
-        favorProvider = new GDBProvider(DBInfor.GDB_FAVOR_DB_PATH);
     }
 
     public void loadNewStars() {
@@ -54,21 +50,22 @@ public class StarSwipePresenter {
                 // query favor map
                 if (favorMap == null) {
                     favorMap = new HashMap<>();
-                    List<FavorBean> list = favorProvider.getFavors();
+                    List<FavorBean> list = GdbProviderHelper.getProvider().getFavors();
                     for (FavorBean bean:list) {
                         favorMap.put(bean.getStarId(), bean);
                     }
                 }
 
                 // load LOAD_NUM stars
-                List<Star> starList = gdbProvider.getRandomStars(LOAD_NUM);
+                List<Star> starList = GdbProviderHelper.getProvider().getRandomStars(LOAD_NUM);
                 List<StarProxy> slist = new ArrayList<>();
 
                 for (Star star:starList) {
 
                     // load records for each star
                     // 很奇怪如果是从这里装配后，后面onStarLoaded之后执行的代码调试的时候也是对的，但SwipeFlingAdapterView就是显示不出来
-                    gdbProvider.loadStarRecords(star);
+                    GdbProviderHelper.getProvider().loadStarRecords(star);
+                    DebugLog.e(star.getName() + " records:" + star.getRecordList().size());
 
                     StarProxy proxy = new StarProxy();
                     proxy.setStar(star);
@@ -104,8 +101,8 @@ public class StarSwipePresenter {
     }
 
     public void saveFavor(FavorBean bean) {
-        favorProvider.saveFavor(bean);
-        gdbProvider.saveFavor(bean);
+        GdbProviderHelper.getProvider().saveFavor(bean);
+        GdbProviderHelper.getProvider().saveFavor(bean);
     }
 
     public void sortRecords(List<Record> recordList, int sortMode, boolean desc) {

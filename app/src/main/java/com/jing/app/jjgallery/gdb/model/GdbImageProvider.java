@@ -73,6 +73,10 @@ public class GdbImageProvider {
      * @return
      */
     private static String getImagePath(String parent, String name, int index, IndexPackage indexPackage) {
+        if (SettingProperties.isGdbNoImageMode()) {
+            return "";
+        }
+
         String path;
         if (hasFolder(parent, name)) {
             File file = new File(parent + "/" + name);
@@ -105,7 +109,12 @@ public class GdbImageProvider {
         File[] files = file.listFiles();
         if (files != null) {
             for (File f:files) {
-                list.add(f.getPath());
+                if (SettingProperties.isGdbNoImageMode()) {
+                    list.add("");
+                }
+                else {
+                    list.add(f.getPath());
+                }
             }
             Collections.shuffle(list);
         }

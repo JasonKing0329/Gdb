@@ -20,15 +20,14 @@ import com.king.service.gdb.bean.SceneBean;
 import com.king.service.gdb.bean.Star;
 import com.king.service.gdb.bean.StarCountBean;
 
+import static com.king.service.gdb.DBConstants.TABLE_CONF;
+import static com.king.service.gdb.DBConstants.TABLE_RECORD_1V1;
+import static com.king.service.gdb.DBConstants.TABLE_STAR;
+
+import static com.king.service.gdb.DBConstants.TABLE_FAVOR;
+import static com.king.service.gdb.DBConstants.TABLE_RECORD_3W;
 
 public class SqliteDao {
-
-	private final String TABLE_SEQUENCE = "sqlite_sequence";
-	private final String TABLE_CONF = "conf";
-	private final String TABLE_STAR = "star";
-	private final String TABLE_RECORD_1V1 = "record_1v1";
-	private final String TABLE_RECORD_3W = "record_3w";
-	private final String TABLE_FAVOR = "favor";
 
 	public SqliteDao() {
 		try {

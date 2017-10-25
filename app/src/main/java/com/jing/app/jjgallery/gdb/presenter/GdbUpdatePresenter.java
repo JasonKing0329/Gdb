@@ -8,7 +8,7 @@ import com.jing.app.jjgallery.gdb.http.AppHttpClient;
 import com.jing.app.jjgallery.gdb.http.Command;
 import com.jing.app.jjgallery.gdb.http.bean.response.AppCheckBean;
 import com.jing.app.jjgallery.gdb.http.bean.response.GdbRespBean;
-import com.jing.app.jjgallery.gdb.model.conf.DBInfor;
+import com.jing.app.jjgallery.gdb.model.db.GdbProviderHelper;
 import com.jing.app.jjgallery.gdb.view.update.IGdbUpdateView;
 import com.king.service.gdb.GDBProvider;
 
@@ -27,12 +27,10 @@ import io.reactivex.schedulers.Schedulers;
 public class GdbUpdatePresenter {
 
     private IGdbUpdateView updateView;
-    private GDBProvider gdbProvider;
     private CompositeDisposable compositeDisposable;
 
     public GdbUpdatePresenter(IGdbUpdateView view) {
         updateView = view;
-        gdbProvider = new GDBProvider(DBInfor.GDB_DB_PATH);
         compositeDisposable = new CompositeDisposable();
     }
 
@@ -62,8 +60,7 @@ public class GdbUpdatePresenter {
     }
 
     public static String getDbVersionName() {
-        GDBProvider provider = new GDBProvider(DBInfor.GDB_DB_PATH);
-        return getDbVersionName(provider);
+        return getDbVersionName(GdbProviderHelper.getProvider());
     }
 
     public static String getDbVersionName(GDBProvider provider) {
@@ -75,7 +72,7 @@ public class GdbUpdatePresenter {
     }
 
     private void requestGdbDatabase() {
-        String versionName = getDbVersionName(gdbProvider);
+        String versionName = getDbVersionName(GdbProviderHelper.getProvider());
         Disposable disposable = AppHttpClient.getInstance().getAppService().checkGdbDatabaseUpdate(Command.TYPE_GDB_DATABASE, versionName)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
