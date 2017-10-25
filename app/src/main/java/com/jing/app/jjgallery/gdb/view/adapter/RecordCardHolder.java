@@ -24,8 +24,6 @@ import com.king.service.gdb.bean.Star;
 import java.util.ArrayList;
 import java.util.List;
 
-import static android.R.attr.id;
-
 /**
  * 描述: record的卡片布局
  * <p/>作者：景阳
@@ -113,6 +111,9 @@ public class RecordCardHolder {
                 starList.addAll(rRecord.getStarMixList());
             }
 
+            ivStar1.setImageResource(R.drawable.default_coach);
+            ivStar2.setImageResource(R.drawable.default_coach);
+            ivStar2.setVisibility(View.VISIBLE);
             ImageView[] views = new ImageView[]{ivStar1, ivStar2};
             int imageViewIndex = 0;
             for (Star star:starList) {

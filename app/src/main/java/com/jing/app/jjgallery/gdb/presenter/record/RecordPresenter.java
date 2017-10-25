@@ -84,8 +84,12 @@ public class RecordPresenter {
                     knownList.add(star3w);
                     star3w.setStar(stars.get(i));
                     star3w.setFlag(GDBProperites.STAR_3W_FLAG_TOP);
-                    star3w.setScore(Integer.parseInt(scores[i]));
-                    star3w.setScoreC(Integer.parseInt(scoresC[i]));
+                    if (scores != null && scores.length > i) {
+                        star3w.setScore((int) Double.parseDouble(scores[i]));
+                    }
+                    if (scoresC != null && scoresC.length > i) {
+                        star3w.setScoreC((int) Double.parseDouble(scoresC[i]));
+                    }
                 } catch (Exception e) {
                     continue;
                 }
@@ -108,8 +112,12 @@ public class RecordPresenter {
                     knownList.add(star3w);
                     star3w.setStar(stars.get(i));
                     star3w.setFlag(GDBProperites.STAR_3W_FLAG_BOTTOM);
-                    star3w.setScore(Integer.parseInt(scores[i]));
-                    star3w.setScoreC(Integer.parseInt(scoresC[i]));
+                    if (scores != null && scores.length > i) {
+                        star3w.setScore((int) Double.parseDouble(scores[i]));
+                    }
+                    if (scoresC != null && scoresC.length > i) {
+                        star3w.setScoreC((int) Double.parseDouble(scoresC[i]));
+                    }
                 } catch (Exception e) {
                     continue;
                 }
@@ -132,8 +140,12 @@ public class RecordPresenter {
                     knownList.add(star3w);
                     star3w.setStar(stars.get(i));
                     star3w.setFlag(GDBProperites.STAR_3W_FLAG_MIX);
-                    star3w.setScore(Integer.parseInt(scores[i]));
-                    star3w.setScoreC(Integer.parseInt(scoresC[i]));
+                    if (scores != null && scores.length > i) {
+                        star3w.setScore((int) Double.parseDouble(scores[i]));
+                    }
+                    if (scoresC != null && scoresC.length > i) {
+                        star3w.setScoreC((int) Double.parseDouble(scoresC[i]));
+                    }
                 } catch (Exception e) {
                     continue;
                 }
