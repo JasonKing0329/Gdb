@@ -33,6 +33,7 @@
     <dimen name="showimagedialog_icon_width">40dp</dimen>
     <dimen name="actionbar_title_max_width">160dp</dimen>
 
+    <dimen name="actionbar_floating_touch_distance">100dp</dimen>
     <!-- customdialog  -->
     <dimen name="custom_dialog_toolbar_icon">30dp</dimen>
     <dimen name="custom_dialog_icon_frame_width">0dp</dimen>

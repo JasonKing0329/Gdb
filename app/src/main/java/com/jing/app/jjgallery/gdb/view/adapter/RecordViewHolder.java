@@ -265,7 +265,7 @@ public class RecordViewHolder {
 
         RequestOptions recordOptions = GlideUtil.getRecordOptions();
         Glide.with(GdbApplication.getInstance())
-                .load(GdbImageProvider.getRecordRandomPath(path, null))
+                .load(path)
                 .apply(recordOptions)
                 .into(imageView);
     }

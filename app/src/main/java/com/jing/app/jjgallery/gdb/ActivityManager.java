@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.jing.app.jjgallery.gdb.view.settings.SettingsActivity;
+import com.jing.app.jjgallery.gdb.view.star.StarActivity;
 import com.jing.app.jjgallery.gdb.view.star.StarListActivity;
 import com.jing.app.jjgallery.gdb.view.star.StarSwipeActivity;
 import com.king.service.gdb.bean.Record;
@@ -95,12 +96,11 @@ public class ActivityManager {
     }
 
     public static void startStarActivity(Activity from, int starId) {
-//        Bundle bundle = new Bundle();
-//        bundle.putInt(StarActivity.KEY_STAR_ID, starId);
-//        Intent intent = new Intent().setClass(from, StarActivity.class);
-//        intent.putExtras(bundle);
-//        from.startActivity(intent);
-//        applyAnimation(from);
+        Bundle bundle = new Bundle();
+        bundle.putInt(StarActivity.KEY_STAR_ID, starId);
+        Intent intent = new Intent().setClass(from, StarActivity.class);
+        intent.putExtras(bundle);
+        from.startActivity(intent);
     }
 
     public static void startStarActivity(Activity from, Star star) {

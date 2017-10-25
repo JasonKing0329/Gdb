@@ -21,6 +21,7 @@
     <color name="actionbar_bk_orange">#ef9801</color>
     <color name="actionbar_bk_deepblue">#197ba9</color>
     <color name="actionbar_bk_purple">#a91980</color>
+    <color name="actionbar_bk_floating">#99ffffff</color>
     <color name="custom_dialog_icon_bk_frame">#ffffff</color>
     <color name="custom_dialog_icon_bk_normal">#00a5e4</color>
     <color name="custom_dialog_icon_bk_pressed">#cc6600</color>

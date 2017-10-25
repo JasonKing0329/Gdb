@@ -239,7 +239,7 @@ public class GDataProvider implements GDBProvider {
 
     @Override
     public boolean isStarFavor(int starId) {
-        return false;
+        return favorDao.isStarFavor(starId);
     }
 
     @Override

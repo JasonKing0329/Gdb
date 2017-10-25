@@ -3,6 +3,7 @@ package com.jing.app.jjgallery.gdb.model;
 import com.jing.app.jjgallery.gdb.model.conf.Configuration;
 
 import java.io.File;
+import java.io.FileFilter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -82,7 +83,10 @@ public class GdbImageProvider {
             File file = new File(parent + "/" + name);
             File[] files = file.listFiles();
             if (files.length == 0) {
-                path = parent + "/" + name + ".png";
+                path = parent + "/" + name;
+                if (!name.endsWith(".png")) {
+                    path = path.concat(".png");
+                }
             }
             else {
                 if (index == -1 || index >= files.length) {
@@ -98,7 +102,10 @@ public class GdbImageProvider {
             }
         }
         else {
-            path = parent + "/" + name + ".png";
+            path = parent + "/" + name;
+            if (!name.endsWith(".png")) {
+                path = path.concat(".png");
+            }
         }
         return path;
     }
@@ -106,7 +113,12 @@ public class GdbImageProvider {
     private static List<String> getImagePathList(String parent, String name) {
         List<String> list = new ArrayList<>();
         File file = new File(parent + "/" + name);
-        File[] files = file.listFiles();
+        File[] files = file.listFiles(new FileFilter() {
+            @Override
+            public boolean accept(File file) {
+                return !file.getName().endsWith(".nomedia");
+            }
+        });
         if (files != null) {
             for (File f:files) {
                 if (SettingProperties.isGdbNoImageMode()) {
