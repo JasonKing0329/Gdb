@@ -18,6 +18,7 @@ import com.jing.app.jjgallery.gdb.view.pub.ActionBarManager;
 import com.jing.app.jjgallery.gdb.view.pub.BannerAnimDialogFragment;
 import com.jing.app.jjgallery.gdb.view.pub.ProgressProvider;
 import com.jing.app.jjgallery.gdb.view.pub.PullZoomRecyclerView;
+import com.jing.app.jjgallery.gdb.view.record.SortDialogFragment;
 import com.king.service.gdb.bean.FavorBean;
 import com.king.service.gdb.bean.Record;
 import com.king.service.gdb.bean.Star;
@@ -131,32 +132,21 @@ public class StarFragment extends BaseFragmentV4 implements IStarView, StarRecor
 
     public void onIconClick(View view) {
         if (view.getId() == R.id.actionbar_sort) {
-//            new SortDialog(getActivity(), new CustomDialog.OnCustomDialogActionListener() {
-//                @Override
-//                public boolean onSave(Object object) {
-//                    Map<String, Object> map = (Map<String, Object>) object;
-//                    int sortMode = (int) map.get("sortMode");
-//                    boolean desc = (Boolean) map.get("desc");
-//                    if (currentSortMode != sortMode || currentSortDesc != desc) {
-//                        currentSortMode = sortMode;
-//                        currentSortDesc = desc;
-//                        SettingProperties.setGdbStarRecordOrderMode(getActivity(), currentSortMode);
-//                        refresh();
-//                    }
-//                    return false;
-//                }
-//
-//                @Override
-//                public boolean onCancel() {
-//                    return false;
-//                }
-//
-//                @Override
-//                public void onLoadData(HashMap<String, Object> data) {
-//                    data.put("sortMode", currentSortMode);
-//                    data.put("desc", currentSortDesc);
-//                }
-//            }).show();
+            SortDialogFragment dialog = new SortDialogFragment();
+            dialog.setDesc(currentSortDesc);
+            dialog.setSortMode(currentSortMode);
+            dialog.setOnSortListener(new SortDialogFragment.OnSortListener() {
+                @Override
+                public void onSort(boolean desc, int sortMode, boolean isIncludeDeprecated) {
+                    if (currentSortMode != sortMode || currentSortDesc != desc) {
+                        currentSortMode = sortMode;
+                        currentSortDesc = desc;
+                        SettingProperties.setGdbStarRecordOrderMode(getActivity(), currentSortMode);
+                        refresh();
+                    }
+                }
+            });
+            dialog.show(getFragmentManager(), "SortDialogFragment");
         }
     }
 

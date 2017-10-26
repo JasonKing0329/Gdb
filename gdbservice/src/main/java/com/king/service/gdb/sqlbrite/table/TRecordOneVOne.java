@@ -12,7 +12,7 @@ import io.reactivex.functions.Function;
  * <p/>作者：景阳
  * <p/>创建时间: 2017/8/29 16:38
  */
-public class TRecordOneVOne {
+public class TRecordOneVOne implements ISortRecord {
     // 表名
     public static final String TABLE_NAME = "record_1v1";
 

@@ -130,12 +130,11 @@ public interface GDBProvider {
      * name符合关键词nameLike，按sortColumn desc/asc 排序，从第from条记录开始取number条记录
      * @param sortColumn
      * @param desc
-     * @param from
-     * @param number
+     * @param cursor
      * @param nameLike
      * @return
      */
-    List<Record> getRecords(String sortColumn, boolean desc, boolean includeDeprecated, int from, int number, String nameLike, String scene);
+    List<Record> getRecords(String sortColumn, boolean desc, boolean includeDeprecated, RecordCursor cursor, String nameLike, String scene);
 
     /**
      * scene list

@@ -219,7 +219,7 @@
 							android:layout_width="@dimen/actionbar_icon_width"
 							android:layout_height="match_parent"
 							android:visibility="gone"
-							android:src="@color/actionbar_text_light"/>
+							android:src="@drawable/ic_color_lens_purple_200_36dp"/>
 					</LinearLayout>
 					<LinearLayout
 						android:id="@+id/actionbar_icons_selection"

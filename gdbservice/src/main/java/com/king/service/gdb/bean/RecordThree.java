@@ -10,11 +10,9 @@ public class RecordThree extends RecordSingleScene {
     private String scoreTop;
     private String scoreBottom;
     private String scoreMix;
-    private int scoreStar;
     private String scoreTopC;
     private String scoreBottomC;
     private String scoreMixC;
-    private int scoreStarC;
     private int scoreFkType1;
     private int scoreFkType2;
     private int scoreFkType3;
@@ -79,14 +77,6 @@ public class RecordThree extends RecordSingleScene {
         this.scoreMix = scoreMix;
     }
 
-    public int getScoreStar() {
-        return scoreStar;
-    }
-
-    public void setScoreStar(int scoreStar) {
-        this.scoreStar = scoreStar;
-    }
-
     public String getScoreTopC() {
         return scoreTopC;
     }
@@ -109,14 +99,6 @@ public class RecordThree extends RecordSingleScene {
 
     public void setScoreMixC(String scoreMixC) {
         this.scoreMixC = scoreMixC;
-    }
-
-    public int getScoreStarC() {
-        return scoreStarC;
-    }
-
-    public void setScoreStarC(int scoreStarC) {
-        this.scoreStarC = scoreStarC;
     }
 
     public int getScoreFkType1() {

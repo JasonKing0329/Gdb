@@ -8,10 +8,8 @@ public class RecordOneVOne extends RecordSingleScene {
 	private int star2Id;
 	private int scoreStar1;
 	private int scoreStar2;
-	private int scoreStar;
 	private int scoreStarC1;
 	private int scoreStarC2;
-	private int scoreStarC;
 	private int scoreFkType1;
 	private int scoreFkType2;
 	private int scoreFkType3;
@@ -106,18 +104,6 @@ public class RecordOneVOne extends RecordSingleScene {
 	}
 	public void setScoreFkType6(int scoreFkType6) {
 		this.scoreFkType6 = scoreFkType6;
-	}
-	public int getScoreStar() {
-		return scoreStar;
-	}
-	public void setScoreStar(int scoreStar) {
-		this.scoreStar = scoreStar;
-	}
-	public int getScoreStarC() {
-		return scoreStarC;
-	}
-	public void setScoreStarC(int scoreStarC) {
-		this.scoreStarC = scoreStarC;
 	}
 
 }

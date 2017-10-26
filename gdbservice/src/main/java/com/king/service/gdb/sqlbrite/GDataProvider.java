@@ -265,13 +265,18 @@ public class GDataProvider implements GDBProvider {
     }
 
     @Override
-    public List<Record> getRecords(String sortColumn, boolean desc, boolean includeDeprecated, int from, int number, String nameLike, String scene) {
-        return null;
+    public List<Record> getRecords(String sortColumn, boolean desc, boolean includeDeprecated, RecordCursor cursor, String nameLike, String scene) {
+        List<Record> list = recordDao.getRecords(sortColumn, desc, includeDeprecated, cursor, nameLike, scene);
+        // load stars
+        for (Record mRecord:list){
+            loadStarForReocrd(mRecord);
+        }
+        return list;
     }
 
     @Override
     public List<SceneBean> getSceneList() {
-        return null;
+        return recordDao.getSceneList();
     }
 
     @Override

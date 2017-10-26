@@ -113,7 +113,7 @@ public class GHomeHeader extends RecyclerView.ViewHolder {
     public void onViewClicked(View view) {
             switch (view.getId()) {
                 case R.id.group_recommend:
-                    ActivityManager.startGDBRecordListActivity((Activity) view.getContext(), null);
+                    ActivityManager.startRecordListActivity((Activity) view.getContext());
                     break;
                 case R.id.group_starlist:
                     onStarListener.onStarGroupClicked();

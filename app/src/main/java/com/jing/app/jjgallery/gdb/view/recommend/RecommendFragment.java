@@ -211,7 +211,7 @@ public class RecommendFragment extends BaseFragmentV4 implements IRecommend, Vie
                 @Override
                 public void onClick(View v) {
                     // start record list
-                    ActivityManager.startGDBRecordListActivity(getActivity(), null);
+                    ActivityManager.startRecordListActivity(getActivity());
                 }
             });
 

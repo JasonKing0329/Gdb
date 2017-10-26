@@ -14,6 +14,8 @@ public abstract class RecordSingleScene extends Record {
 	private String specialDesc;
 	private int scoreFk;
 	private int scoreNoCond;
+	private int scoreStar;
+	private int scoreStarC;
 	public String getSceneName() {
 		return sceneName;
 	}
@@ -85,6 +87,18 @@ public abstract class RecordSingleScene extends Record {
 	}
 	public void setSpecialDesc(String specialDesc) {
 		this.specialDesc = specialDesc;
+	}
+	public int getScoreStar() {
+		return scoreStar;
+	}
+	public void setScoreStar(int scoreStar) {
+		this.scoreStar = scoreStar;
+	}
+	public int getScoreStarC() {
+		return scoreStarC;
+	}
+	public void setScoreStarC(int scoreStarC) {
+		this.scoreStarC = scoreStarC;
 	}
 	
 }

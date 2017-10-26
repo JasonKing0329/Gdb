@@ -18,6 +18,7 @@ import java.util.List;
 /**
  * Created by Administrator on 2016/7/30 0030.
  */
+@Deprecated
 public class SqldroidProvider implements GDBProvider {
 
     private String databasePath;
@@ -401,15 +402,14 @@ public class SqldroidProvider implements GDBProvider {
      * name符合关键词nameLike，按sortColumn desc/asc 排序，从第from条记录开始取number条记录
      * @param sortColumn
      * @param desc
-     * @param from
-     * @param number
+     * @param cursor
      * @param nameLike
      * @return
      */
-    public List<Record> getRecords(String sortColumn, boolean desc, boolean includeDeprecated, int from, int number, String nameLike, String scene) {
+    public List<Record> getRecords(String sortColumn, boolean desc, boolean includeDeprecated, RecordCursor cursor, String nameLike, String scene) {
         try {
             SqlConnection.getInstance().connect(databasePath);
-            return sqliteDao.getRecords(sortColumn, desc, includeDeprecated, from, number, nameLike, scene, SqlConnection.getInstance().getConnection());
+            return sqliteDao.getRecords(sortColumn, desc, includeDeprecated, cursor.from1v1, cursor.number, nameLike, scene, SqlConnection.getInstance().getConnection());
         } catch (Exception e) {
             e.printStackTrace();
         } finally {

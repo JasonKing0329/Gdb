@@ -12,6 +12,7 @@ import com.jing.app.jjgallery.gdb.model.conf.ConfManager;
 import com.jing.app.jjgallery.gdb.view.home.GHomeActivity;
 import com.jing.app.jjgallery.gdb.view.pub.ProgressProvider;
 import com.jing.app.jjgallery.gdb.view.record.RecordActivity;
+import com.jing.app.jjgallery.gdb.view.record.RecordListActivity;
 import com.jing.app.jjgallery.gdb.view.settings.SettingsActivity;
 import com.jing.app.jjgallery.gdb.view.star.StarActivity;
 import com.jing.app.jjgallery.gdb.view.star.StarListActivity;
@@ -49,19 +50,9 @@ public class ActivityManager {
         return true;
     }
 
-    public static boolean startGDBRecordListActivity(Activity from, Bundle bundle) {
-//        if (!new File(ConfManager.GDB_DB_PATH).exists()) {
-//            ((ProgressProvider) from).showToastLong(from.getString(R.string.gdb_no_conf), ProgressProvider.TOAST_WARNING);
-//            return false;
-//        }
-//        Intent intent = new Intent().setClass(from, RecordListActivity.class);
-//        if (bundle == null) {
-//            from.startActivity(intent);
-//            applyAnimation(from);
-//        }
-//        else {
-//            ActivityCompat.startActivity(from, intent, bundle);
-//        }
+    public static boolean startRecordListActivity(Activity from) {
+        Intent intent = new Intent().setClass(from, RecordListActivity.class);
+        from.startActivity(intent);
         return true;
     }
 

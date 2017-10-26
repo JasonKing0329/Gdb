@@ -19,6 +19,7 @@ import com.jing.app.jjgallery.gdb.view.adapter.RecordsListAdapter;
 import com.jing.app.jjgallery.gdb.view.adapter.SwipeAdapter;
 import com.jing.app.jjgallery.gdb.view.pub.dialog.DefaultDialogManager;
 import com.jing.app.jjgallery.gdb.view.pub.swipeview.SwipeFlingAdapterView;
+import com.jing.app.jjgallery.gdb.view.record.SortDialogFragment;
 import com.king.service.gdb.bean.FavorBean;
 import com.king.service.gdb.bean.Record;
 import com.king.service.gdb.bean.RecordOneVOne;
@@ -327,31 +328,20 @@ public class StarSwipeActivity extends GBaseActivity implements IStarSwipeView {
                 updateRecords();
                 break;
             case R.id.iv_sort:
-//                new SortDialog(this, new CustomDialog.OnCustomDialogActionListener() {
-//                    @Override
-//                    public boolean onSave(Object object) {
-//                        Map<String, Object> map = (Map<String, Object>) object;
-//                        int sortMode = (int) map.get("sortMode");
-//                        boolean desc = (Boolean) map.get("desc");
-//                        if (currentSortMode != sortMode || currentSortDesc != desc) {
-//                            currentSortMode = sortMode;
-//                            currentSortDesc = desc;
-//                            refreshRecordList();
-//                        }
-//                        return false;
-//                    }
-//
-//                    @Override
-//                    public boolean onCancel() {
-//                        return false;
-//                    }
-//
-//                    @Override
-//                    public void onLoadData(HashMap<String, Object> data) {
-//                        data.put("sortMode", currentSortMode);
-//                        data.put("desc", currentSortDesc);
-//                    }
-//                }).show();
+                SortDialogFragment dialog = new SortDialogFragment();
+                dialog.setDesc(currentSortDesc);
+                dialog.setSortMode(currentSortMode);
+                dialog.setOnSortListener(new SortDialogFragment.OnSortListener() {
+                    @Override
+                    public void onSort(boolean desc, int sortMode, boolean isIncludeDeprecated) {
+                        if (currentSortMode != sortMode || currentSortDesc != desc) {
+                            currentSortMode = sortMode;
+                            currentSortDesc = desc;
+                            refreshRecordList();
+                        }
+                    }
+                });
+                dialog.show(getSupportFragmentManager(), "SortDialogFragment");
                 break;
         }
     }
