@@ -8,6 +8,15 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
     <!--透明Dialog-->
     <style name="BaseDialogFragment" parent="@android:style/Theme.Dialog">
         <item name="android:windowFrame">@null</item>
@@ -96,6 +105,56 @@
         <item name="android:layout_height">@dimen/actionbar_icon_width</item>
         <item name="android:padding">@dimen/actionbar_padding</item>
         <item name="android:background">@drawable/ripple_fullscreen_bk</item>
+    </style>
+
+    <style name="GdbRecommendDialog" parent="@android:style/Theme.DeviceDefault.Light.Dialog">
+        <item name="android:windowFrame">@null</item><!--边框-->
+        <item name="android:windowIsFloating">true</item><!--是否浮现在activity之上-->
+        <item name="android:windowIsTranslucent">false</item><!--半透明-->
+        <item name="android:windowNoTitle">true</item><!--无标题-->
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:backgroundDimEnabled">false</item><!--模糊-->
+    </style>
+
+    <style name="GdbRecommendFilterCheck">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:minWidth">100dp</item>
+    </style>
+
+    <style name="GdbRecommendFilterEdit">
+        <item name="android:layout_width">50dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:inputType">number</item>
+    </style>
+
+    <style name="GdbHomeStarGroup">
+        <item name="android:layout_width">@dimen/gdb_home_star_size</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="GdbHomeStarImage">
+        <item name="android:layout_width">@dimen/gdb_home_star_size</item>
+        <item name="android:layout_height">@dimen/gdb_home_star_size</item>
+        <item name="android:scaleType">centerCrop</item>
+    </style>
+
+    <style name="GdbHomeStarText">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:textSize">12dp</item>
+    </style>
+
+    <style name="GdbRecommendActionIcon">
+        <item name="android:layout_width">@dimen/gdb_recommend_action_size</item>
+        <item name="android:layout_height">@dimen/gdb_recommend_action_size</item>
+        <item name="android:padding">@dimen/gdb_recommend_action_padding</item>
+        <item name="android:background">?android:attr/selectableItemBackgroundBorderless</item>
     </style>
 
 </resources>

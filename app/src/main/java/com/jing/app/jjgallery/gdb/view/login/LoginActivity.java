@@ -327,7 +327,7 @@ public class LoginActivity extends GBaseActivity implements ILoginView {
 
     public void onServiceDone() {
 //        new HomeSelecter(this).startDefaultHome(this, null);
-        ActivityManager.startStarSwipeActivity(this);
+        ActivityManager.startHomeActivity(this);
         finish();
     }
 

@@ -24,6 +24,7 @@
     <color name="actionbar_bk_deepblue">#197ba9</color>
     <color name="actionbar_bk_purple">#a91980</color>
     <color name="actionbar_bk_floating">#99ffffff</color>
+    <color name="actionbar_bk_dark">#25242c</color>
     <color name="custom_dialog_icon_bk_frame">#ffffff</color>
     <color name="custom_dialog_icon_bk_normal">#00a5e4</color>
     <color name="custom_dialog_icon_bk_pressed">#cc6600</color>
@@ -31,5 +32,7 @@
     <color name="gdb_record_text_normal_light_dim">#909090</color>
     <color name="record_deprecated_bg">#c3c3c3</color>
     <color name="gdb_record_text_bareback_light">#00a5c4</color>
+
+    <color name="gdb_float_infor_bg">#99000000</color>
 
 </resources>

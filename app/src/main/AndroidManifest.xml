@@ -32,7 +32,8 @@
             android:name="com.sec.android.support.multiwindow"
             android:value="true" />
 
-        <activity android:name=".view.login.LoginActivity">
+        <activity android:name=".view.login.LoginActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -41,11 +42,19 @@
                 <category android:name="android.intent.category.MULTIWINDOW_LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".view.settings.SettingsActivity"/>
-        <activity android:name=".view.star.StarSwipeActivity"/>
-        <activity android:name=".view.star.StarListActivity"/>
-        <activity android:name=".view.star.StarActivity"/>
-        <activity android:name=".view.record.RecordActivity"/>
+        <activity android:name=".view.home.GHomeActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name=".view.settings.SettingsActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".view.star.StarSwipeActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".view.star.StarListActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".view.star.StarActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".view.record.RecordActivity"
+            android:screenOrientation="portrait"/>
 
         <provider
             android:name="android.support.v4.content.FileProvider"

@@ -137,7 +137,11 @@ public class GDataProvider implements GDBProvider {
 
     @Override
     public List<Record> getAllRecords() {
-        return null;
+        List<Record> list = recordDao.getAllRecords();
+        for (Record mRecord:list){
+            loadStarForReocrd(mRecord);
+        }
+        return list;
     }
 
     @Override
@@ -147,7 +151,12 @@ public class GDataProvider implements GDBProvider {
 
     @Override
     public List<Record> getLatestRecords(RecordCursor cursor) {
-        return null;
+
+        List<Record> list = recordDao.getLatestRecords(cursor);
+        for (Record mRecord:list){
+            loadStarForReocrd(mRecord);
+        }
+        return list;
     }
 
     @Override
@@ -159,52 +168,55 @@ public class GDataProvider implements GDBProvider {
 
         // load stars
         for (Record mRecord:list){
-            if (mRecord instanceof RecordOneVOne) {
-                RecordOneVOne record = (RecordOneVOne) mRecord;
-                record.setStar1(queryStarById(record.getStar1Id()));
-                record.setStar2(queryStarById(record.getStar2Id()));
-            }
-            else if (mRecord instanceof RecordThree) {
-                RecordThree record = (RecordThree) mRecord;
-                String ids = record.getStarTopId();
-                if (!TextUtils.isEmpty(ids)) {
-                    String[] starIds = ids.split(",");
-                    for (String startId:starIds) {
-                        Star star = queryStarById(Integer.parseInt(startId));
-                        if (record.getStarTopList() == null) {
-                            record.setStarTopList(new ArrayList<Star>());
-                        }
-                        record.getStarTopList().add(star);
-                    }
-                }
-                ids = record.getStarBottomId();
-                if (!TextUtils.isEmpty(ids)) {
-                    String[] starIds = ids.split(",");
-                    for (String startId:starIds) {
-                        Star star = queryStarById(Integer.parseInt(startId));
-                        if (record.getStarBottomList() == null) {
-                            record.setStarBottomList(new ArrayList<Star>());
-                        }
-                        record.getStarBottomList().add(star);
-                    }
-                }
-                ids = record.getStarMixId();
-                if (!TextUtils.isEmpty(ids)) {
-                    String[] starIds = ids.split(",");
-                    for (String startId:starIds) {
-                        Star star = queryStarById(Integer.parseInt(startId));
-                        if (record.getStarMixList() == null) {
-                            record.setStarMixList(new ArrayList<Star>());
-                        }
-                        record.getStarMixList().add(star);
-                    }
-                }
-
-            }
+            loadStarForReocrd(mRecord);
         }
 
         mStar.setRecordList(list);
         mStar.setRecordNumber(list.size());
+    }
+
+    private void loadStarForReocrd(Record mRecord) {
+        if (mRecord instanceof RecordOneVOne) {
+            RecordOneVOne record = (RecordOneVOne) mRecord;
+            record.setStar1(queryStarById(record.getStar1Id()));
+            record.setStar2(queryStarById(record.getStar2Id()));
+        }
+        else if (mRecord instanceof RecordThree) {
+            RecordThree record = (RecordThree) mRecord;
+            String ids = record.getStarTopId();
+            if (!TextUtils.isEmpty(ids)) {
+                String[] starIds = ids.split(",");
+                for (String startId:starIds) {
+                    Star star = queryStarById(Integer.parseInt(startId));
+                    if (record.getStarTopList() == null) {
+                        record.setStarTopList(new ArrayList<Star>());
+                    }
+                    record.getStarTopList().add(star);
+                }
+            }
+            ids = record.getStarBottomId();
+            if (!TextUtils.isEmpty(ids)) {
+                String[] starIds = ids.split(",");
+                for (String startId:starIds) {
+                    Star star = queryStarById(Integer.parseInt(startId));
+                    if (record.getStarBottomList() == null) {
+                        record.setStarBottomList(new ArrayList<Star>());
+                    }
+                    record.getStarBottomList().add(star);
+                }
+            }
+            ids = record.getStarMixId();
+            if (!TextUtils.isEmpty(ids)) {
+                String[] starIds = ids.split(",");
+                for (String startId:starIds) {
+                    Star star = queryStarById(Integer.parseInt(startId));
+                    if (record.getStarMixList() == null) {
+                        record.setStarMixList(new ArrayList<Star>());
+                    }
+                    record.getStarMixList().add(star);
+                }
+            }
+        }
     }
 
     @Override
