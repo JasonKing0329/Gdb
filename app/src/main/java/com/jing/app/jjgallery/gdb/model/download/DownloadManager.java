@@ -7,6 +7,7 @@ import com.jing.app.jjgallery.gdb.http.Command;
 import com.jing.app.jjgallery.gdb.http.DownloadClient;
 import com.jing.app.jjgallery.gdb.http.bean.data.DownloadItem;
 import com.jing.app.jjgallery.gdb.http.progress.ProgressListener;
+import com.jing.app.jjgallery.gdb.model.conf.Configuration;
 import com.jing.app.jjgallery.gdb.util.DebugLog;
 import com.jing.app.jjgallery.gdb.util.FileUtil;
 
@@ -239,38 +240,33 @@ public class DownloadManager {
         return file;
     }
 
+    /**
+     * star 和 record均以key创建文件目录
+     * @param item
+     * @return
+     */
     private File getStarRecordFile(DownloadItem item) {
         File file;
         String key = item.getKey();
+        // 位于服务端star/record的一级目录
         if (key == null) {
             key = item.getName().substring(0, item.getName().lastIndexOf("."));
         }
         String parent = savePath + "/" + key;
-        String out = savePath + "/" + key + ".png";
+        String out = savePath + "/" + item.getName();
         File outFile = new File(out);
         File dir = new File(parent);
-        // key不为null（服务端文件存在于二级目录），本地必须存在相应key目录下
-        if (item.getKey() != null) {
-            file = saveInFolder(item, dir, outFile);
-        }
-        else {
-            // key为null（服务端文件存在于一级目录），out file与parent都不存在，直接存在根目录中
-            if (!outFile.exists() && !dir.exists()) {
-                file = new File(savePath + "/" + item.getName());
-            }
-            else {
-                file = saveInFolder(item, dir, outFile);
-            }
-        }
+        file = saveInFolder(item, dir, outFile);
+
+        // create .nomedia
+        Configuration.createNoMedia(dir);
         return file;
     }
 
     private File saveInFolder(DownloadItem item, File parent, File outFile) {
         File file;
         // 创建文件夹
-        if (!parent.exists()) {
-            parent.mkdir();
-        }
+        parent.mkdirs();
 
         // 移动out file
         if (outFile.exists()) {

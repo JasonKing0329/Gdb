@@ -116,16 +116,23 @@ public class Configuration {
 		}
 	}
 
-	private static void createNoMedia() {
+	/**
+	 * 遍历程序所有目录，创建.nomedia文件
+	 */
+	public static void createNoMedia() {
 		File file = new File(APP_ROOT);
-		accessFile(file);
+		createNoMedia(file);
 	}
 
-	private static void accessFile(File file) {
+	/**
+	 * 遍历file下所有目录，创建.nomedia文件
+	 * @param file
+	 */
+	public static void createNoMedia(File file) {
 		File[] files = file.listFiles();
 		for (File f:files) {
 			if (f.isDirectory()) {
-				accessFile(f);
+				createNoMedia(f);
 			}
 		}
 		File nomediaFile = new File(file.getPath() + "/.nomedia");
