@@ -74,6 +74,7 @@ public class StarListPresenter extends ManageListPresenter {
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
+                        throwable.printStackTrace();
                         view.onRequestFail();
                     }
                 });
@@ -140,7 +141,7 @@ public class StarListPresenter extends ManageListPresenter {
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-
+                        throwable.printStackTrace();
                     }
                 });
     }
@@ -225,6 +226,7 @@ public class StarListPresenter extends ManageListPresenter {
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
+                        throwable.printStackTrace();
                         starListView.onLoadStarError(throwable.getMessage());
                     }
                 });
@@ -251,7 +253,7 @@ public class StarListPresenter extends ManageListPresenter {
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-
+                        throwable.printStackTrace();
                     }
                 });
     }

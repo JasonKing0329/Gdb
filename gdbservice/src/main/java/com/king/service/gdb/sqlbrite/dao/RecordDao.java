@@ -335,6 +335,66 @@ public class RecordDao {
         return list;
     }
 
+    public Record getRecordByName(String name) {
+        Record record = getOneVOneRecordByName(name);
+        if (record == null) {
+            record = get3WRecordByName(name);
+        }
+        return record;
+    }
+
+    public Record getOneVOneRecordByName(String name) {
+        Record record = null;
+        // name里带单引号在sqlite中要作为特殊符号转化
+        if (name.contains("'")) {
+            name = name.replace("'", "''");
+        }
+        List<Record> list = new ArrayList<>();
+        // 由于parseRecords里是从1开始的，因此用_fake占0位
+        String sql = "SELECT '1' AS _fake, * FROM " + TRecordOneVOne.TABLE_NAME + " WHERE name=?";
+        String[] args = new String[]{name};
+        Cursor cursor = null;
+        try {
+            cursor = gDataDb.query(sql, args);
+            while (cursor.moveToNext()) {
+                record = TRecordOneVOne.parseRecords(cursor);
+                list.add(record);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+        return record;
+    }
+
+    public Record get3WRecordByName(String name) {
+        Record record = null;
+        // name里带单引号在sqlite中要作为特殊符号转化
+        if (name.contains("'")) {
+            name = name.replace("'", "''");
+        }
+        // 由于parseRecords里是从1开始的，因此用_fake占0位
+        String sql = "SELECT '1' AS _fake, * FROM " + TRecord3W.TABLE_NAME + " WHERE name=?";
+        String[] args = new String[]{name};
+        Cursor cursor = null;
+        try {
+            cursor = gDataDb.query(sql, args);
+            if (cursor.moveToNext()) {
+                record = TRecord3W.parse3WRecords(cursor);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+        return record;
+    }
+
     public List<SceneBean> getSceneList() {
         List<SceneBean> list = new ArrayList<>();
         String sql = "SELECT scene, COUNT(scene) AS count, AVG(score) AS average, MAX(score) AS max FROM " + VScene.TABLE_NAME + " GROUP BY scene ORDER BY scene";

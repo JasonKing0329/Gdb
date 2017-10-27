@@ -119,10 +119,10 @@ public class GHomeHeader extends RecyclerView.ViewHolder {
                     onStarListener.onStarGroupClicked();
                     break;
                 case R.id.group_game:
-                    ActivityManager.startGDBGameActivity((Activity) view.getContext(), null);
+                    ActivityManager.startGameActivity((Activity) view.getContext());
                     break;
                 case R.id.group_surf:
-                    ActivityManager.startGdbSurfActivity((Activity) view.getContext(), null);
+                    ActivityManager.startSurfActivity((Activity) view.getContext());
                     break;
             }
     }

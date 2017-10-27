@@ -17,6 +17,7 @@ import com.jing.app.jjgallery.gdb.view.settings.SettingsActivity;
 import com.jing.app.jjgallery.gdb.view.star.StarActivity;
 import com.jing.app.jjgallery.gdb.view.star.StarListActivity;
 import com.jing.app.jjgallery.gdb.view.star.StarSwipeActivity;
+import com.jing.app.jjgallery.gdb.view.surf.SurfActivity;
 import com.king.service.gdb.bean.Record;
 import com.king.service.gdb.bean.Star;
 
@@ -58,10 +59,6 @@ public class ActivityManager {
 
     public static void startSettingActivity(Activity from) {
         from.startActivity(new Intent().setClass(from, SettingsActivity.class));
-    }
-
-    public static void startSettingActivity(Activity from, int requestCode) {
-        from.startActivityForResult(new Intent().setClass(from, SettingsActivity.class), requestCode);
     }
 
     public static void reload(Activity from) {
@@ -110,31 +107,19 @@ public class ActivityManager {
         }
     }
 
-    public static boolean startGDBGameActivity(Activity from, Bundle bundle) {
+    public static boolean startGameActivity(Activity from) {
 //        if (!new File(ConfManager.GDB_GAME_DB_PATH).exists()) {
 //            ((ProgressProvider) from).showToastLong(from.getString(R.string.gdb_no_conf), ProgressProvider.TOAST_WARNING);
 //            return false;
 //        }
 //        Intent intent = new Intent().setClass(from, SeasonActivity.class);
-//        if (bundle == null) {
-//            from.startActivity(intent);
-//            applyAnimation(from);
-//        }
-//        else {
-//            ActivityCompat.startActivity(from, intent, bundle);
-//        }
+//        from.startActivity(intent);
         return true;
     }
 
-    public static void startGdbSurfActivity(Activity from, Bundle bundle) {
-//        Intent intent = new Intent().setClass(from, com.jing.app.jjgallery.gdb.view.surf.SurfActivity.class);
-//        if (bundle == null) {
-//            from.startActivity(intent);
-//            applyAnimation(from);
-//        }
-//        else {
-//            ActivityCompat.startActivity(from, intent, bundle);
-//        }
+    public static void startSurfActivity(Activity from) {
+        Intent intent = new Intent().setClass(from, SurfActivity.class);
+        from.startActivity(intent);
     }
 
     public static void startGdbGameGroupActivity(Activity from, int seasonId) {

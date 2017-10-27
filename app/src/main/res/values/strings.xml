@@ -86,6 +86,8 @@
     <string name="menu_by_name">Order by name</string>
     <string name="menu_by_date">Order by date</string>
     <string name="menu_by_none">No order</string>
+    <string name="menu_gdb_surf_relate" translatable="false">Relate</string>
+    <string name="menu_gdb_surf_refresh">Refresh</string>
     <string name="guide_timeline">Time Line</string>
     <string name="sliding_right_waterfall" translatable="false">Waterfall</string>
 

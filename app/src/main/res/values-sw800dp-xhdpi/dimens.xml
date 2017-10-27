@@ -144,4 +144,7 @@
     <dimen name="gdb_record_card_bottom_margin_hor">18dp</dimen>
     <dimen name="gdb_record_card_bottom_gap">2dp</dimen>
     <dimen name="gdb_record_card_bottom_image_size">140dp</dimen>
+
+    <dimen name="path_indicator_height">48dp</dimen>
+    <dimen name="path_indicator_text_size">10dp</dimen>
 </resources>

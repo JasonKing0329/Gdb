@@ -61,7 +61,7 @@ public class RecordPresenter {
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-
+                        throwable.printStackTrace();
                     }
                 });
     }

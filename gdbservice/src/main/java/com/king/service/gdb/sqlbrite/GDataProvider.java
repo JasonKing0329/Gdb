@@ -286,7 +286,10 @@ public class GDataProvider implements GDBProvider {
 
     @Override
     public Record getRecordByName(String name) {
-        return null;
+        Record record = recordDao.getRecordByName(name);
+        // load star
+        loadStarForReocrd(record);
+        return record;
     }
 
     @Override

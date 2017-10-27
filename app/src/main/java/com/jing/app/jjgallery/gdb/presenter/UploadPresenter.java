@@ -72,6 +72,7 @@ public class UploadPresenter {
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
+                        throwable.printStackTrace();
                         DebugLog.e("upload" + throwable.getMessage());
                         uploadView.onUploadFail();
                     }

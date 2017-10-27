@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <com.king.lib.jindicator.IndicatorView
+            android:id="@+id/indicator"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/path_indicator_height"
+            android:background="@color/white_bg"
+            app:indicatorColor="@color/colorPrimary"
+            app:indicatorColorPressed="@color/colorAccent"
+            app:indicatorHeight="@dimen/path_indicator_height"
+            app:textSize="14dp"/>
+        <RelativeLayout
+            android:id="@+id/group_ft_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    </LinearLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_top"
+        android:layout_width="@dimen/gdb_home_icon_size"
+        android:layout_height="@dimen/gdb_home_icon_size"
+        android:src="@drawable/ic_arrow_upward_white_36dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:tint="@color/white"
+        android:backgroundTint="@color/colorPrimary"
+        app:rippleColor="@color/actionbar_bk_blue"
+        app:borderWidth="0dp"
+        app:useCompatPadding="true"/>
+
+</RelativeLayout>

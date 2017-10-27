@@ -173,7 +173,7 @@ public class LoginActivity extends GBaseActivity implements ILoginView {
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-
+                        throwable.printStackTrace();
                     }
                 });
     }
@@ -198,7 +198,7 @@ public class LoginActivity extends GBaseActivity implements ILoginView {
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-
+                        throwable.printStackTrace();
                     }
                 });
     }

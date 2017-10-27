@@ -1,1 +1,1 @@
-include ':app', ':gdbservice', ':libresmanager', ':shapimageview'
+include ':app', ':gdbservice', ':libresmanager', ':shapimageview', ':jindicator'

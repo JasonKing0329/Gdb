@@ -87,6 +87,7 @@ public class RecordListPresenter extends ManageListPresenter {
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
+                        throwable.printStackTrace();
                         view.onRequestFail();
                     }
                 });
@@ -274,7 +275,7 @@ public class RecordListPresenter extends ManageListPresenter {
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-
+                        throwable.printStackTrace();
                     }
                 });
     }

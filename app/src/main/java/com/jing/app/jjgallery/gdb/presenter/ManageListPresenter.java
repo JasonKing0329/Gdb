@@ -45,6 +45,7 @@ public class ManageListPresenter {
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
+                        throwable.printStackTrace();
                         view.onServerUnavailable();
                     }
                 });
@@ -95,6 +96,7 @@ public class ManageListPresenter {
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
+                        throwable.printStackTrace();
                         if (type.equals(Command.TYPE_RECORD)) {
                             view.onMoveImagesFail();
                         } else if (type.equals(Command.TYPE_STAR)) {

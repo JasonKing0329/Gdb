@@ -1,7 +1,7 @@
 apply plugin: 'com.android.application'
 
-ext.appVersionName = "1.9"
-ext.appVersionCode = 13
+ext.appVersionName = "2.0"
+ext.appVersionCode = 14
 ext.appReleaseDir = "E:/temp/release/gdb"
 
 android {
@@ -119,8 +119,8 @@ dependencies {
     compile 'com.facebook.rebound:rebound:0.3.8'
     // apply in viewsystem/main/gdb/StarListAdapter
     compile 'cc.solart:turbo-recyclerview-helper:1.0.3-beta'
-
     compile project(':gdbservice')
     compile project(':libresmanager')
     compile project(':shapimageview')
+    compile project(':jindicator')
 }

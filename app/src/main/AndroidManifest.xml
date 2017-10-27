@@ -59,6 +59,8 @@
             android:screenOrientation="portrait"/>
         <activity android:name=".view.record.RecordSceneActivity"
             android:screenOrientation="portrait"/>
+        <activity android:name=".view.surf.SurfActivity"
+            android:screenOrientation="portrait"/>
 
         <provider
             android:name="android.support.v4.content.FileProvider"
