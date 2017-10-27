@@ -2,6 +2,7 @@ package com.jing.app.jjgallery.gdb.view.login;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -28,10 +29,15 @@ import com.jing.app.jjgallery.gdb.view.settings.SettingsActivity;
 import com.jing.app.jjgallery.gdb.view.update.UpdateListener;
 import com.jing.app.jjgallery.gdb.view.update.UpdateManager;
 
+import java.io.File;
+import java.io.FileFilter;
+import java.io.IOException;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
+import id.zelory.compressor.Compressor;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
@@ -39,6 +45,8 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
+
+import static com.jing.app.jjgallery.gdb.model.conf.Configuration.APP_DIR_IMG;
 
 public class LoginActivity extends GBaseActivity implements ILoginView {
 
@@ -313,6 +321,7 @@ public class LoginActivity extends GBaseActivity implements ILoginView {
 //                                isServiceBound = bindService(new Intent().setClass(LoginActivity.this, FileDBService.class)
 //                                        , connection, BIND_AUTO_CREATE);
 //                            }
+                            onServiceDone();
                         }
                         else if (which == DialogInterface.BUTTON_NEGATIVE) {
 
@@ -326,6 +335,54 @@ public class LoginActivity extends GBaseActivity implements ILoginView {
     }
 
     public void onServiceDone() {
+//        showProgress("loading");
+//        Observable.create(new ObservableOnSubscribe<Object>() {
+//            @Override
+//            public void subscribe(@NonNull ObservableEmitter<Object> e) throws Exception {
+//                File file = new File(Configuration.APP_DIR_IMG + "/ggg");
+//                File files[] = file.listFiles(new FileFilter() {
+//                    @Override
+//                    public boolean accept(File pathname) {
+//                        return !pathname.getName().endsWith(".nomedia");
+//                    }
+//                });
+//                File tempFolder = new File(Configuration.APP_DIR_IMG + "ggg1");
+//                if (!tempFolder.exists()) {
+//                    tempFolder.mkdir();
+//                }
+//                for (File f:files) {
+//                    try {
+//                        File target = new Compressor(GdbApplication.getInstance())
+//                                .setMaxWidth(1080)
+//                                .setMaxHeight(607)
+//                                .setQuality(75)
+//                                .setCompressFormat(Bitmap.CompressFormat.WEBP)
+//                                .setDestinationDirectoryPath(tempFolder.getPath())
+//                                .compressToFile(f);
+//
+//                        f.delete();
+//                        target.renameTo(f);
+//                    } catch (IOException e1) {
+//                        e1.printStackTrace();
+//                    }
+//                }
+//                tempFolder.delete();
+//                e.onNext(null);
+//            }
+//        }).observeOn(AndroidSchedulers.mainThread())
+//                .subscribeOn(Schedulers.io())
+//                .subscribe(new Consumer<Object>() {
+//                    @Override
+//                    public void accept(Object o) throws Exception {
+//                        dismissProgress();
+//                    }
+//                }, new Consumer<Throwable>() {
+//                    @Override
+//                    public void accept(Throwable throwable) throws Exception {
+//                        dismissProgress();
+//                        throwable.printStackTrace();
+//                    }
+//                });
 //        new HomeSelecter(this).startDefaultHome(this, null);
         ActivityManager.startHomeActivity(this);
         finish();
