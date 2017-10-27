@@ -21,6 +21,7 @@ import com.jing.app.jjgallery.gdb.model.conf.ConfManager;
 import com.jing.app.jjgallery.gdb.model.conf.Configuration;
 import com.jing.app.jjgallery.gdb.model.login.LoginParams;
 import com.jing.app.jjgallery.gdb.presenter.LoginPresenter;
+import com.jing.app.jjgallery.gdb.util.DebugLog;
 import com.jing.app.jjgallery.gdb.util.PermissionUtil;
 import com.jing.app.jjgallery.gdb.view.pub.ProgressButton;
 import com.jing.app.jjgallery.gdb.view.pub.ProgressProvider;
@@ -45,8 +46,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
-
-import static com.jing.app.jjgallery.gdb.model.conf.Configuration.APP_DIR_IMG;
 
 public class LoginActivity extends GBaseActivity implements ILoginView {
 
@@ -335,57 +334,77 @@ public class LoginActivity extends GBaseActivity implements ILoginView {
     }
 
     public void onServiceDone() {
-//        showProgress("loading");
-//        Observable.create(new ObservableOnSubscribe<Object>() {
-//            @Override
-//            public void subscribe(@NonNull ObservableEmitter<Object> e) throws Exception {
-//                File file = new File(Configuration.APP_DIR_IMG + "/ggg");
-//                File files[] = file.listFiles(new FileFilter() {
-//                    @Override
-//                    public boolean accept(File pathname) {
-//                        return !pathname.getName().endsWith(".nomedia");
-//                    }
-//                });
-//                File tempFolder = new File(Configuration.APP_DIR_IMG + "ggg1");
-//                if (!tempFolder.exists()) {
-//                    tempFolder.mkdir();
-//                }
-//                for (File f:files) {
-//                    try {
-//                        File target = new Compressor(GdbApplication.getInstance())
-//                                .setMaxWidth(1080)
-//                                .setMaxHeight(607)
-//                                .setQuality(75)
-//                                .setCompressFormat(Bitmap.CompressFormat.WEBP)
-//                                .setDestinationDirectoryPath(tempFolder.getPath())
-//                                .compressToFile(f);
-//
-//                        f.delete();
-//                        target.renameTo(f);
-//                    } catch (IOException e1) {
-//                        e1.printStackTrace();
-//                    }
-//                }
-//                tempFolder.delete();
-//                e.onNext(null);
-//            }
-//        }).observeOn(AndroidSchedulers.mainThread())
-//                .subscribeOn(Schedulers.io())
-//                .subscribe(new Consumer<Object>() {
-//                    @Override
-//                    public void accept(Object o) throws Exception {
-//                        dismissProgress();
-//                    }
-//                }, new Consumer<Throwable>() {
-//                    @Override
-//                    public void accept(Throwable throwable) throws Exception {
-//                        dismissProgress();
-//                        throwable.printStackTrace();
-//                    }
-//                });
+//        showProgress("compressing");
+//        compressFiles();
 //        new HomeSelecter(this).startDefaultHome(this, null);
         ActivityManager.startHomeActivity(this);
         finish();
+    }
+
+    private void compressFiles() {
+        Observable.create(new ObservableOnSubscribe<Object>() {
+            @Override
+            public void subscribe(@NonNull ObservableEmitter<Object> e) throws Exception {
+                File tempFolder = new File(Configuration.APP_DIR_IMG + "_temp_");
+                if (!tempFolder.exists()) {
+                    tempFolder.mkdir();
+                }
+                File file = new File(Configuration.GDB_IMG_STAR);
+                traverseCompressFile(file, tempFolder);
+                file = new File(Configuration.GDB_IMG_RECORD);
+                traverseCompressFile(file, tempFolder);
+                tempFolder.delete();
+                e.onNext(null);
+            }
+        }).observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(new Consumer<Object>() {
+                    @Override
+                    public void accept(Object o) throws Exception {
+                        dismissProgress();
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        dismissProgress();
+                        throwable.printStackTrace();
+                    }
+                });
+    }
+
+    private void traverseCompressFile(File file, File tempFolder) {
+        if (file.isDirectory()) {
+            File files[] = file.listFiles(new FileFilter() {
+                @Override
+                public boolean accept(File pathname) {
+                    return !pathname.getName().endsWith(".nomedia");
+                }
+            });
+            for (File f:files) {
+                traverseCompressFile(f, tempFolder);
+            }
+        }
+        else {
+            // 200K以下的不再压缩
+            if (file.length() < 204800) {
+                return;
+            }
+            try {
+                DebugLog.e("compress " + file.getPath());
+                File target = new Compressor(GdbApplication.getInstance())
+                        .setMaxWidth(1080)
+                        .setMaxHeight(607)
+                        .setQuality(75)
+                        .setCompressFormat(Bitmap.CompressFormat.WEBP)
+                        .setDestinationDirectoryPath(tempFolder.getPath())
+                        .compressToFile(file);
+
+                file.delete();
+                target.renameTo(file);
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+        }
     }
 
     @OnClick(R.id.btn_login)
