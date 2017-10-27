@@ -81,23 +81,24 @@ public class GdbImageProvider {
         String path;
         if (hasFolder(parent, name)) {
             File file = new File(parent + "/" + name);
-            File[] files = file.listFiles(fileFilter);
-            if (files.length == 0) {
+            List<File> fileList = new ArrayList<>();
+            getImageFiles(file, fileList);
+            if (fileList.size() == 0) {
                 path = parent + "/" + name;
                 if (!name.endsWith(".png")) {
                     path = path.concat(".png");
                 }
             }
             else {
-                if (index == -1 || index >= files.length) {
-                    int pos = Math.abs(new Random().nextInt()) % files.length;
+                if (index == -1 || index >= fileList.size()) {
+                    int pos = Math.abs(new Random().nextInt()) % fileList.size();
                     if (indexPackage != null) {
                         indexPackage.index = pos;
                     }
-                    return files[pos].getPath();
+                    return fileList.get(pos).getPath();
                 }
                 else {
-                    return files[index].getPath();
+                    return fileList.get(index).getPath();
                 }
             }
         }
@@ -110,6 +111,23 @@ public class GdbImageProvider {
         return path;
     }
 
+    /**
+     * v2.0.2 it supported multi-level directories since v2.0.1
+     * @param file
+     * @param list
+     */
+    private static void getImageFiles(File file, List<File> list) {
+        if (file.isDirectory()) {
+            File[] files = file.listFiles(fileFilter);
+            for (File f:files) {
+                getImageFiles(f, list);
+            }
+        }
+        else {
+            list.add(file);
+        }
+    }
+
     private static FileFilter fileFilter = new FileFilter() {
         @Override
         public boolean accept(File file) {
@@ -120,9 +138,10 @@ public class GdbImageProvider {
     private static List<String> getImagePathList(String parent, String name) {
         List<String> list = new ArrayList<>();
         File file = new File(parent + "/" + name);
-        File[] files = file.listFiles(fileFilter);
-        if (files != null) {
-            for (File f:files) {
+        List<File> fileList = new ArrayList<>();
+        getImageFiles(file, fileList);
+        if (fileList != null) {
+            for (File f:fileList) {
                 if (SettingProperties.isGdbNoImageMode()) {
                     list.add("");
                 }
