@@ -45,4 +45,14 @@ public class StarListPagerAdapter extends FragmentPagerAdapter {
     public CharSequence getPageTitle(int position) {
         return titleList.get(position);
     }
+
+    public void onViewModeChanged() {
+        if (fragmentList != null) {
+            for (StarListFragment ft:fragmentList) {
+                if (ft != null) {
+                    ft.onViewModeChanged();
+                }
+            }
+        }
+    }
 }

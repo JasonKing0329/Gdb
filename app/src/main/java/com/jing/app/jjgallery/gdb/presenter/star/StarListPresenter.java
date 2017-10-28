@@ -1,18 +1,17 @@
 package com.jing.app.jjgallery.gdb.presenter.star;
 
-import android.os.AsyncTask;
-
 import com.jing.app.jjgallery.gdb.GdbConstants;
 import com.jing.app.jjgallery.gdb.http.AppHttpClient;
 import com.jing.app.jjgallery.gdb.http.Command;
 import com.jing.app.jjgallery.gdb.http.bean.data.DownloadItem;
 import com.jing.app.jjgallery.gdb.http.bean.request.GdbCheckNewFileBean;
 import com.jing.app.jjgallery.gdb.model.GdbImageProvider;
+import com.jing.app.jjgallery.gdb.model.SettingProperties;
 import com.jing.app.jjgallery.gdb.model.bean.StarProxy;
 import com.jing.app.jjgallery.gdb.model.conf.Configuration;
+import com.jing.app.jjgallery.gdb.model.conf.PreferenceValue;
 import com.jing.app.jjgallery.gdb.model.db.GdbProviderHelper;
 import com.jing.app.jjgallery.gdb.presenter.ManageListPresenter;
-import com.jing.app.jjgallery.gdb.util.DebugLog;
 import com.jing.app.jjgallery.gdb.view.list.IManageListView;
 import com.jing.app.jjgallery.gdb.view.star.IStarListHeaderView;
 import com.jing.app.jjgallery.gdb.view.star.IStarListView;
@@ -197,19 +196,24 @@ public class StarListPresenter extends ManageListPresenter {
                     }
                     Collections.sort(resultList, new StarFavorComparator());
                 }
-                else {// order by name
-                    // add headers
-                    // about header rules, see viewsystem/main/gdb/StarListAdapter.java
-                    StarProxy star = null;
-                    char index = 'A';
-                    for (int i = 0; i < 26; i ++) {
-                        star = new StarProxy();
-                        Star s = new Star();
-                        star.setStar(s);
-                        s.setId(-1);
-                        s.setName("" + index ++);
-                        resultList.add(star);
+                else {
+                    // order by name
+                    // 只有list列表支持sticky header
+                    if (SettingProperties.getStarListViewMode() == PreferenceValue.STAR_LIST_VIEW_LIST) {
+                        // add headers
+                        // about header rules, see viewsystem/main/gdb/StarListAdapter.java
+                        StarProxy star = null;
+                        char index = 'A';
+                        for (int i = 0; i < 26; i ++) {
+                            star = new StarProxy();
+                            Star s = new Star();
+                            star.setStar(s);
+                            s.setId(-1);
+                            s.setName("" + index ++);
+                            resultList.add(star);
+                        }
                     }
+
                     resultList.addAll(proxyList);
                     Collections.sort(resultList, new StarNameComparator());
                 }

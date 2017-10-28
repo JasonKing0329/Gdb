@@ -25,6 +25,7 @@ import com.jing.app.jjgallery.gdb.http.bean.data.DownloadItem;
 import com.jing.app.jjgallery.gdb.model.GdbImageProvider;
 import com.jing.app.jjgallery.gdb.model.SettingProperties;
 import com.jing.app.jjgallery.gdb.model.conf.Configuration;
+import com.jing.app.jjgallery.gdb.model.conf.PreferenceValue;
 import com.jing.app.jjgallery.gdb.presenter.star.StarListPresenter;
 import com.jing.app.jjgallery.gdb.util.GlideUtil;
 import com.jing.app.jjgallery.gdb.util.LMBannerViewUtil;
@@ -322,6 +323,12 @@ public class StarListActivity extends GDBListActivity implements IStarListHolder
         private void loadMenu(MenuInflater menuInflater, Menu menu) {
             menu.clear();
             menuInflater.inflate(R.menu.gdb_star_list, menu);
+            if (SettingProperties.getStarListViewMode() == PreferenceValue.STAR_LIST_VIEW_GRID) {
+                menu.findItem(R.id.menu_gdb_view_mode).setTitle(R.string.menu_view_mode_list);
+            }
+            else {
+                menu.findItem(R.id.menu_gdb_view_mode).setTitle(R.string.menu_view_mode_grid);
+            }
         }
 
         @Override
@@ -332,6 +339,15 @@ public class StarListActivity extends GDBListActivity implements IStarListHolder
                     break;
                 case R.id.menu_gdb_download:
                     showDownloadDialog();
+                    break;
+                case R.id.menu_gdb_view_mode:
+                    if (item.getTitle().toString().equals(getString(R.string.menu_view_mode_list))) {
+                        SettingProperties.setStarListViewMode(PreferenceValue.STAR_LIST_VIEW_LIST);
+                    }
+                    else {
+                        SettingProperties.setStarListViewMode(PreferenceValue.STAR_LIST_VIEW_GRID);
+                    }
+                    pagerAdapter.onViewModeChanged();
                     break;
             }
             return false;

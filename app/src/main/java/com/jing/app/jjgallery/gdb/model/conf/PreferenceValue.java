@@ -44,7 +44,9 @@ public class PreferenceValue {
     public static final int GDB_SR_ORDERBY_SCORE_EXTRA =28;
     public static final int GDB_SR_ORDERBY_STAR =29;
     public static final int GDB_SR_ORDERBY_STARC =30;
-
     public static final int GDB_SR_ORDERBY_TIME =31;
     public static final int GDB_SR_ORDERBY_SIZE =32;
+
+    public static final int STAR_LIST_VIEW_LIST =0;
+    public static final int STAR_LIST_VIEW_GRID =1;
 }

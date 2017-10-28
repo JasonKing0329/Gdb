@@ -106,4 +106,6 @@
 
     <string name="save_image">保存图片</string>
     <string name="show_time">显示时间</string>
+    <string name="menu_view_mode_grid">网格视图</string>
+    <string name="menu_view_mode_list">列表视图</string>
 </resources>

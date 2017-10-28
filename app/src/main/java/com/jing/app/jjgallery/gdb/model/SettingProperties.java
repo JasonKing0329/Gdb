@@ -561,4 +561,25 @@ public class SettingProperties {
         return preferences.getBoolean(PreferenceKey.PREF_GDB_STAR_RECORDS_CARD, false);
     }
 
+    /**
+     * star list grid/list mode
+     * @param mode see PreferenceValue.STAR_LIST_VIEW_XXX
+     */
+    public static void setStarListViewMode(int mode) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(GdbApplication.getInstance());
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putInt(PreferenceKey.PREF_STAR_LIST_VIEW_MODE, mode);
+        editor.commit();
+    }
+
+    /**
+     * animation type
+     * @return see PreferenceValue.STAR_LIST_VIEW_XXX
+     */
+    public static int getStarListViewMode() {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(GdbApplication.getInstance());
+        int mode = preferences.getInt(PreferenceKey.PREF_STAR_LIST_VIEW_MODE, 0);
+        return mode;
+    }
+
 }

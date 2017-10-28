@@ -16,16 +16,11 @@ import com.king.service.gdb.sqlbrite.table.TRecordOneVOne;
 import com.king.service.gdb.sqlbrite.table.VScene;
 import com.squareup.sqlbrite2.BriteDatabase;
 
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-
-import static android.R.id.list;
-import static android.R.id.switch_widget;
-import static com.king.service.gdb.DBConstants.TABLE_RECORD_1V1;
 
 /**
  * 描述:
@@ -237,15 +232,19 @@ public class RecordDao {
         // 更新cursor的位置
         List<Record> finalList = new ArrayList<>();
         int count1v1 = 0, count3w = 0;
-        for (int i = 0; i < cursor.number && i < list.size(); i ++) {
-            Record record = list.get(i);
-            if (record instanceof RecordOneVOne) {
-                count1v1 ++;
+        for (int i = 0;i < list.size(); i ++) {
+            // number为-1表示不限制
+            boolean isOk = cursor.number == -1 ? true:(i < cursor.number);
+            if (isOk) {
+                Record record = list.get(i);
+                if (record instanceof RecordOneVOne) {
+                    count1v1 ++;
+                }
+                else if (record instanceof RecordThree) {
+                    count3w ++;
+                }
+                finalList.add(record);
             }
-            else if (record instanceof RecordThree) {
-                count3w ++;
-            }
-            finalList.add(record);
         }
         cursor.from1v1 += count1v1;
         cursor.from3w += count3w;

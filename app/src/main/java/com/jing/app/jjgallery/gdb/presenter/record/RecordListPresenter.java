@@ -10,19 +10,15 @@ import com.jing.app.jjgallery.gdb.http.bean.request.GdbCheckNewFileBean;
 import com.jing.app.jjgallery.gdb.model.RecordComparator;
 import com.jing.app.jjgallery.gdb.model.VideoModel;
 import com.jing.app.jjgallery.gdb.model.conf.Configuration;
-import com.jing.app.jjgallery.gdb.model.conf.DBInfor;
 import com.jing.app.jjgallery.gdb.model.conf.PreferenceValue;
 import com.jing.app.jjgallery.gdb.model.db.GdbProviderHelper;
 import com.jing.app.jjgallery.gdb.presenter.ManageListPresenter;
 import com.jing.app.jjgallery.gdb.view.list.IManageListView;
 import com.jing.app.jjgallery.gdb.view.record.IRecordListView;
 import com.jing.app.jjgallery.gdb.view.record.IRecordSceneView;
-import com.king.service.gdb.GDBProvider;
 import com.king.service.gdb.RecordCursor;
 import com.king.service.gdb.bean.Record;
 import com.king.service.gdb.bean.SceneBean;
-
-import org.reactivestreams.Subscriber;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -33,7 +29,6 @@ import java.util.List;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
-import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Consumer;
@@ -182,13 +177,17 @@ public class RecordListPresenter extends ManageListPresenter {
                 RecordCursor cursor = (RecordCursor) params[4];
                 String like = (String) params[5];
                 String scene = (String) params[6];
-                // 磁盘上文件不多，加载全部供挑选
-//                if (showCanBePlayed) {
-//                    from = -1;
-//                    number = -1;
-//                }
+
+                // 加载可播放的需要从全部记录里通过对比video目录文件信息来挑选
+                if (showCanBePlayed) {
+                    cursor.from1v1 = -1;
+                    cursor.from3w = -1;
+                    cursor.number = -1;
+                }
+
                 List<Record> list = GdbProviderHelper.getProvider().getRecords(RecordComparator.getSortColumn(sortMode), desc, includeDeprecated, cursor, like, scene);
 
+                // 加载可播放的需要从全部记录里通过对比video目录文件信息来挑选
                 if (showCanBePlayed) {
                     list = pickCanBePlayedRecord(list);
                 }
