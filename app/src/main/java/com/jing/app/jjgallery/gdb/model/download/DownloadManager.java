@@ -1,8 +1,10 @@
 package com.jing.app.jjgallery.gdb.model.download;
 
+import android.graphics.Bitmap;
 import android.os.Handler;
 import android.os.Message;
 
+import com.jing.app.jjgallery.gdb.GdbApplication;
 import com.jing.app.jjgallery.gdb.http.Command;
 import com.jing.app.jjgallery.gdb.http.DownloadClient;
 import com.jing.app.jjgallery.gdb.http.bean.data.DownloadItem;
@@ -20,6 +22,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
+import id.zelory.compressor.Compressor;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
@@ -230,6 +233,8 @@ public class DownloadManager {
             fileOutputStream.flush();
             fileOutputStream.close();
             input.close();
+
+            compressFile(file);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -238,6 +243,31 @@ public class DownloadManager {
         item.setPath(file.getPath());
 
         return file;
+    }
+
+    private void compressFile(File file) {
+        // 150K以上的才压缩，gif不压缩
+        if (file.length() > 153600 && !file.getName().endsWith(".gif")) {
+            try {
+                DebugLog.e("compress " + file.getPath());
+                File tempFolder = new File(Configuration.APP_DIR_IMG + "_temp_");
+                if (!tempFolder.exists()) {
+                    tempFolder.mkdir();
+                }
+                File target = new Compressor(GdbApplication.getInstance())
+                        .setMaxWidth(1080)
+                        .setMaxHeight(607)
+                        .setQuality(75)
+                        .setCompressFormat(Bitmap.CompressFormat.WEBP)
+                        .setDestinationDirectoryPath(tempFolder.getPath())
+                        .compressToFile(file);
+
+                file.delete();
+                target.renameTo(file);
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+        }
     }
 
     /**
