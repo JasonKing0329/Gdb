@@ -7,9 +7,9 @@ package com.jing.app.jjgallery.gdb.view.surf;
  * <p/>作者：景阳
  * <p/>创建时间: 2017/7/31 13:50
  */
-public class SurfFragmentTree {
+public class SurfFragmentTree<T extends SurfFragment> {
     public SurfFragmentTree parent;
     public SurfFragmentTree child;
-    public SurfFragment fragment;
+    public T fragment;
     public int level;
 }

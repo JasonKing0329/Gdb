@@ -122,7 +122,7 @@ public class GHomeHeader extends RecyclerView.ViewHolder {
                     ActivityManager.startGameActivity((Activity) view.getContext());
                     break;
                 case R.id.group_surf:
-                    ActivityManager.startSurfActivity((Activity) view.getContext());
+                    ActivityManager.startSurfHttpActivity((Activity) view.getContext());
                     break;
             }
     }

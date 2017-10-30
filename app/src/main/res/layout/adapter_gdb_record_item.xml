@@ -216,7 +216,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/gdb_record_name_left"
                 android:layout_marginRight="10dp"
-                android:layout_toRightOf="@id/record_thumb"
+                android:layout_toRightOf="@id/group_img"
                 android:layout_centerVertical="true">
                 <TextView
                     android:id="@+id/tv_name_simplify"

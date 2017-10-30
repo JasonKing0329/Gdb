@@ -69,4 +69,14 @@ public class FileUtil {
         values[0] = opts.outHeight;
         return values;
     }
+
+    public static boolean isImageFile(String path) {
+        if (path == null) {
+            return false;
+        }
+        else {
+            path = path.toLowerCase();
+            return path.endsWith(".png") || path.endsWith(".jpg") || path.endsWith(".gif") || path.endsWith(".bmp") || path.endsWith(".jpeg");
+        }
+    }
 }

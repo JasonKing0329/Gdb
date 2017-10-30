@@ -59,7 +59,9 @@
             android:screenOrientation="portrait"/>
         <activity android:name=".view.record.RecordSceneActivity"
             android:screenOrientation="portrait"/>
-        <activity android:name=".view.surf.SurfActivity"
+        <activity android:name=".view.surf.SurfHttpActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".view.surf.SurfLocalActivity"
             android:screenOrientation="portrait"/>
 
         <provider

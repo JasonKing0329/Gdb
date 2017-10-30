@@ -1,6 +1,7 @@
 package com.jing.app.jjgallery.gdb.model;
 
 import com.jing.app.jjgallery.gdb.model.conf.Configuration;
+import com.jing.app.jjgallery.gdb.model.conf.PreferenceKey;
 
 import java.io.File;
 import java.io.FileFilter;
@@ -152,6 +153,53 @@ public class GdbImageProvider {
             Collections.shuffle(list);
         }
         return list;
+    }
+
+    public static String getNavHeadImage() {
+        if (SettingProperties.isGdbNoImageMode()) {
+            return "";
+        }
+        else {
+            return SettingProperties.getPreference(PreferenceKey.PREF_GDB_NAV_HEADER_BG);
+        }
+    }
+
+    public static void saveNavHeadImage(String path) {
+        SettingProperties.savePreference(PreferenceKey.PREF_GDB_NAV_HEADER_BG, path);
+    }
+
+    public static String getRandomNavHeadImage() {
+
+        if (SettingProperties.isGdbNoImageMode()) {
+            return "";
+        }
+        else {
+            File dir = new File(Configuration.GDB_IMG_RECORD);
+            File[] files = dir.listFiles(new FileFilter() {
+                @Override
+                public boolean accept(File file) {
+                    return !file.getName().endsWith(".nomedia");
+                }
+            });
+            if (files != null && files.length > 0) {
+                return files[Math.abs(new Random().nextInt()) % files.length].getPath();
+            }
+            return null;
+        }
+    }
+
+    /**
+     * 控制无图模式
+     * @param path
+     * @return
+     */
+    public static String parseFilePath(String path) {
+        if (SettingProperties.isGdbNoImageMode()) {
+            return "";
+        }
+        else {
+            return path;
+        }
     }
 
     public static class IndexPackage {

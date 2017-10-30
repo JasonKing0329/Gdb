@@ -1,6 +1,6 @@
 package com.jing.app.jjgallery.gdb.view.surf;
 
-import com.jing.app.jjgallery.gdb.model.bean.SurfFileBean;
+import com.jing.app.jjgallery.gdb.model.bean.HttpSurfFileBean;
 
 import java.util.List;
 
@@ -9,10 +9,10 @@ import java.util.List;
  * <p/>作者：景阳
  * <p/>创建时间: 2017/7/27 11:21
  */
-public interface ISurfView {
+public interface ISurfHttpView {
     void onRequestFail();
 
-    void onFolderReceived(List<SurfFileBean> list);
+    void onFolderReceived(List<HttpSurfFileBean> list);
 
     void onRecordRelated(int index);
 

@@ -3,45 +3,31 @@ package com.jing.app.jjgallery.gdb.view.surf;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 
-import com.jing.app.jjgallery.gdb.ActivityManager;
 import com.jing.app.jjgallery.gdb.GBaseActivity;
 import com.jing.app.jjgallery.gdb.R;
-import com.jing.app.jjgallery.gdb.http.HttpConstants;
 import com.jing.app.jjgallery.gdb.http.bean.data.FileBean;
-import com.jing.app.jjgallery.gdb.model.bean.SurfFileBean;
-import com.jing.app.jjgallery.gdb.presenter.surf.SurfPresenter;
-import com.jing.app.jjgallery.gdb.view.record.SortDialogFragment;
 import com.king.lib.jindicator.IndicatorView;
-import com.king.service.gdb.bean.Record;
-
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 /**
- * 描述:
+ * 描述: 文件目录浏览，封装本地文件、网络文件浏览的公共部分
+ * 处理层级fragment的管理，切换
  * <p/>作者：景阳
  * <p/>创建时间: 2017/7/27 10:57
  */
-public class SurfActivity extends GBaseActivity implements ISurfView, ISurfHolder, SurfAdapter.OnSurfItemActionListener {
+public abstract class SurfActivity<T extends SurfFragment> extends GBaseActivity {
 
     @BindView(R.id.fab_top)
     FloatingActionButton fabTop;
     @BindView(R.id.indicator)
     IndicatorView indicatorView;
 
-    private SurfPresenter presenter;
-
-    private int currentSortMode;
-    private boolean currentSortDesc;
-
-    private SurfFragmentTree ftTree;
+    protected SurfFragmentTree<T> ftTree;
 
     @Override
     protected int getContentView() {
@@ -50,8 +36,6 @@ public class SurfActivity extends GBaseActivity implements ISurfView, ISurfHolde
 
     @Override
     protected void initController() {
-        presenter = new SurfPresenter(this);
-
         ftTree = new SurfFragmentTree();
     }
 
@@ -59,7 +43,7 @@ public class SurfActivity extends GBaseActivity implements ISurfView, ISurfHolde
     protected Unbinder initView() {
         Unbinder unbinder = ButterKnife.bind(this);
 
-        indicatorView.addPath("Content");
+        indicatorView.addPath(getRootPathName());
         indicatorView.setPathIndicatorListener(new IndicatorView.PathIndicatorListener() {
             @Override
             public void onClickPath(int index, String path) {
@@ -85,6 +69,8 @@ public class SurfActivity extends GBaseActivity implements ISurfView, ISurfHolde
         return unbinder;
     }
 
+    protected abstract String getRootPathName();
+
     @Override
     protected void initBackgroundWork() {
 
@@ -109,78 +95,7 @@ public class SurfActivity extends GBaseActivity implements ISurfView, ISurfHolde
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.gdb_surf, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_gdb_surf_relate:
-                presenter.relateToDatabase(ftTree.fragment.getSurfFileList());
-                break;
-            case R.id.menu_gdb_surf_sort:
-                showSortDialog();
-                break;
-            case R.id.menu_gdb_surf_refresh:
-                ftTree.fragment.loadFolder();
-                break;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    private void showSortDialog() {
-        SortDialogFragment sortDialog = new SortDialogFragment();
-        sortDialog.setSortMode(currentSortMode);
-        sortDialog.setDesc(currentSortDesc);
-        sortDialog.setOnSortListener(new SortDialogFragment.OnSortListener() {
-            @Override
-            public void onSort(boolean desc, int sortMode, boolean isIncludeDeprecated) {
-                currentSortDesc = desc;
-                currentSortMode = sortMode;
-                presenter.sortFileList(ftTree.fragment.getSurfFileList(), currentSortMode, currentSortDesc);
-            }
-        });
-        sortDialog.show(getSupportFragmentManager(), "SortDialogFragment");
-    }
-
-    @Override
-    public void onRequestFail() {
-        dismissProgress();
-        showToastLong(getString(R.string.gdb_request_fail));
-    }
-
-    @Override
-    public void onFolderReceived(List<SurfFileBean> list) {
-        ftTree.fragment.onFolderReceived(list);
-    }
-
-    @Override
-    public void onRecordRelated(int index) {
-        if (!isDestroyed()) {
-            ftTree.fragment.notifyItemChanged(index);
-        }
-    }
-
-    @Override
-    public void onSortFinished() {
-        ftTree.fragment.notifyDataSetChanged();
-    }
-
-    @Override
-    public void startProgress() {
-        showProgress(getString(R.string.loading));
-    }
-
-    @Override
-    public void endProgress() {
-        dismissProgress();
-    }
-
-    @Override
-    public void onClickSurfFolder(FileBean fileBean) {
+    protected void onClickFolder(FileBean fileBean) {
         indicatorView.addPath(fileBean.getName());
         showNewFragment(fileBean);
     }
@@ -189,17 +104,19 @@ public class SurfActivity extends GBaseActivity implements ISurfView, ISurfHolde
      * initialize root directory
      */
     private void initFragment() {
-        FileBean bean = new FileBean();
-        bean.setPath(HttpConstants.FOLDER_TYPE_CONTENT);
-        bean.setName(HttpConstants.FOLDER_TYPE_CONTENT);
+
+        FileBean bean = createRootFileBean();
 
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ftTree.fragment = new SurfFragment();
+        ftTree.fragment = newSurfFragment();
         ftTree.fragment.setFolder(bean);
-        ftTree.fragment.setOnSurfItemActionListener(this);
         ft.add(R.id.group_ft_container, ftTree.fragment, "SurfFragment_" + ftTree.level);
         ft.commit();
     }
+
+    protected abstract FileBean createRootFileBean();
+
+    protected abstract T newSurfFragment();
 
     /**
      * click sub folder to start a sub-level folder by new fragment
@@ -208,9 +125,8 @@ public class SurfActivity extends GBaseActivity implements ISurfView, ISurfHolde
     private void showNewFragment(FileBean fileBean) {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         SurfFragmentTree node = new SurfFragmentTree();
-        node.fragment = new SurfFragment();
+        node.fragment = newSurfFragment();
         node.fragment.setFolder(fileBean);
-        node.fragment.setOnSurfItemActionListener(this);
         node.level = ftTree.level + 1;
         node.parent = ftTree;
         ftTree.child = node;
@@ -257,15 +173,4 @@ public class SurfActivity extends GBaseActivity implements ISurfView, ISurfHolde
         ftTree = tree;
     }
 
-    @Override
-    public void onClickSurfRecord(Record record) {
-        if (record != null) {
-            ActivityManager.startRecordActivity(this, record);
-        }
-    }
-
-    @Override
-    public SurfPresenter getPresenter() {
-        return presenter;
-    }
 }

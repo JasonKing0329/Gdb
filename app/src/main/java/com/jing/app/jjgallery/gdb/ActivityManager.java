@@ -18,8 +18,11 @@ import com.jing.app.jjgallery.gdb.view.star.StarActivity;
 import com.jing.app.jjgallery.gdb.view.star.StarListActivity;
 import com.jing.app.jjgallery.gdb.view.star.StarSwipeActivity;
 import com.jing.app.jjgallery.gdb.view.surf.SurfActivity;
+import com.jing.app.jjgallery.gdb.view.surf.SurfHttpActivity;
+import com.jing.app.jjgallery.gdb.view.surf.SurfLocalActivity;
 import com.king.service.gdb.bean.Record;
 import com.king.service.gdb.bean.Star;
+import com.king.service.gdb.game.Constants;
 
 import java.io.File;
 
@@ -117,9 +120,29 @@ public class ActivityManager {
         return true;
     }
 
-    public static void startSurfActivity(Activity from) {
-        Intent intent = new Intent().setClass(from, SurfActivity.class);
+    public static void startSurfHttpActivity(Activity from) {
+        Intent intent = new Intent().setClass(from, SurfHttpActivity.class);
         from.startActivity(intent);
+    }
+
+    /**
+     * SurfLocalActivity作为文件浏览器
+     * @param from
+     */
+    public static void startSurfLocalActivity(Activity from) {
+        Intent intent = new Intent().setClass(from, SurfLocalActivity.class);
+        from.startActivity(intent);
+    }
+
+    /**
+     * SurfLocalActivity作为文件选择器
+     * @param from
+     * @param requestCode
+     */
+    public static void startSurfLocalActivity(Activity from, int requestCode) {
+        Intent intent = new Intent().setClass(from, SurfLocalActivity.class);
+        intent.putExtra(GdbConstants.KEY_REQEUST_CODE, requestCode);
+        from.startActivityForResult(intent, requestCode);
     }
 
     public static void startGdbGameGroupActivity(Activity from, int seasonId) {

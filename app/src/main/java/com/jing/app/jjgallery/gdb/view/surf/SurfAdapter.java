@@ -5,12 +5,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+import com.github.siyamed.shapeimageview.BubbleImageView;
+import com.jing.app.jjgallery.gdb.GdbApplication;
 import com.jing.app.jjgallery.gdb.R;
 import com.jing.app.jjgallery.gdb.http.bean.data.FileBean;
-import com.jing.app.jjgallery.gdb.model.bean.SurfFileBean;
+import com.jing.app.jjgallery.gdb.model.GdbImageProvider;
+import com.jing.app.jjgallery.gdb.model.bean.HttpSurfFileBean;
+import com.jing.app.jjgallery.gdb.util.FileUtil;
 import com.jing.app.jjgallery.gdb.util.FormatUtil;
+import com.jing.app.jjgallery.gdb.util.GlideUtil;
 import com.jing.app.jjgallery.gdb.view.adapter.RecordHolder;
 import com.king.service.gdb.bean.Record;
 
@@ -27,15 +35,20 @@ public class SurfAdapter extends RecyclerView.Adapter {
 
     private final int TYPE_FILE = 2;
 
-    private List<SurfFileBean> list;
+    private final int TYPE_HTTP_RECORD = 3;
+
+    private List<FileBean> list;
 
     private OnSurfItemActionListener onSurfItemActionListener;
 
-    public SurfAdapter(List<SurfFileBean> list) {
+    private RequestOptions imageOptions;
+
+    public SurfAdapter(List<FileBean> list) {
         this.list = list;
+        imageOptions = GlideUtil.getRecordOptions();
     }
 
-    public void setList(List<SurfFileBean> list) {
+    public void setList(List<FileBean> list) {
         this.list = list;
     }
 
@@ -49,7 +62,12 @@ public class SurfAdapter extends RecyclerView.Adapter {
             return TYPE_FOLDER;
         }
         else {
-            return TYPE_FILE;
+            if (list.get(position) instanceof HttpSurfFileBean) {
+                return TYPE_HTTP_RECORD;
+            }
+            else {
+                return TYPE_FILE;
+            }
         }
     }
 
@@ -58,17 +76,21 @@ public class SurfAdapter extends RecyclerView.Adapter {
         if (viewType == TYPE_FOLDER) {
             return new FolderHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_gdb_surf_folder, parent, false));
         }
-        else {
+        // server record files
+        else if (viewType == TYPE_HTTP_RECORD) {
             RecordHolder holder = new RecordHolder(parent);
             holder.setParameters(parent.getContext().getResources().getColor(R.color.gdb_record_text_normal_light)
-                    , parent.getContext().getResources().getColor(R.color.gdb_record_text_bareback_light), fileListener);
+                    , parent.getContext().getResources().getColor(R.color.gdb_record_text_bareback_light), serverFileListener);
             return holder;
+        }
+        else {
+            return new FileHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_surf_file, parent, false));
         }
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        SurfFileBean bean = list.get(position);
+        FileBean bean = list.get(position);
         if (holder instanceof FolderHolder) {
             FolderHolder fHolder = (FolderHolder) holder;
             fHolder.tvName.setText(bean.getName());
@@ -78,10 +100,11 @@ public class SurfAdapter extends RecyclerView.Adapter {
             fHolder.groupFolder.setTag(bean);
             fHolder.groupFolder.setOnClickListener(folderListener);
         }
-        else {
+        // server record files
+        else if (bean instanceof HttpSurfFileBean) {
             RecordHolder rHolder = (RecordHolder) holder;
             rHolder.hideIndexView();
-            Record record = bean.getRecord();
+            Record record = ((HttpSurfFileBean) bean).getRecord();
             if (record == null) {
                 rHolder.bind(bean.getName(), bean.getLastModifyTime(), bean.getSize());
             }
@@ -90,14 +113,41 @@ public class SurfAdapter extends RecyclerView.Adapter {
                 rHolder.bindExtra(bean.getLastModifyTime(), bean.getSize());
             }
         }
+        // normal files
+        else {
+            FileHolder fHolder = (FileHolder) holder;
+            fHolder.tvName.setText(bean.getName());
+            fHolder.tvDate.setText(FormatUtil.formatDate(bean.getLastModifyTime()));
+            fHolder.tvSize.setText(FormatUtil.formatSize(bean.getSize()));
+            fHolder.groupContainer.setTag(bean);
+            fHolder.groupContainer.setOnClickListener(fileListener);
+
+            if (FileUtil.isImageFile(bean.getPath())) {
+                String imgPath = GdbImageProvider.parseFilePath(bean.getPath());
+                Glide.with(GdbApplication.getInstance())
+                        .load(imgPath)
+                        .apply(imageOptions)
+                        .into(fHolder.ivThumb);
+            }
+        }
     }
+
+    View.OnClickListener serverFileListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            if (onSurfItemActionListener != null) {
+                Record record = (Record) v.getTag();
+                onSurfItemActionListener.onClickSurfFile(record);
+            }
+        }
+    };
 
     View.OnClickListener fileListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             if (onSurfItemActionListener != null) {
-                Record record = (Record) v.getTag();
-                onSurfItemActionListener.onClickSurfRecord(record);
+                FileBean bean = (FileBean) v.getTag();
+                onSurfItemActionListener.onClickSurfFile(bean);
             }
         }
     };
@@ -134,8 +184,27 @@ public class SurfAdapter extends RecyclerView.Adapter {
         }
     }
 
-    public interface OnSurfItemActionListener {
+    public static class FileHolder extends RecyclerView.ViewHolder {
+
+        RelativeLayout groupContainer;
+        BubbleImageView ivThumb;
+        TextView tvName;
+        TextView tvDate;
+        TextView tvSize;
+
+        public FileHolder(View itemView) {
+            super(itemView);
+
+            groupContainer = (RelativeLayout) itemView.findViewById(R.id.group_container);
+            ivThumb = (BubbleImageView) itemView.findViewById(R.id.iv_thumb);
+            tvName = (TextView) itemView.findViewById(R.id.tv_name);
+            tvDate = (TextView) itemView.findViewById(R.id.tv_date);
+            tvSize = (TextView) itemView.findViewById(R.id.tv_size);
+        }
+    }
+
+    public interface OnSurfItemActionListener<T> {
         void onClickSurfFolder(FileBean fileBean);
-        void onClickSurfRecord(Record record);
+        void onClickSurfFile(T file);
     }
 }

@@ -5,16 +5,12 @@ import com.jing.app.jjgallery.gdb.http.bean.data.FileBean;
 import com.jing.app.jjgallery.gdb.http.bean.request.FolderRequest;
 import com.jing.app.jjgallery.gdb.http.bean.response.FolderResponse;
 import com.jing.app.jjgallery.gdb.model.RecordComparator;
-import com.jing.app.jjgallery.gdb.model.bean.SurfFileBean;
-import com.jing.app.jjgallery.gdb.model.conf.DBInfor;
+import com.jing.app.jjgallery.gdb.model.bean.HttpSurfFileBean;
 import com.jing.app.jjgallery.gdb.model.conf.PreferenceValue;
 import com.jing.app.jjgallery.gdb.model.db.GdbProviderHelper;
-import com.jing.app.jjgallery.gdb.view.surf.ISurfView;
+import com.jing.app.jjgallery.gdb.view.surf.ISurfHttpView;
 
-import com.king.service.gdb.GDBProvider;
 import com.king.service.gdb.bean.Record;
-
-import org.reactivestreams.Subscriber;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -30,15 +26,15 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 /**
- * 描述:
+ * 描述: presenter for server files explore
  * <p/>作者：景阳
  * <p/>创建时间: 2017/7/27 11:10
  */
-public class SurfPresenter {
+public class SurfHttpPresenter {
 
-    private ISurfView surfView;
+    private ISurfHttpView surfView;
 
-    public SurfPresenter(ISurfView surfView) {
+    public SurfHttpPresenter(ISurfHttpView surfView) {
         this.surfView = surfView;
     }
 
@@ -53,9 +49,9 @@ public class SurfPresenter {
                 .subscribe(new Consumer<FolderResponse>() {
                     @Override
                     public void accept(FolderResponse bean) throws Exception {
-                        List<SurfFileBean> list = new ArrayList<>();
+                        List<HttpSurfFileBean> list = new ArrayList<>();
                         for (FileBean fb:bean.getFileList()) {
-                            SurfFileBean sfb = new SurfFileBean();
+                            HttpSurfFileBean sfb = new HttpSurfFileBean();
                             sfb.setName(fb.getName());
                             sfb.setPath(fb.getPath());
                             sfb.setFolder(fb.isFolder());
@@ -79,12 +75,12 @@ public class SurfPresenter {
                 });
     }
 
-    public void relateToDatabase(final List<SurfFileBean> list) {
+    public void relateToDatabase(final List<HttpSurfFileBean> list) {
         Observable.create(new ObservableOnSubscribe<Integer>() {
             @Override
             public void subscribe(@NonNull ObservableEmitter<Integer> e) throws Exception {
                 for (int i = 0; i < list.size(); i ++) {
-                    SurfFileBean bean = list.get(i);
+                    HttpSurfFileBean bean = list.get(i);
                     if (!bean.isFolder()) {
                         Record record = GdbProviderHelper.getProvider().getRecordByName(bean.getName());
                         bean.setRecord(record);
@@ -107,12 +103,12 @@ public class SurfPresenter {
                 });
     }
 
-    public void sortFileList(List<SurfFileBean> surfFileList, int sortMode, boolean desc) {
+    public void sortFileList(List<HttpSurfFileBean> surfFileList, int sortMode, boolean desc) {
         Collections.sort(surfFileList, new SurfComparator(sortMode, desc));
         surfView.onSortFinished();
     }
 
-    private class SurfComparator implements Comparator<SurfFileBean> {
+    private class SurfComparator implements Comparator<HttpSurfFileBean> {
 
         private int sortMode;
         private boolean desc;
@@ -123,7 +119,7 @@ public class SurfPresenter {
         }
 
         @Override
-        public int compare(SurfFileBean o1, SurfFileBean o2) {
+        public int compare(HttpSurfFileBean o1, HttpSurfFileBean o2) {
             int result;
             // 按名称排序时，文件夹排在最前面
             if (sortMode == PreferenceValue.GDB_SR_ORDERBY_NAME) {

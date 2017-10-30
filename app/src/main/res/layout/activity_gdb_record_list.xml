@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".gdb.view.record.RecordListActivity">
+    tools:context=".view.record.RecordListActivity">
 
     <include layout="@layout/actionbar_l" />
 

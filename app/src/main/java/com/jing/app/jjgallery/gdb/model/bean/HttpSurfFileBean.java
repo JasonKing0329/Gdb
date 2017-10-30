@@ -8,7 +8,7 @@ import com.king.service.gdb.bean.Record;
  * <p/>作者：景阳
  * <p/>创建时间: 2017/7/28 10:43
  */
-public class SurfFileBean extends FileBean {
+public class HttpSurfFileBean extends FileBean {
     private Record record;
 
     public Record getRecord() {

@@ -84,6 +84,7 @@
     <string name="menu_gdb_check_server">检查更新</string>
     <string name="menu_by_name">按名称排序</string>
     <string name="menu_by_date">按时间排序</string>
+    <string name="menu_by_size">按文件大小排序</string>
     <string name="menu_by_none">无序</string>
     <string name="menu_gdb_surf_refresh">刷新</string>
     <!--************************** download **************************-->

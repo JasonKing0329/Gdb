@@ -5,6 +5,11 @@ package com.jing.app.jjgallery.gdb;
  */
 
 public class GdbConstants {
+
+    public static final String KEY_REQEUST_CODE = "request_code";
+    public static final int REQUEST_SELECT_IMAGE = 101;
+    public static final String DATA_SELECT_IMAGE = "data_select_image";
+
     public static final int STAR_SORT_NAME = 0;
     public static final int STAR_SORT_RECORDS = 1;
     public static final int STAR_SORT_FAVOR = 2;

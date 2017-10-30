@@ -16,7 +16,9 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.jing.app.jjgallery.gdb.ActivityManager;
 import com.jing.app.jjgallery.gdb.GBaseActivity;
+import com.jing.app.jjgallery.gdb.GdbConstants;
 import com.jing.app.jjgallery.gdb.R;
+import com.jing.app.jjgallery.gdb.model.GdbImageProvider;
 import com.jing.app.jjgallery.gdb.model.SettingProperties;
 import com.jing.app.jjgallery.gdb.model.VideoModel;
 import com.jing.app.jjgallery.gdb.model.conf.Configuration;
@@ -26,6 +28,7 @@ import com.jing.app.jjgallery.gdb.util.GlideUtil;
 import com.jing.app.jjgallery.gdb.view.recommend.IRecommendHolder;
 import com.jing.app.jjgallery.gdb.view.update.GdbUpdateListener;
 import com.jing.app.jjgallery.gdb.view.update.GdbUpdateManager;
+import com.king.service.gdb.game.Constants;
 
 import java.io.File;
 import java.io.FileFilter;
@@ -42,8 +45,6 @@ import butterknife.Unbinder;
  */
 public class GHomeActivity extends GBaseActivity implements NavigationView.OnNavigationItemSelectedListener
     , IHomeHolder, IRecommendHolder{
-
-    private final int REQUEST_IMAGE = 101;
 
     @BindView(R.id.nav_view)
     NavigationView navView;
@@ -137,7 +138,7 @@ public class GHomeActivity extends GBaseActivity implements NavigationView.OnNav
     private void focusOnFolder() {
         ivFolder.setSelected(true);
         ivFace.setSelected(false);
-        String path = SettingProperties.getPreference(PreferenceKey.PREF_GDB_NAV_HEADER_BG);
+        String path = GdbImageProvider.getNavHeadImage();
         Glide.with(this)
                 .load(path)
                 .apply(GlideUtil.getRecordOptions())
@@ -148,7 +149,7 @@ public class GHomeActivity extends GBaseActivity implements NavigationView.OnNav
         ivFace.setSelected(true);
         ivFolder.setSelected(false);
         Glide.with(this)
-                .load(randomHeadImagePath())
+                .load(GdbImageProvider.getRandomNavHeadImage())
                 .apply(GlideUtil.getRecordOptions())
                 .into(navHeaderView);
     }
@@ -173,7 +174,7 @@ public class GHomeActivity extends GBaseActivity implements NavigationView.OnNav
             finish();
         }
         else if (id == R.id.nav_main) {
-//            ActivityManager.startFileManagerActivity(this, null);
+            ActivityManager.startSurfLocalActivity(this);
         }
         else if (id == R.id.nav_timeline) {
 //            ActivityManager.startTimeLineActivity(this, null);
@@ -220,37 +221,22 @@ public class GHomeActivity extends GBaseActivity implements NavigationView.OnNav
     }
 
     private void selectImage() {
-//        Intent intent = new Intent().setClass(this, ThumbActivity.class);
-//        startActivityForResult(intent, REQUEST_IMAGE);
+        ActivityManager.startSurfLocalActivity(this, GdbConstants.REQUEST_SELECT_IMAGE);
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
-            case REQUEST_IMAGE:
+            case GdbConstants.REQUEST_SELECT_IMAGE:
                 if (resultCode == Activity.RESULT_OK) {
-//                    String imagePath = data.getStringExtra(Constants.KEY_THUMBFOLDER_CHOOSE_CONTENT);
-//                    SettingProperties.setGdbNavHeadRandom(false);
-//                    SettingProperties.savePreference(this, PreferenceKey.PREF_GDB_NAV_HEADER_BG, imagePath);
-//                    focusOnFolder();
+                    String imagePath = data.getStringExtra(GdbConstants.DATA_SELECT_IMAGE);
+                    SettingProperties.setGdbNavHeadRandom(false);
+                    GdbImageProvider.saveNavHeadImage(imagePath);
+                    focusOnFolder();
                 }
                 break;
         }
-    }
-
-    public String randomHeadImagePath() {
-        File dir = new File(Configuration.GDB_IMG_RECORD);
-        File[] files = dir.listFiles(new FileFilter() {
-            @Override
-            public boolean accept(File file) {
-                return !file.getName().endsWith(".nomedia");
-            }
-        });
-        if (files != null && files.length > 0) {
-            return files[Math.abs(new Random().nextInt()) % files.length].getPath();
-        }
-        return null;
     }
 
 }

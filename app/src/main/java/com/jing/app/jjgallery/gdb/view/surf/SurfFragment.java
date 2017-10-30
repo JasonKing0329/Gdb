@@ -4,13 +4,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.view.View;
 
 import com.jing.app.jjgallery.gdb.BaseFragmentV4;
-import com.jing.app.jjgallery.gdb.IFragmentHolder;
 import com.jing.app.jjgallery.gdb.R;
-import com.jing.app.jjgallery.gdb.http.HttpConstants;
 import com.jing.app.jjgallery.gdb.http.bean.data.FileBean;
-import com.jing.app.jjgallery.gdb.model.SettingProperties;
-import com.jing.app.jjgallery.gdb.model.bean.SurfFileBean;
-import com.jing.app.jjgallery.gdb.util.DebugLog;
 import com.jing.app.jjgallery.gdb.view.pub.AutoLoadMoreRecyclerView;
 
 import java.util.List;
@@ -20,25 +15,17 @@ import butterknife.ButterKnife;
 
 /**
  * 描述: 只负责list的展示与发起加载的时机，响应外部的排序、管理以及发起操作
+ * 服务端文件目录、本地目录的公共处理部分
  * <p/>作者：景阳
  * <p/>创建时间: 2017/7/31 13:27
  */
-public class SurfFragment extends BaseFragmentV4 {
+public abstract class SurfFragment extends BaseFragmentV4 {
 
     @BindView(R.id.rv_files)
     AutoLoadMoreRecyclerView rvFiles;
 
-    private ISurfHolder holder;
-
-    private FileBean folderBean;
+    protected FileBean folderBean;
     private SurfAdapter surfAdapter;
-    private List<SurfFileBean> surfFileList;
-    private SurfAdapter.OnSurfItemActionListener itemListener;
-
-    @Override
-    protected void bindFragmentHolder(IFragmentHolder holder) {
-        this.holder = (ISurfHolder) holder;
-    }
 
     @Override
     protected int getLayoutRes() {
@@ -83,36 +70,16 @@ public class SurfFragment extends BaseFragmentV4 {
      * load file list of current folder
      * callback at onFolderReceived
      */
-    public void loadFolder() {
-        holder.startProgress();
-        DebugLog.e(folderBean.getPath());
-        if (HttpConstants.FOLDER_TYPE_CONTENT.equals(folderBean.getPath())) {
-            holder.getPresenter().surf(HttpConstants.FOLDER_TYPE_CONTENT, null, SettingProperties.isGdbSurfRelated());
-        }
-        else {
-            holder.getPresenter().surf(HttpConstants.FOLDER_TYPE_FOLDER, folderBean.getPath(), SettingProperties.isGdbSurfRelated());
-        }
-    }
-
-    /**
-     * load folder finished
-     * the callback of loadFolder
-     * @param list
-     */
-    public void onFolderReceived(List<SurfFileBean> list) {
-        surfFileList = list;
-        updateSurfList(list);
-        holder.endProgress();
-    }
+    public abstract void loadFolder();
 
     /**
      * update current file list
      * @param list
      */
-    private void updateSurfList(List<SurfFileBean> list) {
+    protected void updateSurfList(List<FileBean> list) {
         if (surfAdapter == null) {
             surfAdapter = new SurfAdapter(list);
-            surfAdapter.setOnSurfItemActionListener(itemListener);
+            surfAdapter.setOnSurfItemActionListener(getOnSurfItemActionListener());
             rvFiles.setAdapter(surfAdapter);
         } else {
             surfAdapter.setList(list);
@@ -120,21 +87,7 @@ public class SurfFragment extends BaseFragmentV4 {
         }
     }
 
-    /**
-     * set listener for list item
-     * @param listener
-     */
-    public void setOnSurfItemActionListener(SurfAdapter.OnSurfItemActionListener listener) {
-        this.itemListener = listener;
-    }
-
-    /**
-     * current file list
-     * @return
-     */
-    public List<SurfFileBean> getSurfFileList() {
-        return surfFileList;
-    }
+    protected abstract SurfAdapter.OnSurfItemActionListener getOnSurfItemActionListener();
 
     /**
      * notify item changed in index
