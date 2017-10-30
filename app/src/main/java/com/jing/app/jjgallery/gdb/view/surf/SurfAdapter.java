@@ -18,6 +18,7 @@ import com.jing.app.jjgallery.gdb.model.GdbImageProvider;
 import com.jing.app.jjgallery.gdb.model.bean.HttpSurfFileBean;
 import com.jing.app.jjgallery.gdb.util.FileUtil;
 import com.jing.app.jjgallery.gdb.util.FormatUtil;
+import com.jing.app.jjgallery.gdb.util.GlideApp;
 import com.jing.app.jjgallery.gdb.util.GlideUtil;
 import com.jing.app.jjgallery.gdb.view.adapter.RecordHolder;
 import com.king.service.gdb.bean.Record;
@@ -122,12 +123,24 @@ public class SurfAdapter extends RecyclerView.Adapter {
             fHolder.groupContainer.setTag(bean);
             fHolder.groupContainer.setOnClickListener(fileListener);
 
-            if (FileUtil.isImageFile(bean.getPath())) {
+            if (FileUtil.isGifFile(bean.getPath())) {
+                String imgPath = GdbImageProvider.parseFilePath(bean.getPath());
+                GlideApp.with(GdbApplication.getInstance())
+                        .asGif()
+                        .load(imgPath)
+                        // 用了error和placeHolder gif就不起作用了
+//                        .apply(imageOptions)
+                        .into(fHolder.ivThumb);
+            }
+            else if (FileUtil.isImageFile(bean.getPath())) {
                 String imgPath = GdbImageProvider.parseFilePath(bean.getPath());
                 Glide.with(GdbApplication.getInstance())
                         .load(imgPath)
                         .apply(imageOptions)
                         .into(fHolder.ivThumb);
+            }
+            else {
+                fHolder.ivThumb.setImageResource(R.drawable.ic_unknow);
             }
         }
     }

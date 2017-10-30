@@ -79,4 +79,15 @@ public class FileUtil {
             return path.endsWith(".png") || path.endsWith(".jpg") || path.endsWith(".gif") || path.endsWith(".bmp") || path.endsWith(".jpeg");
         }
     }
+
+    public static boolean isGifFile(String path) {
+        if (path == null) {
+            return false;
+        }
+        else {
+            path = path.toLowerCase();
+            return path.endsWith(".gif");
+        }
+    }
+
 }
