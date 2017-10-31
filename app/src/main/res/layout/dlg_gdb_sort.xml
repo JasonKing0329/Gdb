@@ -2,24 +2,12 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <GridView
-        android:id="@+id/gdb_sort_grid"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/gdb_sort_grid_height"
-        android:numColumns="3"/>
-    <CheckBox
-        android:id="@+id/cb_deprecated"
-        android:layout_below="@id/gdb_sort_grid"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:checked="true"
-        android:text="Include deprecated"/>
     <RadioGroup
+        android:id="@+id/group_radio"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_below="@id/cb_deprecated"
-        android:layout_marginTop="10dp"
+        android:layout_alignParentBottom="true"
         android:layout_marginLeft="15dp"
         android:layout_marginBottom="20dp">
         <RadioButton
@@ -35,4 +23,20 @@
             android:checked="true"
             android:text="@string/gdb_sort_desc"/>
     </RadioGroup>
+
+    <CheckBox
+        android:id="@+id/cb_deprecated"
+        android:layout_above="@id/group_radio"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:checked="true"
+        android:text="Include deprecated"/>
+
+    <GridView
+        android:id="@+id/gdb_sort_grid"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/cb_deprecated"
+        android:numColumns="3"/>
 </RelativeLayout>

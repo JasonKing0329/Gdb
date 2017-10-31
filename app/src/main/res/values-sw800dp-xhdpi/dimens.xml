@@ -107,7 +107,7 @@
     <dimen name="game_battle_round_card_minheight">100dp</dimen>
     <dimen name="game_cross_coach_text">16dp</dimen>
     <dimen name="boom_menu_btn_radius">30dp</dimen>
-    <dimen name="gdb_home_star_size">175dp</dimen>
+    <dimen name="gdb_home_star_size">200dp</dimen>
     <dimen name="gdb_home_star_height">200dp</dimen>
     <dimen name="gdb_home_star_padding">20dp</dimen>
     <dimen name="gdb_home_record_height">400dp</dimen>
@@ -151,4 +151,5 @@
     <dimen name="path_indicator_text_size">10dp</dimen>
     <dimen name="starlist_grid_img_height">139dp</dimen>
     <dimen name="starlist_grid_favor_size">50dp</dimen>
+    <dimen name="home_star_gap">20dp</dimen>
 </resources>

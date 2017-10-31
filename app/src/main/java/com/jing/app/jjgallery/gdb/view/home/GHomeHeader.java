@@ -59,6 +59,8 @@ public class GHomeHeader extends RecyclerView.ViewHolder {
             adapter.setList(bean.getStarList());
             adapter.notifyDataSetChanged();
         }
+
+        rvStars.scrollToPosition(0);
     }
 
     @OnClick({R.id.group_recommend, R.id.group_starlist, R.id.group_game, R.id.group_surf})
