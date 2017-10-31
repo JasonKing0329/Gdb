@@ -8,14 +8,32 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Filter keywords"/>
-    <CheckBox
-        android:id="@+id/cb_nr"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:paddingTop="10dp"
-        android:paddingBottom="10dp"
-        android:text="NR"
-        android:gravity="center_vertical" />
+        android:paddingBottom="10dp">
+        <TextView
+            android:id="@+id/tv_default"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="?android:attr/selectableItemBackground"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:text="Apply default"/>
+        <CheckBox
+            android:id="@+id/cb_nr"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@id/tv_default"
+            android:layout_centerVertical="true"
+            android:text="NR"
+            android:gravity="center_vertical" />
+    </RelativeLayout>
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recommend_list"
         android:layout_width="match_parent"

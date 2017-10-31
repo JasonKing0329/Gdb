@@ -173,8 +173,8 @@ public class SettingProperties {
     /**
      * gdb filter model
      */
-    public static String getGdbFilterModel(Context context) {
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+    public static String getGdbFilterModel() {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(GdbApplication.getInstance());
         String json = preferences.getString(PreferenceKey.PREF_GDB_FILTER_MODEL, "");
         return json;
     }
@@ -182,8 +182,8 @@ public class SettingProperties {
     /**
      * gdb filter model
      */
-    public static void saveGdbFilterModel(Context context, String json) {
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+    public static void saveGdbFilterModel(String json) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(GdbApplication.getInstance());
         SharedPreferences.Editor editor = preferences.edit();
         editor.putString(PreferenceKey.PREF_GDB_FILTER_MODEL, json);
         editor.apply();
@@ -192,8 +192,8 @@ public class SettingProperties {
     /**
      * gdb game scenes
      */
-    public static String getGdbGameScenes(Context context) {
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+    public static String getGdbGameScenes() {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(GdbApplication.getInstance());
         String scene = preferences.getString(PreferenceKey.PREF_GDB_GAME_SCENES, "");
         return scene;
     }

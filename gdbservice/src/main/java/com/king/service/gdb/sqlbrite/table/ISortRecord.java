@@ -21,4 +21,6 @@ public interface ISortRecord {
     String COLUMN_RIM = "scoreRim";
     String COLUMN_SPECIAL = "scoreSpecial";
     String COLUMN_DATE = "lastModifyDate";
+    String COLUMN_BAREBACK = "scoreNoCond";
+    String COLUMN_DEPRECATED = "deprecated";
 }

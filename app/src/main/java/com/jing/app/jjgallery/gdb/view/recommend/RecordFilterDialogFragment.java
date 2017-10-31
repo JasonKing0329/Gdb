@@ -17,12 +17,14 @@ import com.jing.app.jjgallery.gdb.IFragmentHolder;
 import com.jing.app.jjgallery.gdb.R;
 import com.jing.app.jjgallery.gdb.model.SettingProperties;
 import com.jing.app.jjgallery.gdb.model.bean.recommend.FilterModel;
+import com.jing.app.jjgallery.gdb.presenter.record.FilterPresenter;
 import com.jing.app.jjgallery.gdb.util.LMBannerViewUtil;
 import com.jing.app.jjgallery.gdb.util.ScreenUtils;
 import com.jing.app.jjgallery.gdb.view.pub.dialog.DraggableDialogFragmentV4;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * 描述:
@@ -38,6 +40,8 @@ public class RecordFilterDialogFragment extends DraggableDialogFragmentV4 implem
     private OnRecordFilterActionListener onRecordFilterActionListener;
     private DialogInterface.OnDismissListener onDismissListener;
 
+    private FilterPresenter filterPresenter;
+
     @Override
     protected View getToolbarView(ViewGroup groupToolbar) {
         requestCloseAction();
@@ -48,15 +52,15 @@ public class RecordFilterDialogFragment extends DraggableDialogFragmentV4 implem
 
     @Override
     protected Fragment getContentViewFragment() {
+
+        filterPresenter = new FilterPresenter();
+        filterModel = filterPresenter.getFilters();
+
         ftFilter = new FilterFragment();
         if (onDismissListener != null) {
             getDialog().setOnDismissListener(onDismissListener);
         }
         return ftFilter;
-    }
-
-    public void setmFilterModel(FilterModel filterModel) {
-        this.filterModel = filterModel;
     }
 
     @Override
@@ -67,8 +71,14 @@ public class RecordFilterDialogFragment extends DraggableDialogFragmentV4 implem
     @Override
     public void onSaveFilterModel() {
         if (onRecordFilterActionListener != null) {
+            filterPresenter.saveFilters(filterModel);
             onRecordFilterActionListener.onSaveFilterModel(filterModel);
         }
+    }
+
+    @Override
+    public void applyDefaultFilter() {
+        filterModel = filterPresenter.createFilters();
     }
 
     @Override
@@ -89,6 +99,7 @@ public class RecordFilterDialogFragment extends DraggableDialogFragmentV4 implem
 
     /**
      * 覆盖父类
+     *
      * @return
      */
     protected int getMaxHeight() {
@@ -161,8 +172,7 @@ public class RecordFilterDialogFragment extends DraggableDialogFragmentV4 implem
             if (isRandom) {
                 rbRandom.setChecked(true);
                 rbFix.setText("Fixed");
-            }
-            else {
+            } else {
                 rbFix.setChecked(true);
                 try {
                     rbFix.setText(formatFixedText(LMBannerViewUtil.ANIM_TYPES[SettingProperties.getGdbRecommendAnimType(getContext())]));
@@ -175,8 +185,19 @@ public class RecordFilterDialogFragment extends DraggableDialogFragmentV4 implem
             etTime.setText(String.valueOf(SettingProperties.getGdbRecommendAnimTime(getContext())));
 
             cbNr.setChecked(holder.getFilterModel().isSupportNR());
-            mAdapter = new FilterAdapter(holder.getFilterModel().getList());
-            recyclerView.setAdapter(mAdapter);
+
+            refreshFilter();
+        }
+
+        private void refreshFilter() {
+            if (mAdapter == null) {
+                mAdapter = new FilterAdapter(holder.getFilterModel().getList());
+                recyclerView.setAdapter(mAdapter);
+            }
+            else {
+                mAdapter.setList(holder.getFilterModel().getList());
+                mAdapter.notifyDataSetChanged();
+            }
         }
 
         @Override
@@ -215,6 +236,12 @@ public class RecordFilterDialogFragment extends DraggableDialogFragmentV4 implem
             }
             SettingProperties.setGdbRecommendAnimTime(getContext(), time);
             holder.onSaveFilterModel();
+        }
+
+        @OnClick(R.id.tv_default)
+        public void onViewClicked() {
+            holder.applyDefaultFilter();
+            refreshFilter();
         }
     }
 

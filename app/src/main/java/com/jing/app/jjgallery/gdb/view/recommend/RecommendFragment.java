@@ -26,6 +26,7 @@ import com.jing.app.jjgallery.gdb.presenter.GdbGuidePresenter;
 import com.jing.app.jjgallery.gdb.presenter.record.FilterPresenter;
 import com.jing.app.jjgallery.gdb.util.GlideUtil;
 import com.jing.app.jjgallery.gdb.util.LMBannerViewUtil;
+import com.jing.app.jjgallery.gdb.view.pub.ProgressProvider;
 import com.king.service.gdb.bean.GDBProperites;
 import com.king.service.gdb.bean.Record;
 import com.king.service.gdb.bean.RecordOneVOne;
@@ -78,7 +79,7 @@ public class RecommendFragment extends BaseFragmentV4 implements IRecommend, Vie
 
         filterPresenter = new FilterPresenter();
         // 设置过滤器
-        gdbGuidePresenter.setFilterModel(filterPresenter.getFilters(getContext()));
+        gdbGuidePresenter.setFilterModel(filterPresenter.getFilters());
         // 加载所有记录，通过onRecordRecommand回调
         gdbGuidePresenter.initialize();
     }
@@ -107,6 +108,13 @@ public class RecommendFragment extends BaseFragmentV4 implements IRecommend, Vie
         // adapter里还没有数据，btnStart就会一直显示在那里，知道开始触发onPageScroll才会隐藏
         // 本来引入library，在setGuide把btnStart的visibility置为gone就可以了，但是这个项目已经引入了很多module了，就不再引入了
         lmBanners.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void onRecordsLoadedFailed(String message) {
+        if (getActivity() instanceof ProgressProvider) {
+            ((ProgressProvider) getActivity()).showToastLong("Load recommend failed: " + message);
+        }
     }
 
     private String getRecordStarText(Record record) {
@@ -145,11 +153,9 @@ public class RecommendFragment extends BaseFragmentV4 implements IRecommend, Vie
             case R.id.gdb_recommend_setting:
                 if (filterDialog == null) {
                     filterDialog = new RecordFilterDialogFragment();
-                    filterDialog.setmFilterModel(filterPresenter.getFilters(getContext()));
                     filterDialog.setOnRecordFilterActionListener(new RecordFilterDialogFragment.OnRecordFilterActionListener() {
                         @Override
                         public void onSaveFilterModel(FilterModel model) {
-                            filterPresenter.saveFilters(getContext(), model);
                             gdbGuidePresenter.setFilterModel(model);
                             gdbGuidePresenter.recommendNext();
                         }

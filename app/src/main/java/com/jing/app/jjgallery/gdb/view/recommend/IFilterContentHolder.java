@@ -11,4 +11,6 @@ import com.jing.app.jjgallery.gdb.model.bean.recommend.FilterModel;
 public interface IFilterContentHolder extends IFragmentHolder {
     FilterModel getFilterModel();
     void onSaveFilterModel();
+
+    void applyDefaultFilter();
 }

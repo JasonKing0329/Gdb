@@ -44,6 +44,10 @@ public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.Holder> {
         return mList.size();
     }
 
+    public void setList(List<FilterBean> list) {
+        this.mList = list;
+    }
+
     public static class Holder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private FilterBean filterBean;

@@ -12,4 +12,6 @@ public interface IRecommend {
     void onRecordsLoaded(List<Record> list);
 
     void onRecordRecommand(Record record);
+
+    void onRecordsLoadedFailed(String message);
 }

@@ -216,11 +216,21 @@ public class RecordDao {
         return list;
     }
 
+    /**
+     * 条件获取record
+     * @param sortColumn 排序参照的列
+     * @param desc 是否降序
+     * @param includeDeprecated 是否包含Deprecated记录
+     * @param cursor 偏移量、数量、sortColumn对应value等条件
+     * @param nameLike 名称模糊关键词
+     * @param scene scene关键词
+     * @return
+     */
     public List<Record> getRecords(String sortColumn, boolean desc, boolean includeDeprecated, RecordCursor cursor, String nameLike, String scene) {
         List<Record> list = new ArrayList<>();
         // 加载两张表的前number条数据，进行排序筛选出最终的number条数据
-        List<RecordOneVOne> oList = queryOneVOneRecords(sortColumn, desc, includeDeprecated, cursor.from1v1, cursor.number, nameLike, scene);
-        List<RecordThree> tList = query3WRecords(sortColumn, desc, includeDeprecated, cursor.from3w, cursor.number, nameLike, scene);
+        List<RecordOneVOne> oList = queryOneVOneRecords(sortColumn, desc, includeDeprecated, cursor, nameLike, scene);
+        List<RecordThree> tList = query3WRecords(sortColumn, desc, includeDeprecated, cursor, nameLike, scene);
         for (RecordOneVOne record:oList) {
             list.add(record);
         }
@@ -251,7 +261,7 @@ public class RecordDao {
         return finalList;
     }
 
-    public List<RecordOneVOne> queryOneVOneRecords(String sortColumn, boolean desc, boolean includeDeprecated, int from, int number, String nameLike, String scene) {
+    public List<RecordOneVOne> queryOneVOneRecords(String sortColumn, boolean desc, boolean includeDeprecated, RecordCursor recordCursor, String nameLike, String scene) {
         List<RecordOneVOne> list = new ArrayList<>();
         // 由于parseRecords里是从1开始的，因此用_fake占0位
         StringBuffer buffer = new StringBuffer("SELECT '1' AS _fake, * FROM ");
@@ -265,12 +275,18 @@ public class RecordDao {
         if (!TextUtils.isEmpty(scene)) {
             buffer.append(" AND scene='").append(scene).append("'");
         }
+        if (recordCursor.min != -1) {
+            buffer.append(" AND ").append(sortColumn).append(">=").append(recordCursor.min);
+        }
+        if (recordCursor.max != -1) {
+            buffer.append(" AND ").append(sortColumn).append("<=").append(recordCursor.max);
+        }
         if (!TextUtils.isEmpty(sortColumn)) {
             buffer.append(" ORDER BY ").append(sortColumn);
         }
         buffer.append(" ").append(desc ? "DESC":"ASC");
-        if (from != -1 && number != -1) {
-            buffer.append(" LIMIT ").append(from).append(",").append(number);
+        if (recordCursor.from1v1 != -1 && recordCursor.number != -1) {
+            buffer.append(" LIMIT ").append(recordCursor.from1v1).append(",").append(recordCursor.number);
         }
         String sql = buffer.toString();
         Log.e("RecordDao", "queryOneVOneRecords " + sql);
@@ -293,7 +309,7 @@ public class RecordDao {
         return list;
     }
 
-    public List<RecordThree> query3WRecords(String sortColumn, boolean desc, boolean includeDeprecated, int from, int number, String nameLike, String scene) {
+    public List<RecordThree> query3WRecords(String sortColumn, boolean desc, boolean includeDeprecated, RecordCursor recordCursor, String nameLike, String scene) {
         List<RecordThree> list = new ArrayList<>();
         // 由于parseRecords里是从1开始的，因此用_fake占0位
         StringBuffer buffer = new StringBuffer("SELECT '1' AS _fake, * FROM ");
@@ -307,12 +323,18 @@ public class RecordDao {
         if (!TextUtils.isEmpty(scene)) {
             buffer.append(" AND scene='").append(scene).append("'");
         }
+        if (recordCursor.min != -1) {
+            buffer.append(" AND ").append(sortColumn).append(">=").append(recordCursor.min);
+        }
+        if (recordCursor.max != -1) {
+            buffer.append(" AND ").append(sortColumn).append("<=").append(recordCursor.max);
+        }
         if (!TextUtils.isEmpty(sortColumn)) {
             buffer.append(" ORDER BY ").append(sortColumn);
         }
         buffer.append(" ").append(desc ? "DESC":"ASC");
-        if (from != -1 && number != -1) {
-            buffer.append(" LIMIT ").append(from).append(",").append(number);
+        if (recordCursor.from1v1 != -1 && recordCursor.number != -1) {
+            buffer.append(" LIMIT ").append(recordCursor.from1v1).append(",").append(recordCursor.number);
         }
         String sql = buffer.toString();
         Log.e("RecordDao", "query3WRecords " + sql);

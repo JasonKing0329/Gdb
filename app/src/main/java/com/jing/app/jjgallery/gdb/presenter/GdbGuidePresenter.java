@@ -13,12 +13,11 @@ import com.jing.app.jjgallery.gdb.view.home.GHomeBean;
 import com.jing.app.jjgallery.gdb.view.home.IHomeView;
 import com.jing.app.jjgallery.gdb.view.recommend.IRecommend;
 
-import com.king.service.gdb.GDBProvider;
 import com.king.service.gdb.RecordCursor;
 import com.king.service.gdb.bean.FavorBean;
 import com.king.service.gdb.bean.GDBProperites;
 import com.king.service.gdb.bean.Record;
-import com.king.service.gdb.bean.RecordOneVOne;
+import com.king.service.gdb.bean.RecordSingleScene;
 import com.king.service.gdb.bean.Star;
 
 import java.util.ArrayList;
@@ -94,6 +93,9 @@ public class GdbGuidePresenter {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
                         throwable.printStackTrace();
+                        if (recommendView != null) {
+                            recommendView.onRecordsLoadedFailed(throwable.getMessage());
+                        }
                     }
                 });
     }
@@ -205,37 +207,25 @@ public class GdbGuidePresenter {
         if (keyword.equals(GdbConstants.FILTER_KEY_SCORE)) {
             return record.getScore();
         }
-        else if (keyword.equals(GdbConstants.FILTER_KEY_SCORE_FEEL)) {
-            return record.getScoreFeel();
-        }
         else if (keyword.equals(GdbConstants.FILTER_KEY_SCORE_STORY)) {
             return record.getScoreStory();
         }
         else if (keyword.equals(GdbConstants.FILTER_KEY_SCORE_DEPRECATED)) {
             return record.getDeprecated();
         }
-        else if (record instanceof RecordOneVOne) {
-            RecordOneVOne oRecord = (RecordOneVOne) record;
+        else if (record instanceof RecordSingleScene) {
+            RecordSingleScene oRecord = (RecordSingleScene) record;
             if (keyword.equals(GdbConstants.FILTER_KEY_SCORE_CUM)) {
                 return oRecord.getScoreCum();
             }
             else if (keyword.equals(GdbConstants.FILTER_KEY_SCORE_FK)) {
                 return oRecord.getScoreFk();
             }
-            else if (keyword.equals(GdbConstants.FILTER_KEY_SCORE_STAR1)) {
-                return oRecord.getScoreStar1();
-            }
-            else if (keyword.equals(GdbConstants.FILTER_KEY_SCORE_STAR2)) {
-                return oRecord.getScoreStar2();
-            }
             else if (keyword.equals(GdbConstants.FILTER_KEY_SCORE_STAR)) {
                 return oRecord.getScoreStar();
             }
-            else if (keyword.equals(GdbConstants.FILTER_KEY_SCORE_STARCC1)) {
-                return oRecord.getScoreStar1();
-            }
-            else if (keyword.equals(GdbConstants.FILTER_KEY_SCORE_STARCC2)) {
-                return oRecord.getScoreStar2();
+            else if (keyword.equals(GdbConstants.FILTER_KEY_SCORE_STARC)) {
+                return oRecord.getScoreStarC();
             }
             else if (keyword.equals(GdbConstants.FILTER_KEY_SCORE_BJOB)) {
                 return oRecord.getScoreBJob();
@@ -260,24 +250,6 @@ public class GdbGuidePresenter {
             }
             else if (keyword.equals(GdbConstants.FILTER_KEY_SCORE_FOREPLAY)) {
                 return oRecord.getScoreForePlay();
-            }
-            else if (keyword.equals(GdbConstants.FILTER_KEY_SCORE_FK_SIT_FACE)) {
-                return oRecord.getScoreFkType1();
-            }
-            else if (keyword.equals(GdbConstants.FILTER_KEY_SCORE_FK_SIT_BACK)) {
-                return oRecord.getScoreFkType2();
-            }
-            else if (keyword.equals(GdbConstants.FILTER_KEY_SCORE_FK_STAND_FACE)) {
-                return oRecord.getScoreFkType3();
-            }
-            else if (keyword.equals(GdbConstants.FILTER_KEY_SCORE_FK_STAND_BACK)) {
-                return oRecord.getScoreFkType4();
-            }
-            else if (keyword.equals(GdbConstants.FILTER_KEY_SCORE_FK_SIDE)) {
-                return oRecord.getScoreFkType5();
-            }
-            else if (keyword.equals(GdbConstants.FILTER_KEY_SCORE_FK_SPECIAL)) {
-                return oRecord.getScoreFkType6();
             }
         }
         return 0;

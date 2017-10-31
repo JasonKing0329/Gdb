@@ -21,7 +21,9 @@ import com.squareup.sqlbrite2.BriteDatabase;
 import com.squareup.sqlbrite2.SqlBrite;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import io.reactivex.schedulers.Schedulers;
 
@@ -138,9 +140,13 @@ public class GDataProvider implements GDBProvider {
     @Override
     public List<Record> getAllRecords() {
         List<Record> list = recordDao.getAllRecords();
+
+        // 经测试1000条record，缓存star可以由2s多缩短到500ms以内
+        Map<Integer, Star> starMap = new HashMap<>();
         for (Record mRecord:list){
-            loadStarForReocrd(mRecord);
+            loadStarForReocrd(mRecord, starMap);
         }
+
         return list;
     }
 
@@ -153,6 +159,8 @@ public class GDataProvider implements GDBProvider {
     public List<Record> getLatestRecords(RecordCursor cursor) {
 
         List<Record> list = recordDao.getLatestRecords(cursor);
+
+        // 本方法中list数据较少，不用采取缓存star
         for (Record mRecord:list){
             loadStarForReocrd(mRecord);
         }
@@ -175,11 +183,25 @@ public class GDataProvider implements GDBProvider {
         mStar.setRecordNumber(list.size());
     }
 
+    /**
+     * 无缓存，直接查询star
+     * @param mRecord
+     */
     private void loadStarForReocrd(Record mRecord) {
+        loadStarForReocrd(mRecord, null);
+    }
+
+    /**
+     *
+     * @param mRecord
+     * @param cacheMap 缓存star，节省大量记录重复查询star的时间
+     */
+    private void loadStarForReocrd(Record mRecord, Map<Integer, Star> cacheMap) {
         if (mRecord instanceof RecordOneVOne) {
             RecordOneVOne record = (RecordOneVOne) mRecord;
-            record.setStar1(queryStarById(record.getStar1Id()));
-            record.setStar2(queryStarById(record.getStar2Id()));
+            record.setStar1(getOrQueryStar(record.getStar1Id(), cacheMap));
+            record.setStar1(getOrQueryStar(record.getStar1Id(), cacheMap));
+            record.setStar2(getOrQueryStar(record.getStar2Id(), cacheMap));
         }
         else if (mRecord instanceof RecordThree) {
             RecordThree record = (RecordThree) mRecord;
@@ -187,7 +209,7 @@ public class GDataProvider implements GDBProvider {
             if (!TextUtils.isEmpty(ids)) {
                 String[] starIds = ids.split(",");
                 for (String startId:starIds) {
-                    Star star = queryStarById(Integer.parseInt(startId));
+                    Star star = getOrQueryStar(Integer.parseInt(startId), cacheMap);
                     if (record.getStarTopList() == null) {
                         record.setStarTopList(new ArrayList<Star>());
                     }
@@ -198,7 +220,7 @@ public class GDataProvider implements GDBProvider {
             if (!TextUtils.isEmpty(ids)) {
                 String[] starIds = ids.split(",");
                 for (String startId:starIds) {
-                    Star star = queryStarById(Integer.parseInt(startId));
+                    Star star = getOrQueryStar(Integer.parseInt(startId), cacheMap);
                     if (record.getStarBottomList() == null) {
                         record.setStarBottomList(new ArrayList<Star>());
                     }
@@ -209,7 +231,7 @@ public class GDataProvider implements GDBProvider {
             if (!TextUtils.isEmpty(ids)) {
                 String[] starIds = ids.split(",");
                 for (String startId:starIds) {
-                    Star star = queryStarById(Integer.parseInt(startId));
+                    Star star = getOrQueryStar(Integer.parseInt(startId), cacheMap);
                     if (record.getStarMixList() == null) {
                         record.setStarMixList(new ArrayList<Star>());
                     }
@@ -217,6 +239,19 @@ public class GDataProvider implements GDBProvider {
                 }
             }
         }
+    }
+
+    private Star getOrQueryStar(int starId, Map<Integer, Star> cacheMap) {
+
+        if (cacheMap != null && cacheMap.get(starId) != null) {
+            return cacheMap.get(starId);
+        }
+
+        Star star = queryStarById(starId);
+        if (cacheMap != null) {
+            cacheMap.put(star.getId(), star);
+        }
+        return star;
     }
 
     @Override

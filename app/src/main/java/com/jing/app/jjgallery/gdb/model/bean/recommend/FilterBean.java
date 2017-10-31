@@ -8,8 +8,17 @@ import com.google.gson.annotations.SerializedName;
 
 public class FilterBean {
 
+    /**
+     * 关键词名称
+     */
     @SerializedName("keyword")
     private String keyword;
+
+    /**
+     * 关键词在数据库中对应的字段
+     */
+    @SerializedName("keywordFiled")
+    private String keywordFiled;
 
     @SerializedName("isEnable")
     private boolean isEnable;
@@ -50,5 +59,13 @@ public class FilterBean {
 
     public void setKeyword(String keyword) {
         this.keyword = keyword;
+    }
+
+    public String getKeywordFiled() {
+        return keywordFiled;
+    }
+
+    public void setKeywordFiled(String keywordFiled) {
+        this.keywordFiled = keywordFiled;
     }
 }
