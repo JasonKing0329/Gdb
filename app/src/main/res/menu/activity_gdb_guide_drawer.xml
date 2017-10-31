@@ -7,9 +7,9 @@
             android:icon="@drawable/ic_folder_yellow_700_36dp"
             android:title="@string/menu_filemanager" />
         <item
-            android:id="@+id/nav_timeline"
+            android:id="@+id/nav_swipe_star"
             android:icon="@drawable/ic_timeline_yellow_700_36dp"
-            android:title="@string/guide_timeline" />
+            android:title="@string/menu_swipe_star" />
         <item
             android:id="@+id/nav_waterfall"
             android:icon="@drawable/ic_blur_on_yellow_700_36dp"

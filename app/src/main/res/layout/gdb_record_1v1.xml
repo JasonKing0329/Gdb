@@ -98,7 +98,7 @@
                             android:layout_width="@dimen/gdb_record_page_star1_img_height"
                             android:layout_height="@dimen/gdb_record_page_star1_img_height"
                             android:scaleType="centerCrop"
-                            android:src="@drawable/default_coach"
+                            android:src="@drawable/ic_def_person"
                             android:transitionName="@string/anim_record_page_star1_img" />
 
                         <TextView
@@ -126,7 +126,7 @@
                             android:layout_width="@dimen/gdb_record_page_star1_img_height"
                             android:layout_height="@dimen/gdb_record_page_star1_img_height"
                             android:scaleType="centerCrop"
-                            android:src="@drawable/default_coach"
+                            android:src="@drawable/ic_def_person"
                             android:transitionName="@string/anim_record_page_star2_img" />
 
                         <TextView
@@ -162,7 +162,7 @@
                             android:layout_width="@dimen/gdb_record_page_star3w_img_height"
                             android:layout_height="@dimen/gdb_record_page_star3w_img_height"
                             android:scaleType="centerCrop"
-                            android:src="@drawable/default_coach" />
+                            android:src="@drawable/ic_def_person" />
 
                         <TextView
                             android:id="@+id/tv_3w_flag1"
@@ -196,7 +196,7 @@
                             android:layout_width="@dimen/gdb_record_page_star3w_img_height"
                             android:layout_height="@dimen/gdb_record_page_star3w_img_height"
                             android:scaleType="centerCrop"
-                            android:src="@drawable/default_coach" />
+                            android:src="@drawable/ic_def_person" />
 
                         <TextView
                             android:id="@+id/tv_3w_flag2"
@@ -230,7 +230,7 @@
                             android:layout_width="@dimen/gdb_record_page_star3w_img_height"
                             android:layout_height="@dimen/gdb_record_page_star3w_img_height"
                             android:scaleType="centerCrop"
-                            android:src="@drawable/default_coach" />
+                            android:src="@drawable/ic_def_person" />
 
                         <TextView
                             android:id="@+id/tv_3w_flag3"

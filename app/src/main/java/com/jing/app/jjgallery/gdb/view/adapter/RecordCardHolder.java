@@ -111,8 +111,8 @@ public class RecordCardHolder {
                 starList.addAll(rRecord.getStarMixList());
             }
 
-            ivStar1.setImageResource(R.drawable.default_coach);
-            ivStar2.setImageResource(R.drawable.default_coach);
+            ivStar1.setImageResource(R.drawable.ic_def_person);
+            ivStar2.setImageResource(R.drawable.ic_def_person);
             ivStar2.setVisibility(View.VISIBLE);
             ImageView[] views = new ImageView[]{ivStar1, ivStar2};
             int imageViewIndex = 0;

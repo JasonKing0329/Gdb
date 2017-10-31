@@ -43,8 +43,20 @@ public class GlideUtil {
      */
     public static RequestOptions getStarOptions() {
         RequestOptions options = new RequestOptions();
-        options.error(R.drawable.default_coach);
-        options.placeholder(R.drawable.default_coach);
+        options.error(R.drawable.ic_def_person);
+        options.placeholder(R.drawable.ic_def_person);
+        options.dontAnimate();
+        return options;
+    }
+
+    /**
+     * star item
+     * @return
+     */
+    public static RequestOptions getStarWideOptions() {
+        RequestOptions options = new RequestOptions();
+        options.error(R.drawable.ic_def_person_wide);
+        options.placeholder(R.drawable.ic_def_person_wide);
         options.dontAnimate();
         return options;
     }

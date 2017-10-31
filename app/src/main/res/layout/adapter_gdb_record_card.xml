@@ -136,7 +136,7 @@
                     android:layout_width="@dimen/gdb_record_card_bottom_image_size"
                     android:layout_height="@dimen/gdb_record_card_bottom_image_size"
                     android:scaleType="fitXY"
-                    android:src="@drawable/default_coach"
+                    android:src="@drawable/ic_def_person"
                     app:siRadius="5dp"/>
                 <com.github.siyamed.shapeimageview.RoundedImageView
                     android:id="@+id/iv_frame2"
@@ -144,7 +144,7 @@
                     android:layout_height="@dimen/gdb_record_card_bottom_image_size"
                     android:scaleType="fitXY"
                     android:layout_marginLeft="@dimen/gdb_record_card_bottom_gap"
-                    android:src="@drawable/default_coach"
+                    android:src="@drawable/ic_def_person"
                     app:siRadius="5dp"/>
                 <com.github.siyamed.shapeimageview.RoundedImageView
                     android:id="@+id/iv_frame3"
@@ -152,7 +152,7 @@
                     android:layout_height="@dimen/gdb_record_card_bottom_image_size"
                     android:scaleType="fitXY"
                     android:layout_marginLeft="@dimen/gdb_record_card_bottom_gap"
-                    android:src="@drawable/default_coach"
+                    android:src="@drawable/ic_def_person"
                     app:siRadius="5dp"/>
             </LinearLayout>
         </RelativeLayout>

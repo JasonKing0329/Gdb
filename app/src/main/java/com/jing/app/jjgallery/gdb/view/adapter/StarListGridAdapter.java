@@ -39,7 +39,7 @@ public class StarListGridAdapter extends RecyclerView.Adapter<StarListGridAdapte
 
     public StarListGridAdapter(List<StarProxy> list) {
         this.originList = list;
-        requestOptions = GlideUtil.getStarOptions();
+        requestOptions = GlideUtil.getStarWideOptions();
     }
 
     public void setOnStarClickListener(OnStarClickListener listener) {

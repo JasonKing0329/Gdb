@@ -176,8 +176,8 @@ public class GHomeActivity extends GBaseActivity implements NavigationView.OnNav
         else if (id == R.id.nav_main) {
             ActivityManager.startSurfLocalActivity(this);
         }
-        else if (id == R.id.nav_timeline) {
-//            ActivityManager.startTimeLineActivity(this, null);
+        else if (id == R.id.nav_swipe_star) {
+            ActivityManager.startStarSwipeActivity(this);
         }
         else if (id == R.id.nav_waterfall) {
             Bundle bundle = null;
