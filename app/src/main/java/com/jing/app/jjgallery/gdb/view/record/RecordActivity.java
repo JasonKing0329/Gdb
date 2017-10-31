@@ -27,6 +27,7 @@ import com.jing.app.jjgallery.gdb.model.VideoModel;
 import com.jing.app.jjgallery.gdb.model.bean.Star3W;
 import com.jing.app.jjgallery.gdb.model.bean.StarProxy;
 import com.jing.app.jjgallery.gdb.presenter.record.RecordPresenter;
+import com.jing.app.jjgallery.gdb.util.GlideApp;
 import com.jing.app.jjgallery.gdb.util.GlideUtil;
 import com.jing.app.jjgallery.gdb.util.LMBannerViewUtil;
 import com.jing.app.jjgallery.gdb.view.pub.BannerAnimDialogFragment;
@@ -128,6 +129,8 @@ public class RecordActivity extends GBaseActivity implements IRecordView {
     PointDescLayout groupFk;
     @BindView(R.id.group_record)
     RelativeLayout groupRecord;
+    @BindView(R.id.iv_cum)
+    ImageView ivCum;
 
     @BindView(R.id.group_star_1v1)
     LinearLayout groupStar1v1;
@@ -259,6 +262,15 @@ public class RecordActivity extends GBaseActivity implements IRecordView {
             ivPlay.setVisibility(View.GONE);
         } else {
             ivPlay.setVisibility(View.VISIBLE);
+        }
+
+        String cuPath = GdbImageProvider.getRecordCuPath(record.getName());
+        if (!TextUtils.isEmpty(cuPath)) {
+            ivCum.setVisibility(View.VISIBLE);
+            GlideApp.with(this)
+                    .asGif()
+                    .load(cuPath)
+                    .into(ivCum);
         }
     }
 

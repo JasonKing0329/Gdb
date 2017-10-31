@@ -202,6 +202,21 @@ public class GdbImageProvider {
         }
     }
 
+    public static String getRecordCuPath(String name) {
+        if (SettingProperties.isGdbNoImageMode()) {
+            return "";
+        }
+        String path = Configuration.GDB_IMG_RECORD + "/" + name + "/cu";
+        File folder = new File(path);
+        if (folder.exists()) {
+            File[] files = folder.listFiles();
+            if (files.length > 0) {
+                return files[0].getPath();
+            }
+        }
+        return null;
+    }
+
     public static class IndexPackage {
         public int index;
     }

@@ -368,6 +368,14 @@
                         android:layout_centerVertical="true" />
                 </RelativeLayout>
 
+                <ImageView
+                    android:id="@+id/iv_cum"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/gdb_star_header_height"
+                    android:scaleType="fitXY"
+                    android:visibility="gone"
+                    android:layout_marginBottom="10dp"/>
+
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/gdb_record_line_height">
