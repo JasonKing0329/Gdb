@@ -281,7 +281,12 @@ public class GDataProvider implements GDBProvider {
 
     @Override
     public List<FavorBean> getTopFavors(int number) {
-        return null;
+        return favorDao.getTopFavors(number);
+    }
+
+    @Override
+    public List<FavorBean> getRandomFavors(int number) {
+        return favorDao.getRandomFavors(number);
     }
 
     @Override

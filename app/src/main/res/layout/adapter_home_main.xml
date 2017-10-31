@@ -38,69 +38,15 @@
                 android:layout_marginRight="20dp"/>
         </RelativeLayout>
 
-        <LinearLayout
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_stars"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:orientation="horizontal">
-            <LinearLayout
-                android:id="@+id/group_star1"
-                style="@style/GdbHomeStarGroup"
-                android:orientation="vertical">
-                <com.github.siyamed.shapeimageview.RoundedImageView
-                    android:id="@+id/iv_star1"
-                    style="@style/GdbHomeStarImage"
-                    app:siRadius="10dp"/>
-                <TextView
-                    android:id="@+id/tv_star_name1"
-                    style="@style/GdbHomeStarText"
-                    android:layout_marginTop="5dp" />
-            </LinearLayout>
-            <LinearLayout
-                android:id="@+id/group_star2"
-                style="@style/GdbHomeStarGroup"
-                android:orientation="vertical"
-                android:layout_marginLeft="@dimen/gdb_home_star_padding">
-                <com.github.siyamed.shapeimageview.RoundedImageView
-                    android:id="@+id/iv_star2"
-                    style="@style/GdbHomeStarImage"
-                    app:siRadius="10dp"/>
-                <TextView
-                    android:id="@+id/tv_star_name2"
-                    style="@style/GdbHomeStarText"
-                    android:layout_marginTop="5dp"/>
-            </LinearLayout>
-            <LinearLayout
-                android:id="@+id/group_star3"
-                style="@style/GdbHomeStarGroup"
-                android:orientation="vertical"
-                android:layout_marginLeft="@dimen/gdb_home_star_padding">
-                <com.github.siyamed.shapeimageview.RoundedImageView
-                    android:id="@+id/iv_star3"
-                    app:siRadius="10dp"
-                    style="@style/GdbHomeStarImage" />
-                <TextView
-                    android:id="@+id/tv_star_name3"
-                    style="@style/GdbHomeStarText"
-                    android:layout_marginTop="5dp"/>
-            </LinearLayout>
-            <LinearLayout
-                android:id="@+id/group_star4"
-                style="@style/GdbHomeStarGroup"
-                android:orientation="vertical"
-                android:layout_marginLeft="@dimen/gdb_home_star_padding"
-                android:visibility="gone">
-                <com.github.siyamed.shapeimageview.RoundedImageView
-                    android:id="@+id/iv_star4"
-                    style="@style/GdbHomeStarImage"
-                    app:siRadius="10dp"/>
-                <TextView
-                    android:id="@+id/tv_star_name4"
-                    style="@style/GdbHomeStarText"
-                    android:layout_marginTop="5dp"/>
-            </LinearLayout>
-        </LinearLayout>
+            android:layout_height="@dimen/gdb_home_star_size"
+            android:clipChildren="false"
+            android:overScrollMode="never"
+            app:cardWidth="@dimen/gdb_home_star_size"
+            app:layoutManager="com.jing.app.jjgallery.gdb.view.pub.cardslider.CardSliderLayoutManager"
+            app:viewUpdater="com.jing.app.jjgallery.gdb.view.home.HomeStarUpdater"/>
 
         <LinearLayout
             android:layout_width="match_parent"

@@ -13,4 +13,6 @@ public interface IHomeView {
     void onHomeDataLoaded(GHomeBean bean);
 
     void onMoreRecordsLoaded(List<Record> list);
+
+    void onHomeDataLoadFailed(String message);
 }

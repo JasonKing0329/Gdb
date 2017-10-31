@@ -357,6 +357,11 @@ public class SqldroidProvider implements GDBProvider {
         return null;
     }
 
+    @Override
+    public List<FavorBean> getRandomFavors(int number) {
+        return null;
+    }
+
     public boolean isStarFavor(int starId) {
         try {
             SqlConnection.getInstance().connect(databasePath);

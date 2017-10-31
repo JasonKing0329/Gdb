@@ -5,18 +5,11 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
-import com.github.siyamed.shapeimageview.RoundedImageView;
 import com.jing.app.jjgallery.gdb.ActivityManager;
-import com.jing.app.jjgallery.gdb.GdbApplication;
 import com.jing.app.jjgallery.gdb.R;
 import com.jing.app.jjgallery.gdb.model.bean.StarProxy;
-import com.jing.app.jjgallery.gdb.util.DisplayHelper;
-import com.jing.app.jjgallery.gdb.util.GlideUtil;
+import com.jing.app.jjgallery.gdb.view.pub.cardslider.CardSnapHelper;
 import com.jing.app.jjgallery.gdb.view.recommend.RecommendFragment;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -28,36 +21,19 @@ import butterknife.OnClick;
 
 public class GHomeHeader extends RecyclerView.ViewHolder {
 
-    @BindView(R.id.iv_star1)
-    RoundedImageView ivStar1;
-    @BindView(R.id.iv_star2)
-    RoundedImageView ivStar2;
-    @BindView(R.id.iv_star3)
-    RoundedImageView ivStar3;
-    @BindView(R.id.iv_star4)
-    RoundedImageView ivStar4;
-    @BindView(R.id.tv_star_name1)
-    TextView tvStarName1;
-    @BindView(R.id.tv_star_name2)
-    TextView tvStarName2;
-    @BindView(R.id.tv_star_name3)
-    TextView tvStarName3;
-    @BindView(R.id.tv_star_name4)
-    TextView tvStarName4;
-    @BindView(R.id.group_star4)
-    ViewGroup groupStar4;
+    @BindView(R.id.rv_stars)
+    RecyclerView rvStars;
 
     private OnStarListener onStarListener;
     private GHomeBean homeBean;
 
-    private RequestOptions starOptions;
+    private HomeStarAdapter adapter;
 
     public GHomeHeader(View itemView, FragmentManager fragmentManager, OnStarListener onStarListener) {
         super(itemView);
         this.onStarListener = onStarListener;
         ButterKnife.bind(this, itemView);
         initRecommentd(fragmentManager);
-        starOptions = GlideUtil.getStarOptions();
     }
 
     private void initRecommentd(FragmentManager fragmentManager) {
@@ -71,76 +47,34 @@ public class GHomeHeader extends RecyclerView.ViewHolder {
 
         homeBean = bean;
 
-        if (bean.getStarList().size() > 0) {
-            tvStarName1.setText(bean.getStarList().get(0).getStar().getName());
-
-            Glide.with(GdbApplication.getInstance())
-                    .load(bean.getStarList().get(0).getImagePath())
-                    .apply(starOptions)
-                    .into(ivStar1);
+        if (adapter == null) {
+            adapter = new HomeStarAdapter();
+            adapter.setOnStarListener(onStarListener);
+            adapter.setList(bean.getStarList());
+            rvStars.setAdapter(adapter);
+            // 只能attach一次
+            new CardSnapHelper().attachToRecyclerView(rvStars);
         }
-        if (bean.getStarList().size() > 1) {
-            tvStarName2.setText(bean.getStarList().get(1).getStar().getName());
-
-            Glide.with(GdbApplication.getInstance())
-                    .load(bean.getStarList().get(1).getImagePath())
-                    .apply(starOptions)
-                    .into(ivStar2);
-        }
-        if (bean.getStarList().size() > 2) {
-            tvStarName3.setText(bean.getStarList().get(2).getStar().getName());
-
-            Glide.with(GdbApplication.getInstance())
-                    .load(bean.getStarList().get(2).getImagePath())
-                    .apply(starOptions)
-                    .into(ivStar3);
-        }
-        // 平板显示4个
-        if (DisplayHelper.isTabModel(ivStar4.getContext())) {
-            if (bean.getStarList().size() > 3) {
-                groupStar4.setVisibility(View.VISIBLE);
-                tvStarName4.setText(bean.getStarList().get(3).getStar().getName());
-
-                Glide.with(GdbApplication.getInstance())
-                        .load(bean.getStarList().get(3).getImagePath())
-                        .apply(starOptions)
-                        .into(ivStar4);
-            }
+        else {
+            adapter.setList(bean.getStarList());
+            adapter.notifyDataSetChanged();
         }
     }
 
     @OnClick({R.id.group_recommend, R.id.group_starlist, R.id.group_game, R.id.group_surf})
     public void onViewClicked(View view) {
-            switch (view.getId()) {
-                case R.id.group_recommend:
-                    ActivityManager.startRecordListActivity((Activity) view.getContext());
-                    break;
-                case R.id.group_starlist:
-                    onStarListener.onStarGroupClicked();
-                    break;
-                case R.id.group_game:
-                    ActivityManager.startGameActivity((Activity) view.getContext());
-                    break;
-                case R.id.group_surf:
-                    ActivityManager.startSurfHttpActivity((Activity) view.getContext());
-                    break;
-            }
-    }
-
-    @OnClick({R.id.iv_star1, R.id.iv_star2, R.id.iv_star3, R.id.iv_star4})
-    public void onStarClicked(View view) {
         switch (view.getId()) {
-            case R.id.iv_star1:
-                onStarListener.onStarClicked(homeBean.getStarList().get(0));
+            case R.id.group_recommend:
+                ActivityManager.startRecordListActivity((Activity) view.getContext());
                 break;
-            case R.id.iv_star2:
-                onStarListener.onStarClicked(homeBean.getStarList().get(1));
+            case R.id.group_starlist:
+                onStarListener.onStarGroupClicked();
                 break;
-            case R.id.iv_star3:
-                onStarListener.onStarClicked(homeBean.getStarList().get(2));
+            case R.id.group_game:
+                ActivityManager.startGameActivity((Activity) view.getContext());
                 break;
-            case R.id.iv_star4:
-                onStarListener.onStarClicked(homeBean.getStarList().get(3));
+            case R.id.group_surf:
+                ActivityManager.startSurfHttpActivity((Activity) view.getContext());
                 break;
         }
     }

@@ -22,9 +22,34 @@ public class FavorDao {
         this.gDataDb = gDataDb;
     }
 
+    public List<FavorBean> getRandomFavors(int number) {
+        List<FavorBean> list = new ArrayList<>();
+        String sql = "SELECT * FROM " + TFavor.TABLE_NAME + " ORDER BY RANDOM() limit " + number;
+        String[] args = new String[]{};
+        Cursor cursor = null;
+        try {
+            cursor = gDataDb.query(sql, args);
+            while (cursor.moveToNext()) {
+                list.add(TFavor.parseFavorBean(cursor));
+            }
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+        return list;
+    }
+
     public List<FavorBean> getFavors() {
+        return getTopFavors(0);
+    }
+
+    public List<FavorBean> getTopFavors(int number) {
         List<FavorBean> list = new ArrayList<>();
         String sql = "SELECT * FROM " + TFavor.TABLE_NAME + " ORDER BY favor DESC";
+        if (number > 0) {
+            sql = sql.concat(" LIMIT ").concat(String.valueOf(number));
+        }
         String[] args = new String[]{};
         Cursor cursor = null;
         try {

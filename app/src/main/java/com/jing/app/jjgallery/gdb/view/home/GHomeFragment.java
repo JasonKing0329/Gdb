@@ -12,6 +12,7 @@ import com.jing.app.jjgallery.gdb.IFragmentHolder;
 import com.jing.app.jjgallery.gdb.R;
 import com.jing.app.jjgallery.gdb.model.bean.StarProxy;
 import com.jing.app.jjgallery.gdb.view.pub.AutoLoadMoreRecyclerView;
+import com.jing.app.jjgallery.gdb.view.pub.ProgressProvider;
 import com.king.service.gdb.bean.Record;
 
 import java.util.List;
@@ -130,6 +131,13 @@ public class GHomeFragment extends BaseFragmentV4 implements IHomeView, GHomeRec
         // notifyDataSetChanged会有闪屏现象，用notifyItemRangeInserted结合默认动画就比较理想了
 //        listAdapter.notifyDataSetChanged();
         listAdapter.notifyItemRangeInserted(originSize - 1, list.size());
+    }
+
+    @Override
+    public void onHomeDataLoadFailed(String message) {
+        if (getActivity() instanceof ProgressProvider) {
+            ((ProgressProvider) getActivity()).showToastLong("Load home data error: " + message);
+        }
     }
 
     @Override

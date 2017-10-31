@@ -30,6 +30,7 @@ import java.util.Random;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.Scheduler;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Consumer;
@@ -282,8 +283,45 @@ public class GdbGuidePresenter {
     /**
      * 获取home主页数据
      */
-    public void loadHomeData(IHomeView homeView) {
-        new LoadHomeDataTask(homeView).execute();
+    public void loadHomeData(final IHomeView homeView) {
+        Observable.create(new ObservableOnSubscribe<GHomeBean>() {
+            @Override
+            public void subscribe(ObservableEmitter<GHomeBean> e) throws Exception {
+                GHomeBean homeBean = new GHomeBean();
+                homeBean.setRecordList(getLatestRecord(NUM_LOAD_MORE));
+
+                List<StarProxy> starList = new ArrayList<>();
+
+                // 随机获取N个favor
+                List<FavorBean> favorList = GdbProviderHelper.getProvider().getRandomFavors(10);
+                for (int i = 0; i < favorList.size(); i ++) {
+                    StarProxy proxy = new StarProxy();
+                    Star star = GdbProviderHelper.getProvider().queryStarById(favorList.get(i).getStarId());
+                    proxy.setStar(star);
+                    proxy.setImagePath(GdbImageProvider.getStarRandomPath(star.getName(), null));
+                    proxy.setFavor(favorList.get(i).getFavor());
+                    starList.add(proxy);
+                }
+                homeBean.setStarList(starList);
+
+                e.onNext(homeBean);
+            }
+        }).observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(new Consumer<GHomeBean>() {
+                    @Override
+                    public void accept(GHomeBean data) throws Exception {
+                        if (homeView != null) {
+                            homeView.onHomeDataLoaded(data);
+                        }
+
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        homeView.onHomeDataLoadFailed(throwable.getMessage());
+                    }
+                });
     }
 
     /**
@@ -312,53 +350,6 @@ public class GdbGuidePresenter {
 
     private Queue<LoadMoreTask> executeQueue = new LinkedList<>();
 
-    /**
-     * 加载全部记录
-     */
-    private class LoadHomeDataTask extends AsyncTask<Object, Void, GHomeBean> {
-
-        private final IHomeView homeView;
-
-        public LoadHomeDataTask(IHomeView homeView) {
-            this.homeView = homeView;
-        }
-
-        @Override
-        protected void onPostExecute(GHomeBean data) {
-
-            if (homeView != null) {
-                homeView.onHomeDataLoaded(data);
-            }
-
-            super.onPostExecute(data);
-        }
-
-        @Override
-        protected GHomeBean doInBackground(Object... params) {
-            GHomeBean homeBean = new GHomeBean();
-            homeBean.setRecordList(getLatestRecord(NUM_LOAD_MORE));
-
-//            List<Record> randomList = gdbProvider.getRandomRecords(1);
-//            homeBean.setCoverRecord(randomList.get(0));
-
-            List<StarProxy> starList = new ArrayList<>();
-
-            // 获取全部favor，打乱顺序后由主页挑出前N个使用
-//            List<FavorBean> favorList = favorProvider.getTopFavors(3);
-            List<FavorBean> favorList = GdbProviderHelper.getProvider().getFavors();
-            Collections.shuffle(favorList);
-            for (int i = 0; i < favorList.size(); i ++) {
-                StarProxy proxy = new StarProxy();
-                Star star = GdbProviderHelper.getProvider().queryStarById(favorList.get(i).getStarId());
-                proxy.setStar(star);
-                proxy.setImagePath(GdbImageProvider.getStarRandomPath(star.getName(), null));
-                proxy.setFavor(favorList.get(i).getFavor());
-                starList.add(proxy);
-            }
-            homeBean.setStarList(starList);
-            return homeBean;
-        }
-    }
 
     /**
      * 加载全部记录

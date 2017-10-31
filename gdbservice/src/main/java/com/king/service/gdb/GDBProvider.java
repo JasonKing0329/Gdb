@@ -107,10 +107,17 @@ public interface GDBProvider {
     List<FavorBean> getFavors();
 
     /**
-     * 查询所有的favor数据
+     * 查询number个favor数据
      * @return
      */
     List<FavorBean> getTopFavors(int number);
+
+    /**
+     * 随机查询number个数据
+     * @param number
+     * @return
+     */
+    List<FavorBean> getRandomFavors(int number);
 
     boolean isStarFavor(int starId);
 

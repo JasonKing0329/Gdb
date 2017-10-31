@@ -133,6 +133,7 @@
     <dimen name="game_cross_coach_text">16dp</dimen>
     <dimen name="boom_menu_btn_radius">30dp</dimen>
     <dimen name="gdb_home_star_size">100dp</dimen>
+    <dimen name="gdb_home_star_height">120dp</dimen>
     <dimen name="gdb_home_star_padding">10dp</dimen>
     <dimen name="gdb_home_record_height">200dp</dimen>
     <dimen name="gdb_home_more_height">60dp</dimen>
