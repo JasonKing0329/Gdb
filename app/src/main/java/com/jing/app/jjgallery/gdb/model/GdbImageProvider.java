@@ -209,7 +209,7 @@ public class GdbImageProvider {
         String path = Configuration.GDB_IMG_RECORD + "/" + name + "/cu";
         File folder = new File(path);
         if (folder.exists()) {
-            File[] files = folder.listFiles();
+            File[] files = folder.listFiles(fileFilter);
             if (files.length > 0) {
                 return files[0].getPath();
             }
