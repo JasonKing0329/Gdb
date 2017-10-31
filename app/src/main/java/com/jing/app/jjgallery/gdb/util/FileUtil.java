@@ -90,4 +90,37 @@ public class FileUtil {
         }
     }
 
+    /**
+     * 递归删除文件目录
+     * @param file
+     */
+    public static void deleteFile(File file) {
+        if (file.isDirectory()) {
+            File files[] = file.listFiles();
+            for (File f:files) {
+                deleteFile(f);
+            }
+        }
+        file.delete();
+    }
+
+    /**
+     * 递归统计文件目录里文件的个数（不包含文件夹）
+     * @param file
+     * @return
+     */
+    public static int countFiles(File file) {
+        if (file.isDirectory()) {
+            int count = 0;
+            File files[] = file.listFiles();
+            for (File f:files) {
+                count += countFiles(f);
+            }
+            return count;
+        }
+        else {
+            return 1;
+        }
+    }
+
 }

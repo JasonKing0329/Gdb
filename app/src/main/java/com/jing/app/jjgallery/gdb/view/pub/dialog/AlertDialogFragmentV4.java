@@ -24,6 +24,10 @@ public class AlertDialogFragmentV4 extends DialogFragment {
 
     private String neutralText;
 
+    private CharSequence[] items;
+
+    private DialogInterface.OnClickListener itemListener;
+
     private DialogInterface.OnClickListener positiveListener;
 
     private DialogInterface.OnClickListener negativeListener;
@@ -68,12 +72,20 @@ public class AlertDialogFragmentV4 extends DialogFragment {
         this.dismissListener = dismissListener;
     }
 
+    public void setItems(CharSequence[] items, final DialogInterface.OnClickListener listener) {
+        this.items = items;
+        this.itemListener = listener;
+    }
+
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(title)
                 .setMessage(message);
+        if (items != null) {
+            builder.setItems(items, itemListener);
+        }
         if (positiveText != null) {
             builder.setPositiveButton(positiveText, positiveListener);
         }

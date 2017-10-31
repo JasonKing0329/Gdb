@@ -1,14 +1,18 @@
 package com.jing.app.jjgallery.gdb.view.surf;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.view.View;
 
 import com.jing.app.jjgallery.gdb.GdbConstants;
 import com.jing.app.jjgallery.gdb.IFragmentHolder;
+import com.jing.app.jjgallery.gdb.R;
 import com.jing.app.jjgallery.gdb.http.bean.data.FileBean;
 import com.jing.app.jjgallery.gdb.presenter.surf.SurfLocalPresenter;
 import com.jing.app.jjgallery.gdb.util.FileUtil;
+import com.jing.app.jjgallery.gdb.view.pub.dialog.AlertDialogFragmentV4;
+import com.jing.app.jjgallery.gdb.view.pub.dialog.DefaultDialogManager;
 
 import java.util.List;
 
@@ -78,6 +82,36 @@ public class SurfLocalFragment extends SurfFragment implements ISurfLocalView, S
     }
 
     @Override
+    public void onLongClickSurfFolder(final FileBean bean) {
+        AlertDialogFragmentV4 dialog = new AlertDialogFragmentV4();
+        dialog.setTitle(null);
+        dialog.setItems(getResources().getStringArray(R.array.menu_surf_item), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if (which == 0) {
+                    // 文件夹包含更多文件，再次警告
+                    warningDeleteFolder(bean);
+                }
+            }
+        });
+        dialog.show(getFragmentManager(), "AlertDialogFragmentV4");
+    }
+
+    private void warningDeleteFolder(final FileBean bean) {
+        int count = presenter.countFolderFiles(bean);
+        String msg = String.format(getString(R.string.warning_delete_folder), count);
+        new DefaultDialogManager().showOptionDialogFragment(getFragmentManager(), getString(R.string.warning)
+                , msg, getString(R.string.ok), null, getString(R.string.cancel)
+                , new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        presenter.deleteFile(bean);
+                        loadFolder();
+                    }
+                }, null, null, null);
+    }
+
+    @Override
     public void onClickSurfFile(FileBean file) {
         if (FileUtil.isImageFile(file.getPath())) {
             // 作为文件选择器
@@ -88,5 +122,21 @@ public class SurfLocalFragment extends SurfFragment implements ISurfLocalView, S
                 getActivity().finish();
             }
         }
+    }
+
+    @Override
+    public void onLongClickSurfFile(final FileBean bean) {
+        AlertDialogFragmentV4 dialog = new AlertDialogFragmentV4();
+        dialog.setTitle(null);
+        dialog.setItems(getResources().getStringArray(R.array.menu_surf_item), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if (which == 0) {
+                    presenter.deleteFile(bean);
+                    loadFolder();
+                }
+            }
+        });
+        dialog.show(getFragmentManager(), "AlertDialogFragmentV4");
     }
 }

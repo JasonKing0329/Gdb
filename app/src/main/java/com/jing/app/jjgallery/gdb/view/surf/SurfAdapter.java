@@ -100,6 +100,8 @@ public class SurfAdapter extends RecyclerView.Adapter {
             fHolder.tvName.setText(bean.getName());
             fHolder.groupFolder.setTag(bean);
             fHolder.groupFolder.setOnClickListener(folderListener);
+            fHolder.groupFolder.setTag(bean);
+            fHolder.groupFolder.setOnLongClickListener(folderLongClickListener);
         }
         // server record files
         else if (bean instanceof HttpSurfFileBean) {
@@ -122,6 +124,8 @@ public class SurfAdapter extends RecyclerView.Adapter {
             fHolder.tvSize.setText(FormatUtil.formatSize(bean.getSize()));
             fHolder.groupContainer.setTag(bean);
             fHolder.groupContainer.setOnClickListener(fileListener);
+            fHolder.groupContainer.setTag(bean);
+            fHolder.groupContainer.setOnLongClickListener(fileLongClickListener);
 
             if (FileUtil.isGifFile(bean.getPath())) {
                 String imgPath = GdbImageProvider.parseFilePath(bean.getPath());
@@ -165,6 +169,17 @@ public class SurfAdapter extends RecyclerView.Adapter {
         }
     };
 
+    View.OnLongClickListener fileLongClickListener = new View.OnLongClickListener() {
+        @Override
+        public boolean onLongClick(View v) {
+            if (onSurfItemActionListener != null) {
+                FileBean bean = (FileBean) v.getTag();
+                onSurfItemActionListener.onLongClickSurfFile(bean);
+            }
+            return true;
+        }
+    };
+
     View.OnClickListener folderListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -172,6 +187,17 @@ public class SurfAdapter extends RecyclerView.Adapter {
                 FileBean bean = (FileBean) v.getTag();
                 onSurfItemActionListener.onClickSurfFolder(bean);
             }
+        }
+    };
+
+    View.OnLongClickListener folderLongClickListener = new View.OnLongClickListener() {
+        @Override
+        public boolean onLongClick(View v) {
+            if (onSurfItemActionListener != null) {
+                FileBean bean = (FileBean) v.getTag();
+                onSurfItemActionListener.onLongClickSurfFolder(bean);
+            }
+            return true;
         }
     };
 
@@ -218,6 +244,8 @@ public class SurfAdapter extends RecyclerView.Adapter {
 
     public interface OnSurfItemActionListener<T> {
         void onClickSurfFolder(FileBean fileBean);
+        void onLongClickSurfFolder(FileBean bean);
         void onClickSurfFile(T file);
+        void onLongClickSurfFile(T bean);
     }
 }

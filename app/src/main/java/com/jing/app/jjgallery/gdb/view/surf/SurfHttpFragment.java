@@ -76,10 +76,20 @@ public class SurfHttpFragment extends SurfFragment implements SurfAdapter.OnSurf
     }
 
     @Override
+    public void onLongClickSurfFolder(FileBean bean) {
+
+    }
+
+    @Override
     public void onClickSurfFile(Record record) {
         if (record != null) {
             ActivityManager.startRecordActivity(getActivity(), record);
         }
+    }
+
+    @Override
+    public void onLongClickSurfFile(Record bean) {
+
     }
 
 }

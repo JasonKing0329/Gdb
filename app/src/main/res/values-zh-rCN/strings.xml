@@ -109,4 +109,6 @@
     <string name="show_time">显示时间</string>
     <string name="menu_view_mode_grid">网格视图</string>
     <string name="menu_view_mode_list">列表视图</string>
+
+    <string name="warning_delete_folder">当前文件目录包含%d个文件，确定删除？</string>
 </resources>

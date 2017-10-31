@@ -2,6 +2,7 @@ package com.jing.app.jjgallery.gdb.presenter.surf;
 
 import com.jing.app.jjgallery.gdb.http.bean.data.FileBean;
 import com.jing.app.jjgallery.gdb.model.conf.PreferenceValue;
+import com.jing.app.jjgallery.gdb.util.FileUtil;
 import com.jing.app.jjgallery.gdb.view.surf.ISurfLocalView;
 
 import java.io.File;
@@ -89,6 +90,29 @@ public class SurfLocalPresenter {
     public void sortFileList(List<FileBean> surfFileList, int sortMode, boolean desc) {
         Collections.sort(surfFileList, new SurfComparator(sortMode, desc));
         surfView.onSortFinished();
+    }
+
+    /**
+     * 删除文件/文件目录
+     * @param bean
+     */
+    public void deleteFile(FileBean bean) {
+        if (bean != null && bean.getPath() != null) {
+            FileUtil.deleteFile(new File(bean.getPath()));
+        }
+    }
+
+    /**
+     * 统计文件目录里文件的个数（包含隐藏文件，不包含文件夹）
+     * @param bean
+     * @return
+     */
+    public int countFolderFiles(FileBean bean) {
+        if (bean != null && bean.getPath() != null) {
+            File folder = new File(bean.getPath());
+            return FileUtil.countFiles(folder);
+        }
+        return 0;
     }
 
     private class SurfComparator implements Comparator<FileBean> {

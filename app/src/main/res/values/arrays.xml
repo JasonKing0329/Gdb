@@ -38,4 +38,8 @@
         <item>Y</item>
         <item>Z</item>
     </array>
+
+    <string-array name="menu_surf_item">
+        <item>Delete</item>
+    </string-array>
 </resources>
