@@ -147,8 +147,17 @@ public class StarListFragment extends BaseFragmentV4 implements OnStarClickListe
     }
 
     public void filterStar(String text) {
-        if (mNameAdapter != null) {
-            mNameAdapter.onStarFilter(text);
+        // 网格视图
+        if (currentViewMode == SettingProperties.getStarListViewMode()) {
+            if (mGridAdapter != null) {
+                mGridAdapter.onStarFilter(text);
+            }
+        }
+        // 列表视图
+        else {
+            if (mNameAdapter != null) {
+                mNameAdapter.onStarFilter(text);
+            }
         }
     }
 

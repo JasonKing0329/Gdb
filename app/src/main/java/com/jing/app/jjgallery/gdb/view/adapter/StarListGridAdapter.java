@@ -1,6 +1,7 @@
 package com.jing.app.jjgallery.gdb.view.adapter;
 
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,7 @@ import com.jing.app.jjgallery.gdb.view.pub.dialog.DefaultDialogManager;
 import com.jing.app.jjgallery.gdb.view.star.OnStarClickListener;
 import com.king.service.gdb.bean.FavorBean;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -36,9 +38,16 @@ public class StarListGridAdapter extends RecyclerView.Adapter<StarListGridAdapte
     private RequestOptions requestOptions;
 
     private List<StarProxy> originList;
+    private List<StarProxy> curList;
 
     public StarListGridAdapter(List<StarProxy> list) {
         this.originList = list;
+        curList = new ArrayList<>();
+        if (originList != null) {
+            for (StarProxy proxy:originList) {
+                curList.add(proxy);
+            }
+        }
         requestOptions = GlideUtil.getStarWideOptions();
     }
 
@@ -58,7 +67,7 @@ public class StarListGridAdapter extends RecyclerView.Adapter<StarListGridAdapte
     @Override
     public void onBindViewHolder(ItemHolder holder, int position) {
 
-        StarProxy item = originList.get(position);
+        StarProxy item = curList.get(position);
         holder.tvName.setText(item.getStar().getName() + " (" + item.getStar().getRecordNumber() + ")");
 
         String headPath = item.getImagePath();
@@ -92,16 +101,16 @@ public class StarListGridAdapter extends RecyclerView.Adapter<StarListGridAdapte
 
     @Override
     public int getItemCount() {
-        return originList == null ? 0 : originList.size();
+        return curList == null ? 0 : curList.size();
     }
 
     public int getLetterPosition(String letter){
-        // originList should be ordered by ASC
+        // curList should be ordered by ASC
         if (letter.length() > 1) {
             return -1;
         }
         for (int i = 0 ; i < getItemCount(); i++){
-            char value = originList.get(i).getStar().getName().toUpperCase().charAt(0);
+            char value = curList.get(i).getStar().getName().toUpperCase().charAt(0);
             char index = letter.toUpperCase().charAt(0);
             if(value == index){
                 return i;
@@ -125,9 +134,9 @@ public class StarListGridAdapter extends RecyclerView.Adapter<StarListGridAdapte
         }
         else if (v instanceof ImageView) {
             final int position = (int) v.getTag();
-            if (originList.get(position).getFavor() > 0) {
-                originList.get(position).setFavor(0);
-                saveFavor(originList.get(position), 0);
+            if (curList.get(position).getFavor() > 0) {
+                curList.get(position).setFavor(0);
+                saveFavor(curList.get(position), 0);
                 notifyItemChanged(position);
             }
             else {
@@ -136,16 +145,37 @@ public class StarListGridAdapter extends RecyclerView.Adapter<StarListGridAdapte
                     public void onOk(String name) {
                         try {
                             int favor = Integer.parseInt(name);
-                            originList.get(position).setFavor(favor);
-                            saveFavor(originList.get(position), favor);
+                            curList.get(position).setFavor(favor);
+                            saveFavor(curList.get(position), favor);
                             notifyItemChanged(position);
                         } catch (Exception e) {
-                            originList.get(position).setFavor(0);
+                            curList.get(position).setFavor(0);
                         }
                     }
                 });
             }
         }
+    }
+
+    /**
+     * 按名称模糊过滤
+     * @param name
+     */
+    public void onStarFilter(String name) {
+        curList.clear();
+        if (originList != null) {
+            for (StarProxy proxy:originList) {
+                if (TextUtils.isEmpty(name)) {
+                    curList.add(proxy);
+                }
+                else {
+                    if (proxy.getStar().getName().toLowerCase().contains(name.toLowerCase())) {
+                        curList.add(proxy);
+                    }
+                }
+            }
+        }
+        notifyDataSetChanged();
     }
 
     public static class ItemHolder extends RecyclerView.ViewHolder {

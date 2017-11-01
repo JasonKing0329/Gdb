@@ -29,13 +29,16 @@
     <RelativeLayout
         android:id="@+id/gdb_recommend_bottom"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/gdb_recommend_action_size"
         android:layout_alignBottom="@id/gdb_rec_banners"
-        android:padding="10dp">
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp">
         <ImageView
             android:id="@+id/gdb_recommend_setting"
             style="@style/GdbRecommendActionIcon"
             android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:scaleType="fitCenter"
             android:src="@drawable/ic_settings_white_36dp"/>
     </RelativeLayout>
 
