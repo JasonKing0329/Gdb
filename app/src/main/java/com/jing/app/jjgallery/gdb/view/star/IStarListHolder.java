@@ -10,4 +10,8 @@ import com.jing.app.jjgallery.gdb.presenter.star.StarListPresenter;
  */
 public interface IStarListHolder extends IFragmentHolder {
     StarListPresenter getPresenter();
+
+    void hideDetailIndex();
+
+    void updateDetailIndex(String name);
 }

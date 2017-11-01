@@ -64,6 +64,10 @@ public class StarListGridAdapter extends RecyclerView.Adapter<StarListGridAdapte
         return new ItemHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_gdb_starlist_grid, parent, false));
     }
 
+    public StarProxy getItem(int position) {
+        return curList.get(position);
+    }
+
     @Override
     public void onBindViewHolder(ItemHolder holder, int position) {
 

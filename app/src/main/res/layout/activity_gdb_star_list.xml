@@ -101,6 +101,18 @@
             android:layout_height="match_parent" />
     </LinearLayout>
 
+    <TextView
+        android:id="@+id/tv_index"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_gravity="center_horizontal|top"
+        android:textColor="@color/white"
+        android:textSize="30dp"
+        android:gravity="center"
+        android:visibility="gone"
+        android:background="@drawable/shape_oval_index"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+
     <com.jing.app.jjgallery.gdb.view.pub.WaveSideBarView
         android:id="@+id/side_bar"
         android:layout_width="match_parent"

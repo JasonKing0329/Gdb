@@ -3,6 +3,7 @@ package com.jing.app.jjgallery.gdb.view.star;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
 
 import com.jing.app.jjgallery.gdb.ActivityManager;
@@ -13,6 +14,7 @@ import com.jing.app.jjgallery.gdb.R;
 import com.jing.app.jjgallery.gdb.model.SettingProperties;
 import com.jing.app.jjgallery.gdb.model.bean.StarProxy;
 import com.jing.app.jjgallery.gdb.model.conf.PreferenceValue;
+import com.jing.app.jjgallery.gdb.util.DebugLog;
 import com.jing.app.jjgallery.gdb.util.DisplayHelper;
 import com.jing.app.jjgallery.gdb.view.adapter.StarListAdapter;
 import com.jing.app.jjgallery.gdb.view.adapter.StarListGridAdapter;
@@ -82,7 +84,70 @@ public class StarListFragment extends BaseFragmentV4 implements OnStarClickListe
         });
         rvStar.addItemDecoration(decoration);
 
+        rvStar.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+
+                // 按音序排列，在滑动过程中显示当前的详细index
+                if (curSortMode == GdbConstants.STAR_SORT_NAME) {
+                    switch (newState) {
+                        case RecyclerView.SCROLL_STATE_DRAGGING:
+                            updateDetailIndex();
+                            break;
+                        case RecyclerView.SCROLL_STATE_SETTLING:
+                            break;
+                        default:
+                            holder.hideDetailIndex();
+                            break;
+                    }
+                }
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if (recyclerView.getScrollState() != RecyclerView.SCROLL_STATE_IDLE) {
+                    updateDetailIndex();
+                }
+            }
+        });
+
         holder.getPresenter().loadStarList(curStarMode, curSortMode, this);
+    }
+
+    private void updateDetailIndex() {
+        int position = -1;
+        RecyclerView.LayoutManager manager = rvStar.getLayoutManager();
+        if (manager instanceof LinearLayoutManager) {
+            LinearLayoutManager lm = (LinearLayoutManager) manager;
+            position = lm.findFirstVisibleItemPosition();
+        }
+        else if (manager instanceof GridLayoutManager) {
+            GridLayoutManager gm = (GridLayoutManager) manager;
+            position = gm.findFirstVisibleItemPosition();
+        }
+        String name = null;
+        if (position != -1) {
+            if (currentViewMode == PreferenceValue.STAR_LIST_VIEW_GRID) {
+                if (mGridAdapter != null) {
+                    name = mGridAdapter.getItem(position).getStar().getName();
+                }
+            }
+            else if (mSortMode == GdbConstants.STAR_SORT_RECORDS) {
+                if (mNumberAdapter != null) {
+                    name = mNumberAdapter.getItem(position).getStar().getName();
+                }
+            }
+            else {
+                if (mNameAdapter != null) {
+                    name = mNameAdapter.getItem(position).getStar().getName();
+                }
+            }
+        }
+        if (!TextUtils.isEmpty(name)) {
+            holder.updateDetailIndex(name);
+        }
     }
 
     public void onLetterChange(String letter) {

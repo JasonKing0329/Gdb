@@ -86,6 +86,10 @@ public class StarListNumAdapter extends RecyclerView.Adapter<StarListNumAdapter.
         }
     }
 
+    public StarProxy getItem(int position) {
+        return originList.get(position);
+    }
+
     @Override
     public int getItemCount() {
         return originList == null ? 0:originList.size();

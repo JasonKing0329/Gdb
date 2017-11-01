@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.allure.lbanners.LMBanners;
 import com.allure.lbanners.adapter.LBaseAdapter;
@@ -67,6 +68,8 @@ public class StarListActivity extends GDBListActivity implements IStarListHolder
     TabLayout tabLayout;
     @BindView(R.id.viewpager)
     ViewPager viewpager;
+    @BindView(R.id.tv_index)
+    TextView tvIndex;
 
     private StarListPresenter starPresenter;
     private StarListPagerAdapter pagerAdapter;
@@ -75,6 +78,8 @@ public class StarListActivity extends GDBListActivity implements IStarListHolder
     private BannerAnimDialogFragment bannerSettingDialog;
 
     private int curSortMode;
+
+    private String curDetailIndex;
 
     @Override
     public int getContentView() {
@@ -390,6 +395,41 @@ public class StarListActivity extends GDBListActivity implements IStarListHolder
     @Override
     public StarListPresenter getPresenter() {
         return starPresenter;
+    }
+
+    @Override
+    public void hideDetailIndex() {
+        tvIndex.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void updateDetailIndex(String name) {
+        if (tvIndex.getVisibility() != View.VISIBLE) {
+            tvIndex.setVisibility(View.VISIBLE);
+        }
+
+        String newIndex = getAvailableIndex(name);
+        if (!newIndex.equals(curDetailIndex)) {
+            tvIndex.setText(newIndex);
+        }
+    }
+
+    /**
+     * 最多支持3个字母
+     * @param name
+     * @return
+     */
+    private String getAvailableIndex(String name) {
+        if (name.length() > 2) {
+            return name.substring(0,3);
+        }
+        else if (name.length() > 1) {
+            return name.substring(0,2);
+        }
+        else if (name.length() > 0) {
+            return name.substring(0,1);
+        }
+        return "";
     }
 
     public void changeSideBarVisible() {
