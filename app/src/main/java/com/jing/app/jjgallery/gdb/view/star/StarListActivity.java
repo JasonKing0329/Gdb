@@ -41,11 +41,16 @@ import com.king.service.gdb.bean.StarCountBean;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
 
 /**
  * 描述:
@@ -79,6 +84,10 @@ public class StarListActivity extends GDBListActivity implements IStarListHolder
 
     private int curSortMode;
 
+    /**
+     * 控制detail index显示的timer
+     */
+    private Disposable indexDisposable;
     private String curDetailIndex;
 
     @Override
@@ -247,11 +256,35 @@ public class StarListActivity extends GDBListActivity implements IStarListHolder
     }
 
     @Override
+    protected void onStop() {
+        super.onStop();
+        if (indexDisposable != null) {
+            indexDisposable.dispose();
+        }
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
         if (lmBanners != null) {
             lmBanners.startImageTimerTask();
         }
+
+        // 控制tvIndex在切换显示列表后的隐藏状况
+        indexDisposable = Observable.interval(1, TimeUnit.SECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<Long>() {
+                    @Override
+                    public void accept(Long aLong) throws Exception {
+                        if (tvIndex != null && tvIndex.getVisibility() == View.VISIBLE) {
+                            if (viewpager != null && pagerAdapter != null) {
+                                if (pagerAdapter.getItem(viewpager.getCurrentItem()).isNotScrolling()) {
+                                    tvIndex.setVisibility(View.GONE);
+                                }
+                            }
+                        }
+                    }
+                });
     }
 
     @Override
@@ -410,6 +443,7 @@ public class StarListActivity extends GDBListActivity implements IStarListHolder
 
         String newIndex = getAvailableIndex(name);
         if (!newIndex.equals(curDetailIndex)) {
+            curDetailIndex = newIndex;
             tvIndex.setText(newIndex);
         }
     }

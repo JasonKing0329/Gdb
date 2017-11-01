@@ -66,16 +66,23 @@ public class FavorDao {
     }
 
     public void saveFavor(FavorBean bean) {
-        ContentValues values = new ContentValues();
-        values.put(TFavor.COLUMN_STAR_ID, bean.getStarId());
-        values.put(TFavor.COLUMN_NAME, bean.getStarName());
-        values.put(TFavor.COLUMN_FAVOR, bean.getFavor());
-        boolean isExist = isStarFavor(bean.getId());
-        if (isExist) {
-            gDataDb.update(TFavor.TABLE_NAME, values, "star_id=?", new String[]{String.valueOf(bean.getStarId())});
+        // 删除
+        if (bean.getFavor() == 0) {
+            gDataDb.delete(TFavor.TABLE_NAME, "star_id=?", new String[]{String.valueOf(bean.getStarId())});
         }
+        // 添加或者修改
         else {
-            gDataDb.insert(TFavor.TABLE_NAME, values);
+            ContentValues values = new ContentValues();
+            values.put(TFavor.COLUMN_STAR_ID, bean.getStarId());
+            values.put(TFavor.COLUMN_NAME, bean.getStarName());
+            values.put(TFavor.COLUMN_FAVOR, bean.getFavor());
+            boolean isExist = isStarFavor(bean.getStarId());
+            if (isExist) {
+                gDataDb.update(TFavor.TABLE_NAME, values, "star_id=?", new String[]{String.valueOf(bean.getStarId())});
+            }
+            else {
+                gDataDb.insert(TFavor.TABLE_NAME, values);
+            }
         }
     }
 
@@ -86,10 +93,8 @@ public class FavorDao {
         Cursor cursor = null;
         try {
             cursor = gDataDb.query(sql, args);
-            while (cursor.moveToNext()) {
-                if (cursor.getInt(0) > 0) {
-                    isExist = true;
-                }
+            if (cursor.moveToNext()) {
+                isExist = true;
             }
         } finally {
             if (cursor != null) {
