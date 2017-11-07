@@ -14,7 +14,6 @@ import com.jing.app.jjgallery.gdb.R;
 import com.jing.app.jjgallery.gdb.model.SettingProperties;
 import com.jing.app.jjgallery.gdb.model.bean.StarProxy;
 import com.jing.app.jjgallery.gdb.model.conf.PreferenceValue;
-import com.jing.app.jjgallery.gdb.util.DebugLog;
 import com.jing.app.jjgallery.gdb.util.DisplayHelper;
 import com.jing.app.jjgallery.gdb.view.adapter.StarListAdapter;
 import com.jing.app.jjgallery.gdb.view.adapter.StarListGridAdapter;
@@ -251,5 +250,9 @@ public class StarListFragment extends BaseFragmentV4 implements OnStarClickListe
         if (holder != null && holder.getPresenter() != null) {
             holder.getPresenter().loadStarList(curStarMode, curSortMode, this);
         }
+    }
+
+    public boolean isNotScrolling() {
+        return rvStar.getScrollState() == RecyclerView.SCROLL_STATE_IDLE;
     }
 }
