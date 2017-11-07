@@ -90,7 +90,7 @@
     <string name="menu_gdb_surf_relate" translatable="false">Relate</string>
     <string name="menu_gdb_surf_refresh">Refresh</string>
     <string name="menu_swipe_star" translatable="false">Swipe star</string>
-    <string name="sliding_right_waterfall" translatable="false">Waterfall</string>
+    <string name="menu_random" translatable="false">Random</string>
 
     <!--************************** transition **************************-->
     <string name="trans_surf_center" translatable="false">trans_surf_center</string>

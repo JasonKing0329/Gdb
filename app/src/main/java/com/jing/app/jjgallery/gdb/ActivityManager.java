@@ -9,6 +9,7 @@ import android.view.View;
 
 import com.jing.app.jjgallery.gdb.model.ObjectCache;
 import com.jing.app.jjgallery.gdb.model.conf.ConfManager;
+import com.jing.app.jjgallery.gdb.view.game.RandomActivity;
 import com.jing.app.jjgallery.gdb.view.home.GHomeActivity;
 import com.jing.app.jjgallery.gdb.view.pub.ProgressProvider;
 import com.jing.app.jjgallery.gdb.view.record.RecordActivity;
@@ -56,6 +57,12 @@ public class ActivityManager {
 
     public static boolean startRecordListActivity(Activity from) {
         Intent intent = new Intent().setClass(from, RecordListActivity.class);
+        from.startActivity(intent);
+        return true;
+    }
+
+    public static boolean startRandomActivity(Activity from) {
+        Intent intent = new Intent().setClass(from, RandomActivity.class);
         from.startActivity(intent);
         return true;
     }

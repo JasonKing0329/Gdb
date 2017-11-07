@@ -2,7 +2,6 @@ package com.jing.app.jjgallery.gdb.view.home;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
@@ -21,18 +20,11 @@ import com.jing.app.jjgallery.gdb.R;
 import com.jing.app.jjgallery.gdb.model.GdbImageProvider;
 import com.jing.app.jjgallery.gdb.model.SettingProperties;
 import com.jing.app.jjgallery.gdb.model.VideoModel;
-import com.jing.app.jjgallery.gdb.model.conf.Configuration;
-import com.jing.app.jjgallery.gdb.model.conf.PreferenceKey;
 import com.jing.app.jjgallery.gdb.presenter.GdbGuidePresenter;
 import com.jing.app.jjgallery.gdb.util.GlideUtil;
 import com.jing.app.jjgallery.gdb.view.recommend.IRecommendHolder;
 import com.jing.app.jjgallery.gdb.view.update.GdbUpdateListener;
 import com.jing.app.jjgallery.gdb.view.update.GdbUpdateManager;
-import com.king.service.gdb.game.Constants;
-
-import java.io.File;
-import java.io.FileFilter;
-import java.util.Random;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -179,9 +171,8 @@ public class GHomeActivity extends GBaseActivity implements NavigationView.OnNav
         else if (id == R.id.nav_swipe_star) {
             ActivityManager.startStarSwipeActivity(this);
         }
-        else if (id == R.id.nav_waterfall) {
-            Bundle bundle = null;
-//            ActivityManager.startWaterfallActivity(this, bundle);
+        else if (id == R.id.nav_random) {
+            ActivityManager.startRandomActivity(this);
         }
         else if (id == R.id.nav_update) {
             checkUpdate();

@@ -17,7 +17,7 @@ import butterknife.Unbinder;
  * Created by Administrator on 2017/5/20 0020.
  */
 
-public abstract class GBaseActivity extends AppCompatActivity {
+public abstract class GBaseActivity extends AppCompatActivity implements ProgressProvider {
 
     private ProgressDialog progressDialog;
     private Unbinder unbinder;

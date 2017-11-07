@@ -11,9 +11,9 @@
             android:icon="@drawable/ic_timeline_yellow_700_36dp"
             android:title="@string/menu_swipe_star" />
         <item
-            android:id="@+id/nav_waterfall"
+            android:id="@+id/nav_random"
             android:icon="@drawable/ic_blur_on_yellow_700_36dp"
-            android:title="@string/sliding_right_waterfall" />
+            android:title="@string/menu_random" />
         <item
             android:id="@+id/nav_setting"
             android:icon="@drawable/ic_settings_yellow_700_36dp"
