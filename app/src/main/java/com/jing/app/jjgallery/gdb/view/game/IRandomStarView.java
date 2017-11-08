@@ -1,6 +1,6 @@
 package com.jing.app.jjgallery.gdb.view.game;
 
-import com.king.service.gdb.bean.Star;
+import com.jing.app.jjgallery.gdb.model.bean.RandomStarBean;
 
 import java.util.List;
 
@@ -12,5 +12,5 @@ import java.util.List;
 public interface IRandomStarView {
     void onErrorMessage(String msg);
 
-    void onRandomStar(List<Star> starList);
+    void onRandomStar(List<RandomStarBean> starList);
 }

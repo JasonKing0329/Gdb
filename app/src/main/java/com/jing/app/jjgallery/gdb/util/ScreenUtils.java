@@ -8,6 +8,8 @@ import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.WindowManager;
 
+import com.jing.app.jjgallery.gdb.GdbApplication;
+
 /**
  * 获得屏幕相关的辅助类
  * 
@@ -51,6 +53,24 @@ public class ScreenUtils
 		DisplayMetrics outMetrics = new DisplayMetrics();
 		wm.getDefaultDisplay().getMetrics(outMetrics);
 		return outMetrics.widthPixels;
+	}
+
+	/**
+	 * 获得屏幕宽度
+	 *
+	 * @return
+	 */
+	public static int getScreenWidth() {
+		return getScreenWidth(GdbApplication.getInstance());
+	}
+
+	/**
+	 * 获得屏幕高度
+	 *
+	 * @return
+	 */
+	public static int getScreenHeight() {
+		return getScreenHeight(GdbApplication.getInstance());
 	}
 
 	/**

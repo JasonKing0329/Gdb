@@ -7,11 +7,13 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.RadioButton;
 
+import com.jing.app.jjgallery.gdb.ActivityManager;
 import com.jing.app.jjgallery.gdb.IFragmentHolder;
 import com.jing.app.jjgallery.gdb.R;
+import com.jing.app.jjgallery.gdb.model.bean.RandomStarBean;
 import com.jing.app.jjgallery.gdb.presenter.game.RandomStarPresenter;
+import com.jing.app.jjgallery.gdb.util.DisplayHelper;
 import com.jing.app.jjgallery.gdb.view.pub.ProgressProvider;
-import com.king.service.gdb.bean.Star;
 
 import java.util.List;
 
@@ -24,7 +26,7 @@ import butterknife.OnClick;
  * <p/>作者：景阳
  * <p/>创建时间: 2017/11/7 14:12
  */
-public class RandomStarFragment extends BaseRandomFragment implements IRandomStarView {
+public class RandomStarFragment extends BaseRandomFragment implements IRandomStarView, RandomStarAdapter.OnStarItemListener {
 
     @BindView(R.id.radio_from_all)
     RadioButton radioFromAll;
@@ -140,8 +142,9 @@ public class RandomStarFragment extends BaseRandomFragment implements IRandomSta
     }
 
     @Override
-    public void onRandomStar(List<Star> starList) {
-        int span = starList.size() > 4 ? 4:starList.size();
+    public void onRandomStar(List<RandomStarBean> starList) {
+        int maxSpan = DisplayHelper.isTabModel(getActivity()) ? 4:3;
+        int span = starList.size() > maxSpan ? maxSpan:starList.size();
         if (layoutManager == null) {
             layoutManager = new GridLayoutManager(getActivity(), span);
             rvStars.setLayoutManager(layoutManager);
@@ -150,13 +153,19 @@ public class RandomStarFragment extends BaseRandomFragment implements IRandomSta
             layoutManager.setSpanCount(span);
         }
         if (adapter == null) {
-            adapter = new RandomStarAdapter();
+            adapter = new RandomStarAdapter(maxSpan);
             adapter.setStarList(starList);
+            adapter.setOnStarItemListener(this);
             rvStars.setAdapter(adapter);
         }
         else {
             adapter.setStarList(starList);
             adapter.notifyDataSetChanged();
         }
+    }
+
+    @Override
+    public void onClickStar(RandomStarBean bean) {
+        ActivityManager.startStarActivity(getActivity(), bean.getStarId());
     }
 }
