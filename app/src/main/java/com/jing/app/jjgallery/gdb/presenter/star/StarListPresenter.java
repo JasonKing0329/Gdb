@@ -1,25 +1,17 @@
 package com.jing.app.jjgallery.gdb.presenter.star;
 
 import com.jing.app.jjgallery.gdb.GdbConstants;
-import com.jing.app.jjgallery.gdb.http.AppHttpClient;
-import com.jing.app.jjgallery.gdb.http.Command;
-import com.jing.app.jjgallery.gdb.http.bean.data.DownloadItem;
-import com.jing.app.jjgallery.gdb.http.bean.request.GdbCheckNewFileBean;
 import com.jing.app.jjgallery.gdb.model.GdbImageProvider;
 import com.jing.app.jjgallery.gdb.model.SettingProperties;
 import com.jing.app.jjgallery.gdb.model.bean.StarProxy;
-import com.jing.app.jjgallery.gdb.model.conf.Configuration;
 import com.jing.app.jjgallery.gdb.model.conf.PreferenceValue;
 import com.jing.app.jjgallery.gdb.model.db.GdbProviderHelper;
-import com.jing.app.jjgallery.gdb.presenter.ManageListPresenter;
-import com.jing.app.jjgallery.gdb.view.list.IManageListView;
 import com.jing.app.jjgallery.gdb.view.star.IStarListHeaderView;
 import com.jing.app.jjgallery.gdb.view.star.IStarListView;
 import com.king.service.gdb.bean.FavorBean;
 import com.king.service.gdb.bean.Star;
 import com.king.service.gdb.bean.StarCountBean;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -41,14 +33,13 @@ import io.reactivex.schedulers.Schedulers;
  * <p/>作者：景阳
  * <p/>创建时间: 2017/7/12 9:35
  */
-public class StarListPresenter extends ManageListPresenter {
+public class StarListPresenter {
 
     private IStarListHeaderView starListHeaderView;
     private List<FavorBean> favorList;
     private Random random;
 
-    public StarListPresenter(IManageListView view) {
-        super(view);
+    public StarListPresenter() {
         random = new Random();
     }
 
@@ -58,65 +49,6 @@ public class StarListPresenter extends ManageListPresenter {
      */
     public void setStarListHeaderView(IStarListHeaderView starListHeaderView) {
         this.starListHeaderView = starListHeaderView;
-    }
-
-    public void checkNewStarFile() {
-        AppHttpClient.getInstance().getAppService().checkNewFile(Command.TYPE_STAR)
-                .subscribeOn(Schedulers.io())
-                .unsubscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<GdbCheckNewFileBean>() {
-                    @Override
-                    public void accept(GdbCheckNewFileBean bean) throws Exception {
-                        view.onCheckPass(bean.isStarExisted(), bean.getStarItems());
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception {
-                        throwable.printStackTrace();
-                        view.onRequestFail();
-                    }
-                });
-    }
-
-    /**
-     * 检查已有图片的star，将其过滤掉
-     *
-     * @param downloadList 服务端提供的下载列表
-     * @param existedList  已存在的下载内容，不能为null
-     * @return 未存在的下载内容
-     */
-    public List<DownloadItem> pickStarToDownload(List<DownloadItem> downloadList, List<DownloadItem> existedList) {
-        List<DownloadItem> list = new ArrayList<>();
-        for (DownloadItem item : downloadList) {
-            // name 格式为 XXX.png
-            String name = item.getName().substring(0, item.getName().lastIndexOf("."));
-
-            String path;
-            // 服务端文件处于一级目录
-            if (item.getKey() == null) {
-                // 检查本地一级目录是否存在
-                path = Configuration.GDB_IMG_STAR + "/" + name + ".png";
-                if (!new File(path).exists()) {
-                    // 检查本地二级目录是否存在
-                    path = Configuration.GDB_IMG_STAR + "/" + name + "/" + name + ".png";
-                }
-            }
-            // 服务端文件处于二级目录
-            else {
-                // 只检查本地二级目录是否存在
-                path = Configuration.GDB_IMG_STAR + "/" + item.getKey() + "/" + name + ".png";
-            }
-
-            // 检查本地一级目录是否存在
-            if (new File(path).exists()) {
-                item.setPath(path);
-                existedList.add(item);
-            } else {
-                list.add(item);
-            }
-        }
-        return list;
     }
 
     public void saveFavor(FavorBean bean) {

@@ -14,6 +14,7 @@ import com.jing.app.jjgallery.gdb.view.home.GHomeActivity;
 import com.jing.app.jjgallery.gdb.view.pub.ProgressProvider;
 import com.jing.app.jjgallery.gdb.view.record.RecordActivity;
 import com.jing.app.jjgallery.gdb.view.record.RecordListActivity;
+import com.jing.app.jjgallery.gdb.view.settings.ManageActivity;
 import com.jing.app.jjgallery.gdb.view.settings.SettingsActivity;
 import com.jing.app.jjgallery.gdb.view.star.StarActivity;
 import com.jing.app.jjgallery.gdb.view.star.StarListActivity;
@@ -150,6 +151,11 @@ public class ActivityManager {
         Intent intent = new Intent().setClass(from, SurfLocalActivity.class);
         intent.putExtra(GdbConstants.KEY_REQEUST_CODE, requestCode);
         from.startActivityForResult(intent, requestCode);
+    }
+
+    public static void startManageActivity(Activity from) {
+        Intent intent = new Intent().setClass(from, ManageActivity.class);
+        from.startActivity(intent);
     }
 
     public static void startGdbGameGroupActivity(Activity from, int seasonId) {

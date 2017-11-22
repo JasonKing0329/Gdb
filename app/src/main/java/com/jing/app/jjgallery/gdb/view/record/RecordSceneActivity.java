@@ -36,7 +36,7 @@ public class RecordSceneActivity extends GBaseActivity implements IRecordSceneHo
 
     @Override
     protected void initController() {
-        recordPresenter = new RecordListPresenter(null);
+        recordPresenter = new RecordListPresenter();
     }
 
     @Override

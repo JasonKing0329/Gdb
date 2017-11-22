@@ -18,19 +18,16 @@ import com.allure.lbanners.adapter.LBaseAdapter;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.jing.app.jjgallery.gdb.ActivityManager;
+import com.jing.app.jjgallery.gdb.GBaseActivity;
 import com.jing.app.jjgallery.gdb.GdbApplication;
 import com.jing.app.jjgallery.gdb.GdbConstants;
 import com.jing.app.jjgallery.gdb.R;
-import com.jing.app.jjgallery.gdb.http.Command;
-import com.jing.app.jjgallery.gdb.http.bean.data.DownloadItem;
 import com.jing.app.jjgallery.gdb.model.GdbImageProvider;
 import com.jing.app.jjgallery.gdb.model.SettingProperties;
-import com.jing.app.jjgallery.gdb.model.conf.Configuration;
 import com.jing.app.jjgallery.gdb.model.conf.PreferenceValue;
 import com.jing.app.jjgallery.gdb.presenter.star.StarListPresenter;
 import com.jing.app.jjgallery.gdb.util.GlideUtil;
 import com.jing.app.jjgallery.gdb.util.LMBannerViewUtil;
-import com.jing.app.jjgallery.gdb.view.list.GDBListActivity;
 import com.jing.app.jjgallery.gdb.view.pub.ActionBar;
 import com.jing.app.jjgallery.gdb.view.pub.BannerAnimDialogFragment;
 import com.jing.app.jjgallery.gdb.view.pub.WaveSideBarView;
@@ -57,7 +54,7 @@ import io.reactivex.functions.Consumer;
  * <p/>作者：景阳
  * <p/>创建时间: 2017/7/12 9:33
  */
-public class StarListActivity extends GDBListActivity implements IStarListHolder, IStarListHeaderView {
+public class StarListActivity extends GBaseActivity implements IStarListHolder, IStarListHeaderView {
 
     private final String[] titles = new String[]{
             "All", "1", "0", "0.5"
@@ -92,13 +89,13 @@ public class StarListActivity extends GDBListActivity implements IStarListHolder
 
     @Override
     public int getContentView() {
+        getSupportActionBar().hide();
         return R.layout.activity_gdb_star_list;
     }
 
     @Override
     protected void initController() {
-        starPresenter = new StarListPresenter(this);
-        presenter = starPresenter;
+        starPresenter = new StarListPresenter();
         starPresenter.setStarListHeaderView(this);
     }
 
@@ -142,9 +139,6 @@ public class StarListActivity extends GDBListActivity implements IStarListHolder
 
         // 查询tabLayout的数据，回调在onStarCountLoaded
         starPresenter.queryIndicatorData(curSortMode);
-
-        // 检查服务端新文件，回调在父类
-        starPresenter.checkNewStarFile();
     }
 
     private void initActionbar() {
@@ -372,12 +366,6 @@ public class StarListActivity extends GDBListActivity implements IStarListHolder
         @Override
         public boolean onMenuItemClick(MenuItem item) {
             switch (item.getItemId()) {
-                case R.id.menu_gdb_check_server:
-                    starPresenter.checkNewStarFile();
-                    break;
-                case R.id.menu_gdb_download:
-                    showDownloadDialog();
-                    break;
                 case R.id.menu_gdb_view_mode:
                     if (item.getTitle().toString().equals(getString(R.string.menu_view_mode_list))) {
                         SettingProperties.setStarListViewMode(PreferenceValue.STAR_LIST_VIEW_LIST);
@@ -398,32 +386,6 @@ public class StarListActivity extends GDBListActivity implements IStarListHolder
             pagerAdapter.getItem(viewpager.getCurrentItem()).filterStar(text);
         }
     };
-
-    @Override
-    public void onServerConnectSuccess() {
-        starPresenter.checkNewStarFile();
-    }
-
-    @Override
-    public void onDownloadFinished() {
-        pagerAdapter.getItem(viewpager.getCurrentItem()).refreshList();
-    }
-
-    @Override
-    protected String getListType() {
-        return Command.TYPE_STAR;
-    }
-
-    @Override
-    protected String getSavePath() {
-        return Configuration.GDB_IMG_STAR;
-    }
-
-    @Override
-    protected List<DownloadItem> getListToDownload(List<DownloadItem> downloadList, List<DownloadItem> repeatList) {
-        List<DownloadItem> newList = starPresenter.pickStarToDownload(downloadList, repeatList);
-        return newList;
-    }
 
     @Override
     public StarListPresenter getPresenter() {

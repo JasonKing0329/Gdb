@@ -1,0 +1,24 @@
+package com.jing.app.jjgallery.gdb.view.settings;
+
+import com.jing.app.jjgallery.gdb.http.bean.data.DownloadItem;
+
+import java.util.List;
+
+/**
+ * 描述:
+ * <p/>作者：景阳
+ * <p/>创建时间: 2017/11/22 15:56
+ */
+public interface IManageView {
+    void onServerConnected();
+
+    void onServerUnavailable();
+
+    void onMoveImagesSuccess();
+
+    void onMoveImagesFail();
+
+    void onCheckPass(boolean hasNew, List<DownloadItem> toDownloadList, List<DownloadItem> repeatList, String savePath);
+
+    void onRequestFail();
+}

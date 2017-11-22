@@ -31,7 +31,7 @@
     <string name="login_finger_not_register">Fingerprint has never been registered in device, please register first!</string>
 
     <string name="login_loading_text">Service updating&#8230;&#8230;</string>
-    <string name="login_start_service_insert">Start insert file service?</string>
+    <string name="login_start_service_insert">Open manage page?</string>
     <string name="login_extend_pref_exist">Extend preference file existed, replace it with application preference?</string>
 
     <string name="server_not_conf">Please set server url!</string>
@@ -68,7 +68,9 @@
     <string name="gdb_server_offline">Can\'t connect to server!</string>
     <string name="gdb_request_fail">Rquest failed!</string>
     <string name="gdb_option_download">Click ok to download %d files</string>
-    <string name="gdb_download_done">Images received, request server to move them?</string>
+    <string name="gdb_download_done">Download finished</string>
+    <string name="gdb_move_record">Request server to move records?</string>
+    <string name="gdb_move_star">Request server to move stars?</string>
     <string name="gdb_no_new_images">No new images found.</string>
     <string name="gdb_rec_filter_min">min</string>
     <string name="gdb_rec_filter_max">max</string>

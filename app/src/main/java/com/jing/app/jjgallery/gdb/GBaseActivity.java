@@ -9,6 +9,8 @@ import android.widget.Toast;
 
 import com.jing.app.jjgallery.gdb.util.DisplayHelper;
 import com.jing.app.jjgallery.gdb.view.pub.ProgressProvider;
+import com.jing.app.jjgallery.gdb.view.pub.dialog.LoadingDialog;
+import com.jing.app.jjgallery.gdb.view.pub.dialog.LoadingDialogV4;
 import com.jing.app.jjgallery.gdb.view.toast.TastyToast;
 
 import butterknife.Unbinder;
@@ -21,6 +23,9 @@ public abstract class GBaseActivity extends AppCompatActivity implements Progres
 
     private ProgressDialog progressDialog;
     private Unbinder unbinder;
+
+    private LoadingDialog loadingDialog;
+    private LoadingDialogV4 loadingDialogV4;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -55,6 +60,40 @@ public abstract class GBaseActivity extends AppCompatActivity implements Progres
     public boolean dismissProgress() {
         if (progressDialog.isShowing()) {
             progressDialog.dismiss();
+            return true;
+        }
+        return  false;
+    }
+
+    public void showLoading() {
+        if (loadingDialog == null) {
+            loadingDialog = new LoadingDialog();
+        }
+        if (!loadingDialog.isAdded()) {
+            loadingDialog.show(getFragmentManager(), "LoadingDialog");
+        }
+    }
+
+    public boolean dismissLoading() {
+        if (loadingDialog != null && loadingDialog.isVisible()) {
+            loadingDialog.dismiss();
+            return true;
+        }
+        return  false;
+    }
+
+    public void showLoadingV4() {
+        if (loadingDialogV4 == null) {
+            loadingDialogV4 = new LoadingDialogV4();
+        }
+        if (!loadingDialogV4.isAdded()) {
+            loadingDialogV4.show(getSupportFragmentManager(), "LoadingDialogV4");
+        }
+    }
+
+    public boolean dismissLoadingV4() {
+        if (loadingDialogV4 != null && loadingDialogV4.isVisible()) {
+            loadingDialogV4.dismiss();
             return true;
         }
         return  false;

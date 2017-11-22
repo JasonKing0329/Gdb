@@ -3,24 +3,16 @@ package com.jing.app.jjgallery.gdb.presenter.record;
 import android.os.AsyncTask;
 
 import com.jing.app.jjgallery.gdb.GdbConstants;
-import com.jing.app.jjgallery.gdb.http.AppHttpClient;
-import com.jing.app.jjgallery.gdb.http.Command;
-import com.jing.app.jjgallery.gdb.http.bean.data.DownloadItem;
-import com.jing.app.jjgallery.gdb.http.bean.request.GdbCheckNewFileBean;
 import com.jing.app.jjgallery.gdb.model.RecordComparator;
 import com.jing.app.jjgallery.gdb.model.VideoModel;
-import com.jing.app.jjgallery.gdb.model.conf.Configuration;
 import com.jing.app.jjgallery.gdb.model.conf.PreferenceValue;
 import com.jing.app.jjgallery.gdb.model.db.GdbProviderHelper;
-import com.jing.app.jjgallery.gdb.presenter.ManageListPresenter;
-import com.jing.app.jjgallery.gdb.view.list.IManageListView;
 import com.jing.app.jjgallery.gdb.view.record.IRecordListView;
 import com.jing.app.jjgallery.gdb.view.record.IRecordSceneView;
 import com.king.service.gdb.RecordCursor;
 import com.king.service.gdb.bean.Record;
 import com.king.service.gdb.bean.SceneBean;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -39,7 +31,7 @@ import io.reactivex.schedulers.Schedulers;
  * <p/>作者：景阳
  * <p/>创建时间: 2017/7/12 11:22
  */
-public class RecordListPresenter extends ManageListPresenter {
+public class RecordListPresenter {
 
     private final int DEFAULT_LOAD_MORE = 20;
 
@@ -48,12 +40,8 @@ public class RecordListPresenter extends ManageListPresenter {
 
     private RecordCursor moreCursor;
 
-    /**
-     * 如果使用检测服务器端数据功能，view不能为空
-     * @param view
-     */
-    public RecordListPresenter(IManageListView view) {
-        super(view);
+    public RecordListPresenter() {
+
     }
 
     public void setRecordListView(IRecordListView recordListView) {
@@ -67,64 +55,6 @@ public class RecordListPresenter extends ManageListPresenter {
     public void newRecordCursor() {
         moreCursor = new RecordCursor();
         moreCursor.number = DEFAULT_LOAD_MORE;
-    }
-
-    public void checkNewRecordFile() {
-        AppHttpClient.getInstance().getAppService().checkNewFile(Command.TYPE_RECORD)
-                .subscribeOn(Schedulers.io())
-                .unsubscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<GdbCheckNewFileBean>() {
-                    @Override
-                    public void accept(GdbCheckNewFileBean bean) throws Exception {
-                        view.onCheckPass(bean.isRecordExisted(), bean.getRecordItems());
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception {
-                        throwable.printStackTrace();
-                        view.onRequestFail();
-                    }
-                });
-    }
-
-    /**
-     * 从服务端提供的下载列表中选出已存在的和不存在的
-     * @param downloadList 服务端提供的下载列表
-     * @param existedList 已存在的下载内容，不能为null
-     * @return 未存在的下载内容
-     */
-    public List<DownloadItem> pickRecordToDownload(List<DownloadItem> downloadList, List<DownloadItem> existedList) {
-        List<DownloadItem> list = new ArrayList<>();
-        for (DownloadItem item:downloadList) {
-            // name 格式为 XXX.png
-            String name = item.getName().substring(0, item.getName().lastIndexOf("."));
-
-            String path;
-            // 服务端文件处于一级目录
-            if (item.getKey() == null) {
-                // 检查本地一级目录是否存在
-                path = Configuration.GDB_IMG_RECORD + "/" + name + ".png";
-                if (!new File(path).exists()) {
-                    // 检查本地二级目录是否存在
-                    path = Configuration.GDB_IMG_RECORD + "/" + name + "/" + name + ".png";
-                }
-            }
-            // 服务端文件处于二级目录
-            else {
-                // 只检查本地二级目录是否存在
-                path = Configuration.GDB_IMG_RECORD + "/" + item.getKey() + "/" + name + ".png";
-            }
-
-            // 检查本地一级目录是否存在
-            if (new File(path).exists()) {
-                item.setPath(path);
-                existedList.add(item);
-            } else {
-                list.add(item);
-            }
-        }
-        return list;
     }
 
     /**

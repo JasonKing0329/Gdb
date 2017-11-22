@@ -64,9 +64,6 @@ public class LoginActivity extends GBaseActivity implements ILoginView {
 
     private LoginPresenter loginPresenter;
 
-    private boolean executeInsertProcess;
-    private boolean isServiceBound;
-
     private UpdateManager updateManager;
 
     @Override
@@ -307,23 +304,17 @@ public class LoginActivity extends GBaseActivity implements ILoginView {
         new DefaultDialogManager().showWarningActionDialog(this
                 , getResources().getString(R.string.login_start_service_insert)
                 , getResources().getString(R.string.yes)
-                , getResources().getString(R.string.allno)
+                , getResources().getString(R.string.no)
                 , getResources().getString(R.string.action_settings)
                 , new DialogInterface.OnClickListener() {
 
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         if (which == DialogInterface.BUTTON_POSITIVE) {
-                            executeInsertProcess = true;
-//                            showLoading();
-//                            if (!isServiceRunning()) {
-//                                isServiceBound = bindService(new Intent().setClass(LoginActivity.this, FileDBService.class)
-//                                        , connection, BIND_AUTO_CREATE);
-//                            }
-                            onServiceDone();
+                            ActivityManager.startManageActivity(LoginActivity.this);
+                            finish();
                         }
                         else if (which == DialogInterface.BUTTON_NEGATIVE) {
-
                             startSetting();
                         }
                         else {//netrual, all no

@@ -65,6 +65,8 @@
             android:screenOrientation="portrait"/>
         <activity android:name=".view.game.RandomActivity"
             android:screenOrientation="portrait"/>
+        <activity android:name=".view.settings.ManageActivity"
+            android:screenOrientation="portrait"/>
 
         <provider
             android:name="android.support.v4.content.FileProvider"

@@ -7,15 +7,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.jing.app.jjgallery.gdb.GBaseActivity;
 import com.jing.app.jjgallery.gdb.R;
-import com.jing.app.jjgallery.gdb.http.Command;
-import com.jing.app.jjgallery.gdb.http.bean.data.DownloadItem;
-import com.jing.app.jjgallery.gdb.model.conf.Configuration;
 import com.jing.app.jjgallery.gdb.presenter.record.RecordListPresenter;
-import com.jing.app.jjgallery.gdb.view.list.GDBListActivity;
 import com.jing.app.jjgallery.gdb.view.pub.ActionBar;
-
-import java.util.List;
 
 import butterknife.Unbinder;
 
@@ -24,7 +19,7 @@ import butterknife.Unbinder;
  * <p/>作者：景阳
  * <p/>创建时间: 2017/7/12 11:20
  */
-public class RecordListActivity extends GDBListActivity implements IRecordListHolder {
+public class RecordListActivity extends GBaseActivity implements IRecordListHolder {
 
     private RecordListPresenter recordPresenter;
     private RecordsListFragment recordFragment;
@@ -33,14 +28,14 @@ public class RecordListActivity extends GDBListActivity implements IRecordListHo
     
     @Override
     public int getContentView() {
+        getSupportActionBar().hide();
         return R.layout.activity_gdb_record_list;
     }
 
 
     @Override
     protected void initController() {
-        recordPresenter = new RecordListPresenter(this);
-        presenter = recordPresenter;
+        recordPresenter = new RecordListPresenter();
     }
 
     @Override
@@ -52,7 +47,7 @@ public class RecordListActivity extends GDBListActivity implements IRecordListHo
 
     @Override
     protected void initBackgroundWork() {
-        presenter.checkServerStatus();
+
     }
 
     private void initActionbar() {
@@ -129,12 +124,7 @@ public class RecordListActivity extends GDBListActivity implements IRecordListHo
         @Override
         public boolean onMenuItemClick(MenuItem item) {
             switch (item.getItemId()) {
-                case R.id.menu_gdb_check_server:
-                    recordPresenter.checkNewRecordFile();
-                    break;
-                case R.id.menu_gdb_download:
-                    showDownloadDialog();
-                    break;
+
             }
             return false;
         }
@@ -146,31 +136,6 @@ public class RecordListActivity extends GDBListActivity implements IRecordListHo
             recordFragment.filterRecord(text);
         }
     };
-
-    @Override
-    protected void onServerConnectSuccess() {
-        recordPresenter.checkNewRecordFile();
-    }
-
-    @Override
-    protected void onDownloadFinished() {
-        recordFragment.refreshList();
-    }
-
-    @Override
-    protected String getListType() {
-        return Command.TYPE_RECORD;
-    }
-
-    @Override
-    protected String getSavePath() {
-        return Configuration.GDB_IMG_RECORD;
-    }
-
-    @Override
-    protected List<DownloadItem> getListToDownload(List<DownloadItem> downloadList, List<DownloadItem> repeatList) {
-        return recordPresenter.pickRecordToDownload(downloadList, repeatList);
-    }
 
     @Override
     public RecordListPresenter getPresenter() {

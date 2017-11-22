@@ -175,7 +175,7 @@ public class GHomeActivity extends GBaseActivity implements NavigationView.OnNav
             ActivityManager.startRandomActivity(this);
         }
         else if (id == R.id.nav_update) {
-            checkUpdate();
+            ActivityManager.startManageActivity(this);
         }
 
         drawerLayout.closeDrawer(GravityCompat.START);

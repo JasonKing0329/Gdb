@@ -37,4 +37,8 @@
         <!-- ViewUpdater implementation class. If not set, DefaultViewUpdater class is used. -->
         <attr name="viewUpdater" format="string"/>
     </declare-styleable>
+
+    <declare-styleable name="CircularProgress">
+        <attr name="borderWidth" format="dimension" />
+    </declare-styleable>
 </resources>

@@ -35,4 +35,9 @@
 
     <color name="gdb_float_infor_bg">#66000000</color>
 
+    <color name="redC93437">#FFC93437</color>
+    <color name="blue375BF1">#FF375BF1</color>
+    <color name="yellowF7D23E">#FFF7D23E</color>
+    <color name="green34A350">#FF34A350</color>
+    <color name="loading_bg">#efefef</color>
 </resources>

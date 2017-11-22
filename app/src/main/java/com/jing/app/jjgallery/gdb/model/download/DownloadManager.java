@@ -234,7 +234,10 @@ public class DownloadManager {
             fileOutputStream.close();
             input.close();
 
-            compressFile(file);
+            // 只有下载的图片文件才执行压缩
+            if (FileUtil.isImageFile(file.getPath())) {
+                compressFile(file);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
