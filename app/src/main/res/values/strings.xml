@@ -71,6 +71,7 @@
     <string name="gdb_download_done">Download finished</string>
     <string name="gdb_move_record">Request server to move records?</string>
     <string name="gdb_move_star">Request server to move stars?</string>
+    <string name="gdb_clear_useless">Operation will remove all useless images under gdb record/star folder. Are you sure to continue?</string>
     <string name="gdb_no_new_images">No new images found.</string>
     <string name="gdb_rec_filter_min">min</string>
     <string name="gdb_rec_filter_max">max</string>

@@ -76,6 +76,7 @@
     <string name="gdb_download_done">下载完成</string>
     <string name="gdb_move_record">确认请求服务端移动record目录？</string>
     <string name="gdb_move_star">确认请求服务端移动star目录？</string>
+    <string name="gdb_clear_useless">操作将会删除所有gdb/record和gdb/star目录下未使用图片，确认继续？</string>
     <string name="gdb_no_new_images">没有检测到新图片</string>
     <string name="gdb_update_found">发现GDB数据库新版本%s，点击确定以下载</string>
     <string name="gdb_rec_filter_min">最低</string>

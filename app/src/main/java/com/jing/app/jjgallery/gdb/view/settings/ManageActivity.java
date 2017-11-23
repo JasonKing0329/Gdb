@@ -1,6 +1,7 @@
 package com.jing.app.jjgallery.gdb.view.settings;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.v7.app.ActionBar;
 import android.view.View;
 
@@ -8,8 +9,10 @@ import com.jing.app.jjgallery.gdb.GBaseActivity;
 import com.jing.app.jjgallery.gdb.R;
 import com.jing.app.jjgallery.gdb.http.Command;
 import com.jing.app.jjgallery.gdb.http.bean.data.DownloadItem;
+import com.jing.app.jjgallery.gdb.model.bean.CheckDownloadBean;
 import com.jing.app.jjgallery.gdb.model.bean.DownloadDialogBean;
 import com.jing.app.jjgallery.gdb.presenter.ManagePresenter;
+import com.jing.app.jjgallery.gdb.service.FileService;
 import com.jing.app.jjgallery.gdb.view.download.v4.DownloadDialogFragmentV4;
 import com.jing.app.jjgallery.gdb.view.pub.ProgressProvider;
 import com.jing.app.jjgallery.gdb.view.pub.dialog.AlertDialogFragmentV4;
@@ -75,12 +78,31 @@ public class ManageActivity extends GBaseActivity implements IManageView {
                 presenter.checkNewRecordFile();
                 break;
             case R.id.group_move_stars:
-                optionServerAction(Command.TYPE_STAR, getString(R.string.gdb_move_star));
+                showConfirmCancel(getString(R.string.gdb_move_star), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        showLoadingV4();
+                        presenter.requestServeMoveImages(Command.TYPE_STAR);
+                    }
+                }, null);
                 break;
             case R.id.group_move_records:
-                optionServerAction(Command.TYPE_RECORD, getString(R.string.gdb_move_record));
+                showConfirmCancel(getString(R.string.gdb_move_record), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        showLoadingV4();
+                        presenter.requestServeMoveImages(Command.TYPE_RECORD);
+                    }
+                }, null);
                 break;
             case R.id.group_clear:
+                showConfirmCancel(getString(R.string.gdb_clear_useless), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        showToastLong("Run on background...");
+                        startService(new Intent().setClass(ManageActivity.this, FileService.class));
+                    }
+                }, null);
                 break;
             case R.id.group_check_server:
                 showLoadingV4();
@@ -114,13 +136,13 @@ public class ManageActivity extends GBaseActivity implements IManageView {
     }
 
     @Override
-    public void onCheckPass(boolean hasNew, List<DownloadItem> toDownloadList, final List<DownloadItem> repeatList, String savePath) {
-        if (hasNew) {
+    public void onCheckPass(CheckDownloadBean checkDownloadBean) {
+        if (checkDownloadBean.isHasNew()) {
             DownloadDialogFragmentV4 downloadDialogFragment = new DownloadDialogFragmentV4();
             DownloadDialogBean bean = new DownloadDialogBean();
-            bean.setDownloadList(toDownloadList);
-            bean.setExistedList(repeatList);
-            bean.setSavePath(savePath);
+            bean.setDownloadList(checkDownloadBean.getDownloadList());
+            bean.setExistedList(checkDownloadBean.getRepeatList());
+            bean.setSavePath(checkDownloadBean.getTargetPath());
             bean.setShowPreview(true);
             downloadDialogFragment.setDialogBean(bean);
             downloadDialogFragment.setOnDownloadListener(new DownloadDialogFragmentV4.OnDownloadListener() {
@@ -148,23 +170,27 @@ public class ManageActivity extends GBaseActivity implements IManageView {
     }
 
     /**
-     * request server move original image files
      *
-     * @param type
+     * @param message
      */
-    private void optionServerAction(final String type, String message) {
+    private void showConfirmCancel(String message, DialogInterface.OnClickListener positiveListener
+            , DialogInterface.OnClickListener negativeListener) {
         AlertDialogFragmentV4 dialog = new AlertDialogFragmentV4();
         dialog.setMessage(message);
         dialog.setPositiveText(getString(R.string.yes));
-        dialog.setPositiveListener(new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                showLoadingV4();
-                presenter.requestServeMoveImages(type);
-            }
-        });
+        dialog.setPositiveListener(positiveListener);
         dialog.setNegativeText(getString(R.string.no));
+        if (negativeListener != null) {
+            dialog.setNegativeListener(negativeListener);
+        }
         dialog.show(getSupportFragmentManager(), "AlertDialogFragmentV4");
     }
 
+    @Override
+    protected void onDestroy() {
+        if (presenter != null) {
+            presenter.dispose();
+        }
+        super.onDestroy();
+    }
 }

@@ -1,8 +1,6 @@
 package com.jing.app.jjgallery.gdb.view.settings;
 
-import com.jing.app.jjgallery.gdb.http.bean.data.DownloadItem;
-
-import java.util.List;
+import com.jing.app.jjgallery.gdb.model.bean.CheckDownloadBean;
 
 /**
  * 描述:
@@ -18,7 +16,7 @@ public interface IManageView {
 
     void onMoveImagesFail();
 
-    void onCheckPass(boolean hasNew, List<DownloadItem> toDownloadList, List<DownloadItem> repeatList, String savePath);
+    void onCheckPass(CheckDownloadBean bean);
 
     void onRequestFail();
 }
