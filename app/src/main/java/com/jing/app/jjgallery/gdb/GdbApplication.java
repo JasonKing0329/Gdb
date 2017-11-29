@@ -2,10 +2,12 @@ package com.jing.app.jjgallery.gdb;
 
 import android.app.Activity;
 import android.app.Application;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 
 import com.jing.app.jjgallery.gdb.model.db.GdbProviderHelper;
+import com.jing.app.jjgallery.gdb.service.FileService;
 import com.jing.app.jjgallery.gdb.util.DebugLog;
 import com.orhanobut.logger.AndroidLogAdapter;
 import com.orhanobut.logger.Logger;
@@ -106,7 +108,8 @@ public class GdbApplication extends Application {
         return currentActivity;
     }
 
-    private void stopAllService(Activity activity) {
+    private void stopAllService(Activity from) {
+        stopService(new Intent().setClass(from, FileService.class));
     }
 
     @Override
