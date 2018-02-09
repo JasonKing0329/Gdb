@@ -19,9 +19,8 @@ import com.jing.app.jjgallery.gdb.view.pub.BannerAnimDialogFragment;
 import com.jing.app.jjgallery.gdb.view.pub.ProgressProvider;
 import com.jing.app.jjgallery.gdb.view.pub.PullZoomRecyclerView;
 import com.jing.app.jjgallery.gdb.view.record.SortDialogFragment;
-import com.king.service.gdb.bean.FavorBean;
-import com.king.service.gdb.bean.Record;
-import com.king.service.gdb.bean.Star;
+import com.king.app.gdb.data.entity.Record;
+import com.king.app.gdb.data.entity.Star;
 
 /**
  * Created by JingYang on 2016/8/1 0001.
@@ -29,7 +28,7 @@ import com.king.service.gdb.bean.Star;
  */
 public class StarFragment extends BaseFragmentV4 implements IStarView, StarRecordsAdapter.OnRecordItemClickListener {
 
-    private int starId;
+    private long starId;
     private StarPresenter mPresenter;
     protected PullZoomRecyclerView mRecyclerView;
     private StarRecordsAdapter mAdapter;
@@ -42,7 +41,7 @@ public class StarFragment extends BaseFragmentV4 implements IStarView, StarRecor
 
     private BannerAnimDialogFragment bannerSettingDialog;
     
-    public void setStarId(int starId) {
+    public void setStarId(long starId) {
         this.starId = starId;
     }
 
@@ -119,7 +118,7 @@ public class StarFragment extends BaseFragmentV4 implements IStarView, StarRecor
         starProxy = star;
         mPresenter.sortRecords(star.getStar().getRecordList(), currentSortMode, currentSortDesc);
 
-        boolean isStarFavor = mPresenter.isStarFavor(star.getStar().getId());
+        boolean isStarFavor = mPresenter.isStarFavor(star.getStar());
         mAdapter = new StarRecordsAdapter(star, mRecyclerView);
         mAdapter.setStarFavor(isStarFavor);
         mAdapter.setItemClickListener(this);
@@ -164,11 +163,8 @@ public class StarFragment extends BaseFragmentV4 implements IStarView, StarRecor
 
     @Override
     public void onFavorStar(Star star, int score) {
-        FavorBean bean = new FavorBean();
-        bean.setStarId(star.getId());
-        bean.setFavor(score);
-        bean.setStarName(star.getName());
-        mPresenter.saveFavor(bean);
+        star.setFavor(score);
+        mPresenter.saveFavor(star);
     }
 
     @Override

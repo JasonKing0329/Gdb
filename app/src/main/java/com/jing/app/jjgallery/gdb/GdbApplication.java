@@ -6,11 +6,15 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 
-import com.jing.app.jjgallery.gdb.model.db.GdbProviderHelper;
 import com.jing.app.jjgallery.gdb.service.FileService;
 import com.jing.app.jjgallery.gdb.util.DebugLog;
+import com.king.app.gdb.data.entity.DaoMaster;
+import com.king.app.gdb.data.entity.DaoSession;
 import com.orhanobut.logger.AndroidLogAdapter;
 import com.orhanobut.logger.Logger;
+
+import org.greenrobot.greendao.database.Database;
+import org.greenrobot.greendao.query.QueryBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +35,9 @@ public class GdbApplication extends Application {
     public static GdbApplication getInstance() {
         return instance;
     }
+
+    private DaoSession daoSession;
+    private DaoMaster.DevOpenHelper helper;
 
     @Override
     public void onCreate() {
@@ -100,7 +107,6 @@ public class GdbApplication extends Application {
      * @param activity
      */
     private void onLastActivityFinished(Activity activity) {
-        GdbProviderHelper.close();
         stopAllService(activity);
     }
 
@@ -162,4 +168,26 @@ public class GdbApplication extends Application {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.M;
     }
 
+    /**
+     * 程序初始化使用外置数据库
+     * 需要由外部调用，如果在onCreate里直接初始化会创建新的数据库
+     */
+    public void createGreenDao() {
+        helper = new DaoMaster.DevOpenHelper(getApplicationContext(), "gdata.db");
+        Database db = helper.getWritableDb();
+        daoSession = new DaoMaster(db).newSession();
+
+        QueryBuilder.LOG_SQL = true;
+        QueryBuilder.LOG_VALUES = true;
+    }
+
+    public void reCreateGreenDao() {
+        daoSession.clear();
+        helper.close();
+        createGreenDao();
+    }
+
+    public DaoSession getDaoSession() {
+        return daoSession;
+    }
 }

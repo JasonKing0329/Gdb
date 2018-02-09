@@ -6,14 +6,14 @@ package com.jing.app.jjgallery.gdb.model.bean;
  * <p/>创建时间: 2017/11/8 9:24
  */
 public class RandomStarBean {
-    private int starId;
+    private long starId;
     private String name;
 
-    public int getStarId() {
+    public long getStarId() {
         return starId;
     }
 
-    public void setStarId(int starId) {
+    public void setStarId(long starId) {
         this.starId = starId;
     }
 

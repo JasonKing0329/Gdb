@@ -1,5 +1,6 @@
 package com.jing.app.jjgallery.gdb.presenter.surf;
 
+import com.jing.app.jjgallery.gdb.GdbApplication;
 import com.jing.app.jjgallery.gdb.http.AppHttpClient;
 import com.jing.app.jjgallery.gdb.http.bean.data.FileBean;
 import com.jing.app.jjgallery.gdb.http.bean.request.FolderRequest;
@@ -7,10 +8,9 @@ import com.jing.app.jjgallery.gdb.http.bean.response.FolderResponse;
 import com.jing.app.jjgallery.gdb.model.RecordComparator;
 import com.jing.app.jjgallery.gdb.model.bean.HttpSurfFileBean;
 import com.jing.app.jjgallery.gdb.model.conf.PreferenceValue;
-import com.jing.app.jjgallery.gdb.model.db.GdbProviderHelper;
 import com.jing.app.jjgallery.gdb.view.surf.ISurfHttpView;
-
-import com.king.service.gdb.bean.Record;
+import com.king.app.gdb.data.entity.Record;
+import com.king.app.gdb.data.entity.RecordDao;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -82,7 +82,10 @@ public class SurfHttpPresenter {
                 for (int i = 0; i < list.size(); i ++) {
                     HttpSurfFileBean bean = list.get(i);
                     if (!bean.isFolder()) {
-                        Record record = GdbProviderHelper.getProvider().getRecordByName(bean.getName());
+                        RecordDao dao = GdbApplication.getInstance().getDaoSession().getRecordDao();
+                        Record record = dao.queryBuilder()
+                                .where(RecordDao.Properties.Name.eq(bean.getName()))
+                                .build().unique();
                         bean.setRecord(record);
                         e.onNext(i);
                     }

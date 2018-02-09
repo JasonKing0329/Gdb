@@ -2,7 +2,6 @@ package com.jing.app.jjgallery.gdb.view.home;
 
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,11 +16,10 @@ import com.jing.app.jjgallery.gdb.R;
 import com.jing.app.jjgallery.gdb.model.GdbImageProvider;
 import com.jing.app.jjgallery.gdb.model.VideoModel;
 import com.jing.app.jjgallery.gdb.util.GlideUtil;
+import com.jing.app.jjgallery.gdb.util.ListUtil;
 import com.jing.app.jjgallery.gdb.view.pub.HeaderFooterRecyclerAdapter;
-
-import com.king.service.gdb.bean.Record;
-import com.king.service.gdb.bean.RecordOneVOne;
-import com.king.service.gdb.bean.RecordThree;
+import com.king.app.gdb.data.entity.Record;
+import com.king.app.gdb.data.entity.Star;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -93,37 +91,18 @@ public class GHomeRecordListAdapter extends HeaderFooterRecyclerAdapter<Record> 
                 .apply(recordOptions)
                 .into(itemHolder.ivRecord);
 
-        if (record instanceof RecordOneVOne) {
-            RecordOneVOne orecord = (RecordOneVOne) record;
-            itemHolder.tvStar.setText(orecord.getStar1().getName() + " & " + orecord.getStar2().getName());
-        }
-        else if (record instanceof RecordThree) {
-            RecordThree trecord = (RecordThree) record;
-            String text = null;
-            if (!TextUtils.isEmpty(trecord.getStarTopName())) {
-                text = trecord.getStarTopName();
+        List<Star> starList = record.getStarList();
+        StringBuffer starBuffer = new StringBuffer();
+        if (!ListUtil.isEmpty(starList)) {
+            for (Star star:starList) {
+                starBuffer.append("&").append(star.getName());
             }
-            if (!TextUtils.isEmpty(trecord.getStarBottomName())) {
-                if (text == null) {
-                    text = trecord.getStarBottomName();
-                }
-                else {
-                    text = text.concat("&").concat(trecord.getStarBottomName());
-                }
-            }
-            if (!TextUtils.isEmpty(trecord.getStarMixName())) {
-                if (text == null) {
-                    text = trecord.getStarMixName();
-                }
-                else {
-                    text = text.concat("&").concat(trecord.getStarMixName());
-                }
-            }
-            itemHolder.tvStar.setText(text);
         }
-        else {
-            itemHolder.tvStar.setText("");
+        String starText = starBuffer.toString();
+        if (starText.length() > 1) {
+            starText = starText.substring(1);
         }
+        itemHolder.tvStar.setText(starText);
 
         // 第一个位置以及与上一个位置日期不同的，显示日期
         if (position == 0 || isNotSameDay(record, list.get(position - 1))) {

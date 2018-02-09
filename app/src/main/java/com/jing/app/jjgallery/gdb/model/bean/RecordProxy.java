@@ -1,6 +1,6 @@
 package com.jing.app.jjgallery.gdb.model.bean;
 
-import com.king.service.gdb.bean.Record;
+import com.king.app.gdb.data.entity.Record;
 
 /**
  * Created by JingYang on 2016/8/5 0005.

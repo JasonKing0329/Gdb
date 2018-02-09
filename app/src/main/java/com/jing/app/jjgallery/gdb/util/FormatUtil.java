@@ -24,7 +24,7 @@ public class FormatUtil {
      * @param n
      * @return
      */
-    public static String formatScore(float score, int n) {
+    public static String formatScore(double score, int n) {
         BigDecimal bd = new BigDecimal(score);
         bd = bd.setScale(n, BigDecimal.ROUND_HALF_UP);
         return bd.toString();
@@ -36,7 +36,7 @@ public class FormatUtil {
      * @param num
      * @return
      */
-    public static String formatFloatEnd(float num) {
+    public static String formatFloatEnd(double num) {
 
         String pr = formatScore(num, 2);
         if(pr.indexOf(".") > 0){

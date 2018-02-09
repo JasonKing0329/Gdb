@@ -7,7 +7,7 @@ import com.jing.app.jjgallery.gdb.http.bean.data.FileBean;
 import com.jing.app.jjgallery.gdb.model.SettingProperties;
 import com.jing.app.jjgallery.gdb.model.bean.HttpSurfFileBean;
 import com.jing.app.jjgallery.gdb.util.DebugLog;
-import com.king.service.gdb.bean.Record;
+import com.king.app.gdb.data.entity.Record;
 
 import java.util.ArrayList;
 import java.util.List;

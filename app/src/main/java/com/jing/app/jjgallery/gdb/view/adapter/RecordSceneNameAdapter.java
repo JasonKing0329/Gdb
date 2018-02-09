@@ -12,10 +12,10 @@ import android.widget.TextView;
 
 import com.jing.app.jjgallery.gdb.R;
 import com.jing.app.jjgallery.gdb.model.SettingProperties;
+import com.jing.app.jjgallery.gdb.model.db.SceneBean;
 import com.jing.app.jjgallery.gdb.util.ColorUtils;
 import com.jing.app.jjgallery.gdb.util.FormatUtil;
 import com.jing.app.jjgallery.gdb.util.ScreenUtils;
-import com.king.service.gdb.bean.SceneBean;
 
 import java.util.ArrayList;
 import java.util.List;

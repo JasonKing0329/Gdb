@@ -23,7 +23,7 @@ import com.jing.app.jjgallery.gdb.model.VideoThumbCallback;
 import com.jing.app.jjgallery.gdb.model.bean.VideoData;
 import com.jing.app.jjgallery.gdb.util.FormatUtil;
 import com.jing.app.jjgallery.gdb.util.ScreenUtils;
-import com.king.service.gdb.bean.Record;
+import com.king.app.gdb.data.entity.Record;
 
 import java.util.ArrayList;
 import java.util.List;

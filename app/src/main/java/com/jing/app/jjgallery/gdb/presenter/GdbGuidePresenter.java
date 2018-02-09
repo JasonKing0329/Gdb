@@ -2,23 +2,23 @@ package com.jing.app.jjgallery.gdb.presenter;
 
 import android.os.AsyncTask;
 
+import com.jing.app.jjgallery.gdb.GdbApplication;
 import com.jing.app.jjgallery.gdb.GdbConstants;
 import com.jing.app.jjgallery.gdb.model.GdbImageProvider;
 import com.jing.app.jjgallery.gdb.model.bean.StarProxy;
 import com.jing.app.jjgallery.gdb.model.bean.recommend.FilterBean;
 import com.jing.app.jjgallery.gdb.model.bean.recommend.FilterModel;
-import com.jing.app.jjgallery.gdb.model.db.GdbProviderHelper;
+import com.jing.app.jjgallery.gdb.model.db.StarExtendDao;
 import com.jing.app.jjgallery.gdb.util.DebugLog;
 import com.jing.app.jjgallery.gdb.view.home.GHomeBean;
 import com.jing.app.jjgallery.gdb.view.home.IHomeView;
 import com.jing.app.jjgallery.gdb.view.recommend.IRecommend;
-
-import com.king.service.gdb.RecordCursor;
-import com.king.service.gdb.bean.FavorBean;
-import com.king.service.gdb.bean.GDBProperites;
-import com.king.service.gdb.bean.Record;
-import com.king.service.gdb.bean.RecordSingleScene;
-import com.king.service.gdb.bean.Star;
+import com.king.app.gdb.data.RecordCursor;
+import com.jing.app.jjgallery.gdb.model.db.RecordExtendDao;
+import com.king.app.gdb.data.entity.Record;
+import com.king.app.gdb.data.entity.RecordDao;
+import com.king.app.gdb.data.entity.Star;
+import com.king.app.gdb.data.param.DataConstants;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -30,7 +30,6 @@ import java.util.Random;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
-import io.reactivex.Scheduler;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Consumer;
@@ -56,13 +55,15 @@ public class GdbGuidePresenter {
      * 过滤器
      */
     private FilterModel filterModel;
-
-    /**
-     * 记录record加载的游标
-     */
     private RecordCursor recordCursor;
 
+    private RecordExtendDao recordExtendDao;
+
+    private StarExtendDao starExtendDao;
+
     public GdbGuidePresenter() {
+        recordExtendDao = new RecordExtendDao();
+        starExtendDao = new StarExtendDao();
     }
 
     public GdbGuidePresenter(IRecommend recommendView) {
@@ -78,7 +79,8 @@ public class GdbGuidePresenter {
         Observable.create(new ObservableOnSubscribe<List<Record>>() {
             @Override
             public void subscribe(@NonNull ObservableEmitter<List<Record>> e) throws Exception {
-                recordList = GdbProviderHelper.getProvider().getAllRecords();
+                RecordDao dao = GdbApplication.getInstance().getDaoSession().getRecordDao();
+                recordList = dao.queryBuilder().build().list();
                 e.onNext(recordList);
             }
         }).observeOn(AndroidSchedulers.mainThread())
@@ -151,7 +153,7 @@ public class GdbGuidePresenter {
             for (Record record:recordList) {
                 pass = true;
                 // 记录是NR并且过滤器勾选了支持NR才判定为通过
-                if (record.getHDLevel() == GDBProperites.RECORD_HD_NR && filterModel.isSupportNR()) {
+                if (record.getHdLevel() == DataConstants.RECORD_HD_NR && filterModel.isSupportNR()) {
                     pass = true;
                 }
                 // 普通记录，以及是NR但是过滤器没有勾选NR，需要检测其他过滤项
@@ -209,48 +211,77 @@ public class GdbGuidePresenter {
             return record.getScore();
         }
         else if (keyword.equals(GdbConstants.FILTER_KEY_SCORE_STORY)) {
-            return record.getScoreStory();
+            if (record.getType() == DataConstants.VALUE_RECORD_TYPE_1V1) {
+                return record.getRecordType1v1().getScoreStory();
+            }
+            else if (record.getType() == DataConstants.VALUE_RECORD_TYPE_3W) {
+                return record.getRecordType3w().getScoreStory();
+            }
         }
         else if (keyword.equals(GdbConstants.FILTER_KEY_SCORE_DEPRECATED)) {
             return record.getDeprecated();
         }
-        else if (record instanceof RecordSingleScene) {
-            RecordSingleScene oRecord = (RecordSingleScene) record;
-            if (keyword.equals(GdbConstants.FILTER_KEY_SCORE_CUM)) {
-                return oRecord.getScoreCum();
+        else if (keyword.equals(GdbConstants.FILTER_KEY_SCORE_CUM)) {
+            return record.getScoreCum();
+        }
+        else if (keyword.equals(GdbConstants.FILTER_KEY_SCORE_FK)) {
+            return record.getScorePassion();
+        }
+        else if (keyword.equals(GdbConstants.FILTER_KEY_SCORE_STAR)) {
+            return record.getScoreStar();
+        }
+        else if (keyword.equals(GdbConstants.FILTER_KEY_SCORE_BAREBACK)) {
+            return record.getScoreBareback();
+        }
+        else if (keyword.equals(GdbConstants.FILTER_KEY_SCORE_BJOB)) {
+            if (record.getType() == DataConstants.VALUE_RECORD_TYPE_1V1) {
+                return record.getRecordType1v1().getScoreBjob();
             }
-            else if (keyword.equals(GdbConstants.FILTER_KEY_SCORE_FK)) {
-                return oRecord.getScoreFk();
+            else if (record.getType() == DataConstants.VALUE_RECORD_TYPE_3W) {
+                return record.getRecordType3w().getScoreBjob();
             }
-            else if (keyword.equals(GdbConstants.FILTER_KEY_SCORE_STAR)) {
-                return oRecord.getScoreStar();
+        }
+        else if (keyword.equals(GdbConstants.FILTER_KEY_SCORE_RHYTHM)) {
+            if (record.getType() == DataConstants.VALUE_RECORD_TYPE_1V1) {
+                return record.getRecordType1v1().getScoreRhythm();
             }
-            else if (keyword.equals(GdbConstants.FILTER_KEY_SCORE_STARC)) {
-                return oRecord.getScoreStarC();
+            else if (record.getType() == DataConstants.VALUE_RECORD_TYPE_3W) {
+                return record.getRecordType3w().getScoreRhythm();
             }
-            else if (keyword.equals(GdbConstants.FILTER_KEY_SCORE_BJOB)) {
-                return oRecord.getScoreBJob();
+        }
+        else if (keyword.equals(GdbConstants.FILTER_KEY_SCORE_RIM)) {
+            if (record.getType() == DataConstants.VALUE_RECORD_TYPE_1V1) {
+                return record.getRecordType1v1().getScoreRim();
             }
-            else if (keyword.equals(GdbConstants.FILTER_KEY_SCORE_BAREBACK)) {
-                return oRecord.getScoreNoCond();
+            else if (record.getType() == DataConstants.VALUE_RECORD_TYPE_3W) {
+                return record.getRecordType3w().getScoreRim();
             }
-            else if (keyword.equals(GdbConstants.FILTER_KEY_SCORE_RHYTHM)) {
-                return oRecord.getScoreRhythm();
+        }
+        else if (keyword.equals(GdbConstants.FILTER_KEY_SCORE_SCECE)) {
+            if (record.getType() == DataConstants.VALUE_RECORD_TYPE_1V1) {
+                return record.getRecordType1v1().getScoreScene();
             }
-            else if (keyword.equals(GdbConstants.FILTER_KEY_SCORE_RIM)) {
-                return oRecord.getScoreRim();
+            else if (record.getType() == DataConstants.VALUE_RECORD_TYPE_3W) {
+                return record.getRecordType3w().getScoreScene();
             }
-            else if (keyword.equals(GdbConstants.FILTER_KEY_SCORE_SCECE)) {
-                return oRecord.getScoreScene();
+        }
+        else if (keyword.equals(GdbConstants.FILTER_KEY_SCORE_CSHOW)) {
+            if (record.getType() == DataConstants.VALUE_RECORD_TYPE_1V1) {
+                return record.getRecordType1v1().getScoreCshow();
             }
-            else if (keyword.equals(GdbConstants.FILTER_KEY_SCORE_CSHOW)) {
-                return oRecord.getScoreCShow();
+            else if (record.getType() == DataConstants.VALUE_RECORD_TYPE_3W) {
+                return record.getRecordType3w().getScoreCshow();
             }
-            else if (keyword.equals(GdbConstants.FILTER_KEY_SCORE_SPECIAL)) {
-                return oRecord.getScoreSpeicial();
+        }
+        else if (keyword.equals(GdbConstants.FILTER_KEY_SCORE_SPECIAL)) {
+            return record.getScoreSpecial();
+        }
+        else if (keyword.equals(GdbConstants.FILTER_KEY_SCORE_FOREPLAY)) {
+            if (record.getType() == DataConstants.VALUE_RECORD_TYPE_1V1) {
+                return record.getRecordType1v1().getScoreForePlay();
             }
-            else if (keyword.equals(GdbConstants.FILTER_KEY_SCORE_FOREPLAY)) {
-                return oRecord.getScoreForePlay();
+            else if (record.getType() == DataConstants.VALUE_RECORD_TYPE_3W) {
+                return record.getRecordType3w().getScoreForePlay();
             }
         }
         return 0;
@@ -274,10 +305,9 @@ public class GdbGuidePresenter {
 
     public List<Record> getLatestRecord(int number) {
         recordCursor = new RecordCursor();
-        recordCursor.from1v1 = 0;
-        recordCursor.from3w = 0;
+        recordCursor.offset = 0;
         recordCursor.number = number;
-        return GdbProviderHelper.getProvider().getLatestRecords(recordCursor);
+        return recordExtendDao.getLatestRecords(recordCursor);
     }
 
     /**
@@ -293,13 +323,12 @@ public class GdbGuidePresenter {
                 List<StarProxy> starList = new ArrayList<>();
 
                 // 随机获取N个favor
-                List<FavorBean> favorList = GdbProviderHelper.getProvider().getRandomFavors(10);
+                List<Star> favorList = starExtendDao.getRandomFavors(10);
                 for (int i = 0; i < favorList.size(); i ++) {
                     StarProxy proxy = new StarProxy();
-                    Star star = GdbProviderHelper.getProvider().queryStarById(favorList.get(i).getStarId());
+                    Star star = favorList.get(i);
                     proxy.setStar(star);
                     proxy.setImagePath(GdbImageProvider.getStarRandomPath(star.getName(), null));
-                    proxy.setFavor(favorList.get(i).getFavor());
                     starList.add(proxy);
                 }
                 homeBean.setStarList(starList);
@@ -376,7 +405,7 @@ public class GdbGuidePresenter {
 
         @Override
         protected List<Record> doInBackground(Integer... params) {
-            List<Record> list = GdbProviderHelper.getProvider().getLatestRecords(recordCursor);
+            List<Record> list = recordExtendDao.getLatestRecords(recordCursor);
             return list;
         }
     }

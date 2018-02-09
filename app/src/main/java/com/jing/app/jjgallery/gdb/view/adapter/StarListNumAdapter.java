@@ -18,7 +18,6 @@ import com.jing.app.jjgallery.gdb.presenter.star.StarListPresenter;
 import com.jing.app.jjgallery.gdb.util.GlideUtil;
 import com.jing.app.jjgallery.gdb.view.pub.dialog.DefaultDialogManager;
 import com.jing.app.jjgallery.gdb.view.star.OnStarClickListener;
-import com.king.service.gdb.bean.FavorBean;
 
 import java.util.List;
 
@@ -57,7 +56,7 @@ public class StarListNumAdapter extends RecyclerView.Adapter<StarListNumAdapter.
     public void onBindViewHolder(ViewHolder holder, int position) {
 
         StarProxy item = originList.get(position);
-        holder.name.setText(item.getStar().getName() + " (" + item.getStar().getRecordNumber() + ")");
+        holder.name.setText(item.getStar().getName() + " (" + item.getStar().getRecords() + ")");
         String headPath = item.getImagePath();
         if (headPath == null) {
             holder.imageView.setVisibility(View.GONE);
@@ -75,10 +74,10 @@ public class StarListNumAdapter extends RecyclerView.Adapter<StarListNumAdapter.
         holder.favorView.setTag(position);
         holder.favorView.setOnClickListener(this);
 
-        if (item.getFavor() > 0) {
+        if (item.getStar().getFavor() > 0) {
             holder.favorView.setSelected(true);
             holder.favorScore.setVisibility(View.VISIBLE);
-            holder.favorScore.setText(String.valueOf(item.getFavor()));
+            holder.favorScore.setText(String.valueOf(item.getStar().getFavor()));
         }
         else {
             holder.favorView.setSelected(false);
@@ -105,8 +104,7 @@ public class StarListNumAdapter extends RecyclerView.Adapter<StarListNumAdapter.
         }
         else if (v instanceof ImageView) {
             final int position = (int) v.getTag();
-            if (originList.get(position).getFavor() > 0) {
-                originList.get(position).setFavor(0);
+            if (originList.get(position).getStar().getFavor() > 0) {
                 saveFavor(originList.get(position), 0);
                 notifyItemChanged(position);
             }
@@ -116,11 +114,9 @@ public class StarListNumAdapter extends RecyclerView.Adapter<StarListNumAdapter.
                     public void onOk(String name) {
                         try {
                             int favor = Integer.parseInt(name);
-                            originList.get(position).setFavor(favor);
                             saveFavor(originList.get(position), favor);
                             notifyItemChanged(position);
                         } catch (Exception e) {
-                            originList.get(position).setFavor(0);
                         }
                     }
                 });
@@ -129,11 +125,8 @@ public class StarListNumAdapter extends RecyclerView.Adapter<StarListNumAdapter.
     }
 
     private void saveFavor(StarProxy starProxy, int favor) {
-        FavorBean bean = new FavorBean();
-        bean.setStarId(starProxy.getStar().getId());
-        bean.setStarName(starProxy.getStar().getName());
-        bean.setFavor(favor);
-        mPresenter.saveFavor(bean);
+        starProxy.getStar().setFavor(favor);
+        mPresenter.saveFavor(starProxy.getStar());
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

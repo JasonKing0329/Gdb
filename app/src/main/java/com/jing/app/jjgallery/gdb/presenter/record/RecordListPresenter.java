@@ -2,16 +2,17 @@ package com.jing.app.jjgallery.gdb.presenter.record;
 
 import android.os.AsyncTask;
 
+import com.jing.app.jjgallery.gdb.GdbApplication;
 import com.jing.app.jjgallery.gdb.GdbConstants;
 import com.jing.app.jjgallery.gdb.model.RecordComparator;
 import com.jing.app.jjgallery.gdb.model.VideoModel;
 import com.jing.app.jjgallery.gdb.model.conf.PreferenceValue;
-import com.jing.app.jjgallery.gdb.model.db.GdbProviderHelper;
+import com.jing.app.jjgallery.gdb.model.db.RecordExtendDao;
 import com.jing.app.jjgallery.gdb.view.record.IRecordListView;
 import com.jing.app.jjgallery.gdb.view.record.IRecordSceneView;
-import com.king.service.gdb.RecordCursor;
-import com.king.service.gdb.bean.Record;
-import com.king.service.gdb.bean.SceneBean;
+import com.king.app.gdb.data.RecordCursor;
+import com.jing.app.jjgallery.gdb.model.db.SceneBean;
+import com.king.app.gdb.data.entity.Record;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -40,8 +41,10 @@ public class RecordListPresenter {
 
     private RecordCursor moreCursor;
 
-    public RecordListPresenter() {
+    private RecordExtendDao recordExtendDao;
 
+    public RecordListPresenter() {
+        recordExtendDao = new RecordExtendDao();
     }
 
     public void setRecordListView(IRecordListView recordListView) {
@@ -110,12 +113,11 @@ public class RecordListPresenter {
 
                 // 加载可播放的需要从全部记录里通过对比video目录文件信息来挑选
                 if (showCanBePlayed) {
-                    cursor.from1v1 = -1;
-                    cursor.from3w = -1;
+                    cursor.offset = -1;
                     cursor.number = -1;
                 }
 
-                List<Record> list = GdbProviderHelper.getProvider().getRecords(RecordComparator.getSortColumn(sortMode), desc, includeDeprecated, cursor, like, scene);
+                List<Record> list = recordExtendDao.getRecords(RecordComparator.getSortColumn(sortMode), desc, includeDeprecated, cursor, like, scene);
 
                 // 加载可播放的需要从全部记录里通过对比video目录文件信息来挑选
                 if (showCanBePlayed) {
@@ -125,7 +127,9 @@ public class RecordListPresenter {
             }
             // load all records
             else {
-                List<Record> list = GdbProviderHelper.getProvider().getAllRecords();
+
+                List<Record> list = GdbApplication.getInstance().getDaoSession().getRecordDao()
+                        .queryBuilder().build().list();
                 sortRecords(list, (Integer) params[0], (Boolean) params[1]);
                 return list;
             }
@@ -163,7 +167,7 @@ public class RecordListPresenter {
             RecordCursor cursor = (RecordCursor) params[4];
             String like = (String) params[5];
             String scene = (String) params[6];
-            List<Record> list = GdbProviderHelper.getProvider().getRecords(RecordComparator.getSortColumn(sortMode), desc, includeDeprecated, cursor, like, scene);
+            List<Record> list = recordExtendDao.getRecords(RecordComparator.getSortColumn(sortMode), desc, includeDeprecated, cursor, like, scene);
 
             if (showCanBePlayed) {
                 list = pickCanBePlayedRecord(list);
@@ -191,7 +195,7 @@ public class RecordListPresenter {
         Observable.create(new ObservableOnSubscribe<List<SceneBean>>() {
             @Override
             public void subscribe(@NonNull ObservableEmitter<List<SceneBean>> e) throws Exception {
-                List<SceneBean> scenes = GdbProviderHelper.getProvider().getSceneList();
+                List<SceneBean> scenes = recordExtendDao.getSceneList();
                 e.onNext(scenes);
             }
         }).subscribeOn(Schedulers.io())

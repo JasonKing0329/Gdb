@@ -17,7 +17,6 @@ import com.jing.app.jjgallery.gdb.presenter.star.StarListPresenter;
 import com.jing.app.jjgallery.gdb.util.GlideUtil;
 import com.jing.app.jjgallery.gdb.view.pub.dialog.DefaultDialogManager;
 import com.jing.app.jjgallery.gdb.view.star.OnStarClickListener;
-import com.king.service.gdb.bean.FavorBean;
 
 import java.util.List;
 
@@ -106,7 +105,7 @@ public class StarListAdapter extends BaseTurboAdapter<StarProxy, BaseViewHolder>
         }
         else if (holder instanceof NameHolder) {
             NameHolder nHolder = (NameHolder) holder;
-            nHolder.name.setText(item.getStar().getName() + " (" + item.getStar().getRecordNumber() + ")");
+            nHolder.name.setText(item.getStar().getName() + " (" + item.getStar().getRecords() + ")");
             String headPath = item.getImagePath();
             if (headPath == null) {
                 nHolder.imageView.setVisibility(View.GONE);
@@ -125,10 +124,10 @@ public class StarListAdapter extends BaseTurboAdapter<StarProxy, BaseViewHolder>
             nHolder.favorView.setTag(nHolder);
             nHolder.favorView.setOnClickListener(this);
 
-            if (item.getFavor() > 0) {
+            if (item.getStar().getFavor() > 0) {
                 nHolder.favorView.setSelected(true);
                 nHolder.favorScore.setVisibility(View.VISIBLE);
-                nHolder.favorScore.setText(String.valueOf(item.getFavor()));
+                nHolder.favorScore.setText(String.valueOf(item.getStar().getFavor()));
             }
             else {
                 nHolder.favorView.setSelected(false);
@@ -183,8 +182,7 @@ public class StarListAdapter extends BaseTurboAdapter<StarProxy, BaseViewHolder>
         }
         else if (v instanceof ImageView) {
             final NameHolder holder = (NameHolder) v.getTag();
-            if (holder.starProxy.getFavor() > 0) {
-                holder.starProxy.setFavor(0);
+            if (holder.starProxy.getStar().getFavor() > 0) {
                 saveFavor(holder.starProxy, 0);
                 notifyItemChanged(holder.getAdapterPosition());
             }
@@ -194,7 +192,6 @@ public class StarListAdapter extends BaseTurboAdapter<StarProxy, BaseViewHolder>
                     public void onOk(String name) {
                         try {
                             int favor = Integer.parseInt(name);
-                            holder.starProxy.setFavor(Integer.parseInt(name));
                             saveFavor(holder.starProxy, favor);
                             notifyItemChanged(holder.getAdapterPosition());
                         } catch (Exception e) {
@@ -207,11 +204,8 @@ public class StarListAdapter extends BaseTurboAdapter<StarProxy, BaseViewHolder>
     }
 
     private void saveFavor(StarProxy starProxy, int favor) {
-        FavorBean bean = new FavorBean();
-        bean.setStarId(starProxy.getStar().getId());
-        bean.setStarName(starProxy.getStar().getName());
-        bean.setFavor(favor);
-        mPresenter.saveFavor(bean);
+        starProxy.getStar().setFavor(favor);
+        mPresenter.saveFavor(starProxy.getStar());
     }
 
     public void onStarFilter(String name) {

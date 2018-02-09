@@ -16,14 +16,16 @@ import com.jing.app.jjgallery.gdb.model.conf.PreferenceValue;
 import com.jing.app.jjgallery.gdb.util.DisplayHelper;
 import com.jing.app.jjgallery.gdb.util.FormatUtil;
 import com.jing.app.jjgallery.gdb.util.GlideUtil;
-import com.king.service.gdb.bean.GDBProperites;
-import com.king.service.gdb.bean.Record;
-import com.king.service.gdb.bean.RecordOneVOne;
-import com.king.service.gdb.bean.RecordSingleScene;
-import com.king.service.gdb.bean.Star;
+import com.jing.app.jjgallery.gdb.util.ListUtil;
+import com.king.app.gdb.data.entity.Record;
+import com.king.app.gdb.data.entity.RecordType1v1;
+import com.king.app.gdb.data.entity.RecordType3w;
+import com.king.app.gdb.data.entity.Star;
+import com.king.app.gdb.data.param.DataConstants;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by 景阳 on 2016/8/6 0006.
@@ -176,71 +178,69 @@ public class RecordViewHolder {
         nameView.setText("" + item.getName());
         dirView.setText("" + item.getDirectory());
         scoreView.setText("" + "" + item.getScore());
-        scoreBasicView.setText("basic(" + item.getScoreBasic() + ")");
-        scoreExtraView.setText("extra(" + item.getScoreExtra() + ")");
-        if (item instanceof RecordSingleScene) {
-            RecordSingleScene record = (RecordSingleScene) item;
-            sceneView.setText("" + record.getSceneName() + "(" + record.getScoreScene() + ")");
-            fkView.setText("" + "fk(" + record.getScoreFk() + ")");
-            cumView.setText("" + "cum(" + record.getScoreCum() + ")");
-            bjobView.setText("" + "bjob(" + record.getScoreBJob() + ")");
-
-            if (record.getScoreNoCond() == GDBProperites.BAREBACK) {
-                nameView.setTextColor(nameColorBareback);
-            }
-            else {
-                nameView.setTextColor(nameColorNormal);
-            }
+        scoreBasicView.setText("special(" + item.getScoreSpecial() + ")");
+        scoreExtraView.setText("special desc(" + item.getSpecialDesc() + ")");
+        fkView.setText("" + "fk(" + item.getScorePassion() + ")");
+        cumView.setText("" + "cum(" + item.getScoreCum() + ")");
+        if (item.getScoreBareback() > 0) {
+            nameView.setTextColor(nameColorBareback);
         }
         else {
             nameView.setTextColor(nameColorNormal);
         }
-        if (item instanceof RecordOneVOne) {
-            RecordOneVOne record = (RecordOneVOne) item;
 
-            actorView.setText("star(" + record.getScoreStar() + "/" + record.getScoreStarC() + ")");
+        List<Star> starList = item.getStarList();
+        StringBuffer starBuffer = new StringBuffer();
+        if (!ListUtil.isEmpty(starList)) {
+            for (Star star:starList) {
+                starBuffer.append("&").append(star.getName());
+            }
+        }
+        String starText = starBuffer.toString();
+        if (starText.length() > 1) {
+            starText = starText.substring(1);
+        }
+        actorView.setText(starText);
 
-            Star star1 = record.getStar1();
-            if (star1 == null) {
-                star1View.setText("" + GDBProperites.STAR_UNKNOWN);
-            }
-            else {
-                star1View.setText("" + star1.getName() + "(" + record.getScoreStar1() + "/" + record.getScoreStarC1() + ")");
-            }
-            Star star2 = record.getStar2();
-            if (star2 == null) {
-                star2View.setText("" + GDBProperites.STAR_UNKNOWN);
-            }
-            else {
-                star2View.setText("" + star2.getName() + "(" + record.getScoreStar2() + "/" + record.getScoreStarC2() + ")");
-            }
-
+        if (item.getType() == DataConstants.VALUE_RECORD_TYPE_1V1) {
+            RecordType1v1 recordType1v1 = item.getRecordType1v1();
+            sceneView.setText("" + item.getScene() + "(" + recordType1v1.getScoreScene() + ")");
+            bjobView.setText("" + "bjob(" + recordType1v1.getScoreBjob() + ")");
             StringBuffer buffer = new StringBuffer();
-            if (record.getScoreFkType1() != 0) {
-                buffer.append("坐面(").append(record.getScoreFkType1()).append(")   ");
+            if (recordType1v1.getScoreFkType1() != 0) {
+                buffer.append("坐面(").append(recordType1v1.getScoreFkType1()).append(")   ");
             }
-            if (record.getScoreFkType2() != 0) {
-                buffer.append("坐背(").append(record.getScoreFkType2()).append(")   ");
+            if (recordType1v1.getScoreFkType2() != 0) {
+                buffer.append("坐背(").append(recordType1v1.getScoreFkType2()).append(")   ");
             }
-            if (record.getScoreFkType3() != 0) {
-                buffer.append("立面(").append(record.getScoreFkType3()).append(")   ");
+            if (recordType1v1.getScoreFkType3() != 0) {
+                buffer.append("立面(").append(recordType1v1.getScoreFkType3()).append(")   ");
             }
-            if (record.getScoreFkType4() != 0) {
-                buffer.append("立背(").append(record.getScoreFkType4()).append(")   ");
+            if (recordType1v1.getScoreFkType4() != 0) {
+                buffer.append("立背(").append(recordType1v1.getScoreFkType4()).append(")   ");
             }
-            if (record.getScoreFkType5() != 0) {
-                buffer.append("侧(").append(record.getScoreFkType5()).append(")   ");
+            if (recordType1v1.getScoreFkType5() != 0) {
+                buffer.append("侧(").append(recordType1v1.getScoreFkType5()).append(")   ");
             }
-            if (record.getScoreFkType6() != 0) {
-                buffer.append("特殊(").append(record.getScoreFkType6()).append(")   ");
+            if (recordType1v1.getScoreFkType6() != 0) {
+                buffer.append("特殊(").append(recordType1v1.getScoreFkType6()).append(")   ");
             }
             String text = buffer.toString();
             if (text.length() > 0) {
                 fkSubView.setText("" + text.substring(0, text.length() - 3));
             }
         }
+        else if (item.getType() == DataConstants.VALUE_RECORD_TYPE_3W) {
+            RecordType3w recordType3w = item.getRecordType3w();
+            sceneView.setText("" + item.getScene() + "(" + recordType3w.getScoreScene() + ")");
+            bjobView.setText("" + "bjob(" + recordType3w.getScoreBjob() + ")");
+        }
 
-        showSortScore(item, sortMode);
+        try {
+            showSortScore(item, sortMode);
+        } catch (Exception e) {
+
+        }
     }
 
     private void bindCommon(Record item, String name) {
@@ -270,7 +270,7 @@ public class RecordViewHolder {
                 .into(imageView);
     }
 
-    private void showSortScore(Record item, int sortMode) {
+    private void showSortScore(Record item, int sortMode) throws NullPointerException{
         switch (sortMode) {
             case PreferenceValue.GDB_SR_ORDERBY_DATE:
                 sortScoreView.setVisibility(View.VISIBLE);
@@ -280,67 +280,109 @@ public class RecordViewHolder {
                 break;
             case PreferenceValue.GDB_SR_ORDERBY_BAREBACK:
                 sortScoreView.setVisibility(View.VISIBLE);
-                sortScoreView.setText("" + ((RecordSingleScene) item).getScoreNoCond());
+                sortScoreView.setText("" + item.getScoreBareback());
                 break;
             case PreferenceValue.GDB_SR_ORDERBY_BJOB:
                 sortScoreView.setVisibility(View.VISIBLE);
-                sortScoreView.setText("" + ((RecordSingleScene) item).getScoreBJob());
+                if (item.getType() == DataConstants.VALUE_RECORD_TYPE_1V1) {
+                    sortScoreView.setText("" + item.getRecordType1v1().getScoreBjob());
+                }
+                else if (item.getType() == DataConstants.VALUE_RECORD_TYPE_3W) {
+                    sortScoreView.setText("" + item.getRecordType3w().getScoreBjob());
+                }
                 break;
             case PreferenceValue.GDB_SR_ORDERBY_CSHOW:
                 sortScoreView.setVisibility(View.VISIBLE);
-                sortScoreView.setText("" + ((RecordSingleScene) item).getScoreCShow());
+                if (item.getType() == DataConstants.VALUE_RECORD_TYPE_1V1) {
+                    sortScoreView.setText("" + item.getRecordType1v1().getScoreCshow());
+                }
+                else if (item.getType() == DataConstants.VALUE_RECORD_TYPE_3W) {
+                    sortScoreView.setText("" + item.getRecordType3w().getScoreCshow());
+                }
                 break;
             case PreferenceValue.GDB_SR_ORDERBY_CUM:
                 sortScoreView.setVisibility(View.VISIBLE);
-                sortScoreView.setText("" + ((RecordSingleScene) item).getScoreCum());
+                sortScoreView.setText("" + item.getScoreCum());
                 break;
             case PreferenceValue.GDB_SR_ORDERBY_FK:
                 sortScoreView.setVisibility(View.VISIBLE);
-                sortScoreView.setText("" + ((RecordSingleScene) item).getScoreFk());
+                sortScoreView.setText("" + item.getScorePassion());
                 break;
             case PreferenceValue.GDB_SR_ORDERBY_FK1:
                 sortScoreView.setVisibility(View.VISIBLE);
-                sortScoreView.setText(((RecordOneVOne) item).getScoreFkType1() + "%");
+                if (item.getType() == DataConstants.VALUE_RECORD_TYPE_1V1) {
+                    sortScoreView.setText("" + item.getRecordType1v1().getScoreFkType1());
+                }
                 break;
             case PreferenceValue.GDB_SR_ORDERBY_FK2:
                 sortScoreView.setVisibility(View.VISIBLE);
-                sortScoreView.setText(((RecordOneVOne) item).getScoreFkType2() + "%");
+                if (item.getType() == DataConstants.VALUE_RECORD_TYPE_1V1) {
+                    sortScoreView.setText("" + item.getRecordType1v1().getScoreFkType2());
+                }
                 break;
             case PreferenceValue.GDB_SR_ORDERBY_FK3:
                 sortScoreView.setVisibility(View.VISIBLE);
-                sortScoreView.setText(((RecordOneVOne) item).getScoreFkType3() + "%");
+                if (item.getType() == DataConstants.VALUE_RECORD_TYPE_1V1) {
+                    sortScoreView.setText("" + item.getRecordType1v1().getScoreFkType3());
+                }
                 break;
             case PreferenceValue.GDB_SR_ORDERBY_FK4:
                 sortScoreView.setVisibility(View.VISIBLE);
-                sortScoreView.setText(((RecordOneVOne) item).getScoreFkType4() + "%");
+                if (item.getType() == DataConstants.VALUE_RECORD_TYPE_1V1) {
+                    sortScoreView.setText("" + item.getRecordType1v1().getScoreFkType4());
+                }
                 break;
             case PreferenceValue.GDB_SR_ORDERBY_FK5:
                 sortScoreView.setVisibility(View.VISIBLE);
-                sortScoreView.setText(((RecordOneVOne) item).getScoreFkType5() + "%");
+                if (item.getType() == DataConstants.VALUE_RECORD_TYPE_1V1) {
+                    sortScoreView.setText("" + item.getRecordType1v1().getScoreFkType5());
+                }
                 break;
             case PreferenceValue.GDB_SR_ORDERBY_FK6:
                 sortScoreView.setVisibility(View.VISIBLE);
-                sortScoreView.setText(((RecordOneVOne) item).getScoreFkType6() + "%");
+                if (item.getType() == DataConstants.VALUE_RECORD_TYPE_1V1) {
+                    sortScoreView.setText("" + item.getRecordType1v1().getScoreFkType6());
+                }
                 break;
             case PreferenceValue.GDB_SR_ORDERBY_FOREPLAY:
                 sortScoreView.setVisibility(View.VISIBLE);
-                sortScoreView.setText("" + ((RecordSingleScene) item).getScoreForePlay());
+                if (item.getType() == DataConstants.VALUE_RECORD_TYPE_1V1) {
+                    sortScoreView.setText("" + item.getRecordType1v1().getScoreForePlay());
+                }
+                else if (item.getType() == DataConstants.VALUE_RECORD_TYPE_3W) {
+                    sortScoreView.setText("" + item.getRecordType3w().getScoreForePlay());
+                }
                 break;
             case PreferenceValue.GDB_SR_ORDERBY_HD:
                 sortScoreView.setVisibility(View.VISIBLE);
-                sortScoreView.setText("" + item.getHDLevel());
+                sortScoreView.setText("" + item.getHdLevel());
                 break;
             case PreferenceValue.GDB_SR_ORDERBY_RHYTHM:
                 sortScoreView.setVisibility(View.VISIBLE);
-                sortScoreView.setText("" + ((RecordSingleScene) item).getScoreRhythm());
+                if (item.getType() == DataConstants.VALUE_RECORD_TYPE_1V1) {
+                    sortScoreView.setText("" + item.getRecordType1v1().getScoreRhythm());
+                }
+                else if (item.getType() == DataConstants.VALUE_RECORD_TYPE_3W) {
+                    sortScoreView.setText("" + item.getRecordType3w().getScoreRhythm());
+                }
                 break;
             case PreferenceValue.GDB_SR_ORDERBY_RIM:
                 sortScoreView.setVisibility(View.VISIBLE);
-                sortScoreView.setText("" + ((RecordSingleScene) item).getScoreRim());
+                if (item.getType() == DataConstants.VALUE_RECORD_TYPE_1V1) {
+                    sortScoreView.setText("" + item.getRecordType1v1().getScoreRim());
+                }
+                else if (item.getType() == DataConstants.VALUE_RECORD_TYPE_3W) {
+                    sortScoreView.setText("" + item.getRecordType3w().getScoreRim());
+                }
                 break;
             case PreferenceValue.GDB_SR_ORDERBY_SCENE:
                 sortScoreView.setVisibility(View.VISIBLE);
-                sortScoreView.setText("" + ((RecordSingleScene) item).getScoreScene());
+                if (item.getType() == DataConstants.VALUE_RECORD_TYPE_1V1) {
+                    sortScoreView.setText("" + item.getRecordType1v1().getScoreScene());
+                }
+                else if (item.getType() == DataConstants.VALUE_RECORD_TYPE_3W) {
+                    sortScoreView.setText("" + item.getRecordType3w().getScoreScene());
+                }
                 break;
             case PreferenceValue.GDB_SR_ORDERBY_SCOREFEEL:
                 sortScoreView.setVisibility(View.VISIBLE);
@@ -348,43 +390,34 @@ public class RecordViewHolder {
                 break;
             case PreferenceValue.GDB_SR_ORDERBY_SPECIAL:
                 sortScoreView.setVisibility(View.VISIBLE);
-                sortScoreView.setText("" + ((RecordSingleScene) item).getScoreSpeicial());
+                sortScoreView.setText("" + item.getScoreSpecial());
                 break;
             case PreferenceValue.GDB_SR_ORDERBY_STAR1:
-                sortScoreView.setVisibility(View.VISIBLE);
-                sortScoreView.setText("" + ((RecordOneVOne) item).getScoreStar1());
                 break;
             case PreferenceValue.GDB_SR_ORDERBY_STAR2:
-                sortScoreView.setVisibility(View.VISIBLE);
-                sortScoreView.setText("" + ((RecordOneVOne) item).getScoreStar2());
                 break;
             case PreferenceValue.GDB_SR_ORDERBY_STARCC1:
-                sortScoreView.setVisibility(View.VISIBLE);
-                sortScoreView.setText("" + ((RecordOneVOne) item).getScoreStarC1());
                 break;
             case PreferenceValue.GDB_SR_ORDERBY_STARCC2:
-                sortScoreView.setVisibility(View.VISIBLE);
-                sortScoreView.setText("" + ((RecordOneVOne) item).getScoreStarC2());
                 break;
             case PreferenceValue.GDB_SR_ORDERBY_STORY:
                 sortScoreView.setVisibility(View.VISIBLE);
-                sortScoreView.setText("" + item.getScoreStory());
+                if (item.getType() == DataConstants.VALUE_RECORD_TYPE_1V1) {
+                    sortScoreView.setText("" + item.getRecordType1v1().getScoreStory());
+                }
+                else if (item.getType() == DataConstants.VALUE_RECORD_TYPE_3W) {
+                    sortScoreView.setText("" + item.getRecordType3w().getScoreStory());
+                }
                 break;
             case PreferenceValue.GDB_SR_ORDERBY_SCORE_BASIC:
-                sortScoreView.setVisibility(View.VISIBLE);
-                sortScoreView.setText("" + item.getScoreBasic());
                 break;
             case PreferenceValue.GDB_SR_ORDERBY_SCORE_EXTRA:
-                sortScoreView.setVisibility(View.VISIBLE);
-                sortScoreView.setText("" + item.getScoreExtra());
                 break;
             case PreferenceValue.GDB_SR_ORDERBY_STAR:
                 sortScoreView.setVisibility(View.VISIBLE);
-                sortScoreView.setText("" + ((RecordOneVOne) item).getScoreStar());
+                sortScoreView.setText("" + item.getScoreStar());
                 break;
             case PreferenceValue.GDB_SR_ORDERBY_STARC:
-                sortScoreView.setVisibility(View.VISIBLE);
-                sortScoreView.setText("" + ((RecordOneVOne) item).getScoreStarC());
                 break;
             default:
                 sortScoreView.setVisibility(View.GONE);

@@ -1,7 +1,7 @@
 package com.jing.app.jjgallery.gdb.model.bean;
 
 import com.jing.app.jjgallery.gdb.http.bean.data.FileBean;
-import com.king.service.gdb.bean.Record;
+import com.king.app.gdb.data.entity.Record;
 
 /**
  * 描述:

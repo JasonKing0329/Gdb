@@ -6,8 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.jing.app.jjgallery.gdb.R;
-import com.king.service.gdb.bean.Record;
-import com.king.service.gdb.bean.Star;
+import com.king.app.gdb.data.entity.Record;
+import com.king.app.gdb.data.entity.Star;
 
 /**
  * 描述: RecordCardHolder的普通RecyclerView adapter适配

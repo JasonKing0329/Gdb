@@ -10,9 +10,9 @@ import com.jing.app.jjgallery.gdb.GdbConstants;
 import com.jing.app.jjgallery.gdb.IFragmentHolder;
 import com.jing.app.jjgallery.gdb.R;
 import com.jing.app.jjgallery.gdb.model.SettingProperties;
+import com.jing.app.jjgallery.gdb.model.db.SceneBean;
 import com.jing.app.jjgallery.gdb.view.adapter.RecordSceneNameAdapter;
 import com.jing.app.jjgallery.gdb.view.pub.dialog.HsvColorDialogFragment;
-import com.king.service.gdb.bean.SceneBean;
 
 import java.util.List;
 

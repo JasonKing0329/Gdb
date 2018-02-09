@@ -1,21 +1,20 @@
 package com.jing.app.jjgallery.gdb.presenter.star;
 
+import com.jing.app.jjgallery.gdb.GdbApplication;
 import com.jing.app.jjgallery.gdb.model.GdbImageProvider;
 import com.jing.app.jjgallery.gdb.model.RecordComparator;
 import com.jing.app.jjgallery.gdb.model.bean.StarProxy;
 import com.jing.app.jjgallery.gdb.model.conf.PreferenceValue;
-import com.jing.app.jjgallery.gdb.model.db.GdbProviderHelper;
+import com.jing.app.jjgallery.gdb.model.db.StarExtendDao;
 import com.jing.app.jjgallery.gdb.util.DebugLog;
 import com.jing.app.jjgallery.gdb.view.star.IStarSwipeView;
-import com.king.service.gdb.bean.FavorBean;
-import com.king.service.gdb.bean.Record;
-import com.king.service.gdb.bean.Star;
+import com.king.app.gdb.data.entity.Record;
+import com.king.app.gdb.data.entity.Star;
+import com.king.app.gdb.data.entity.StarDao;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
@@ -36,10 +35,11 @@ public class StarSwipePresenter {
 
     private IStarSwipeView swipeView;
 
-    private Map<Integer, FavorBean> favorMap;
+    private StarExtendDao starExtendDao;
 
     public StarSwipePresenter(IStarSwipeView swipeView) {
         this.swipeView = swipeView;
+        starExtendDao = new StarExtendDao();
     }
 
     public void loadNewStars() {
@@ -47,24 +47,14 @@ public class StarSwipePresenter {
             @Override
             public void subscribe(@NonNull ObservableEmitter<List<StarProxy>> e) throws Exception {
 
-                // query favor map
-                if (favorMap == null) {
-                    favorMap = new HashMap<>();
-                    List<FavorBean> list = GdbProviderHelper.getProvider().getFavors();
-                    for (FavorBean bean:list) {
-                        favorMap.put(bean.getStarId(), bean);
-                    }
-                }
-
                 // load LOAD_NUM stars
-                List<Star> starList = GdbProviderHelper.getProvider().getRandomStars(LOAD_NUM);
+                List<Star> starList = starExtendDao.getRandomStars(LOAD_NUM);
                 List<StarProxy> slist = new ArrayList<>();
 
                 for (Star star:starList) {
 
                     // load records for each star
-                    // 很奇怪如果是从这里装配后，后面onStarLoaded之后执行的代码调试的时候也是对的，但SwipeFlingAdapterView就是显示不出来
-                    GdbProviderHelper.getProvider().loadStarRecords(star);
+                    star.getRecordList();
                     DebugLog.e(star.getName() + " records:" + star.getRecordList().size());
 
                     StarProxy proxy = new StarProxy();
@@ -72,14 +62,6 @@ public class StarSwipePresenter {
                     // load image path
                     proxy.setImagePath(GdbImageProvider.getStarRandomPath(star.getName(), null));
                     // relate favor bean to star
-                    FavorBean bean = favorMap.get(star.getId());
-                    if (bean == null) {
-                        proxy.setFavor(0);
-                    }
-                    else {
-                        proxy.setFavor(bean.getFavor());
-                        proxy.setFavorBean(bean);
-                    }
                     slist.add(proxy);
                 }
 
@@ -100,9 +82,9 @@ public class StarSwipePresenter {
                 });
     }
 
-    public void saveFavor(FavorBean bean) {
-        GdbProviderHelper.getProvider().saveFavor(bean);
-        GdbProviderHelper.getProvider().saveFavor(bean);
+    public void saveFavor(Star star) {
+        StarDao dao = GdbApplication.getInstance().getDaoSession().getStarDao();
+        dao.update(star);
     }
 
     public void sortRecords(List<Record> recordList, int sortMode, boolean desc) {

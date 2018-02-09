@@ -12,7 +12,7 @@ import com.jing.app.jjgallery.gdb.model.SettingProperties;
 import com.jing.app.jjgallery.gdb.util.DebugLog;
 import com.jing.app.jjgallery.gdb.view.adapter.RecordsListAdapter;
 import com.jing.app.jjgallery.gdb.view.pub.AutoLoadMoreRecyclerView;
-import com.king.service.gdb.bean.Record;
+import com.king.app.gdb.data.entity.Record;
 
 import java.util.List;
 

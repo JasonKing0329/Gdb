@@ -31,9 +31,8 @@ import com.jing.app.jjgallery.gdb.util.LMBannerViewUtil;
 import com.jing.app.jjgallery.gdb.view.pub.ActionBar;
 import com.jing.app.jjgallery.gdb.view.pub.BannerAnimDialogFragment;
 import com.jing.app.jjgallery.gdb.view.pub.WaveSideBarView;
-import com.king.service.gdb.bean.FavorBean;
-import com.king.service.gdb.bean.GDBProperites;
-import com.king.service.gdb.bean.StarCountBean;
+import com.king.app.gdb.data.entity.Star;
+import com.king.app.gdb.data.param.DataConstants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -182,10 +181,10 @@ public class StarListActivity extends GBaseActivity implements IStarListHolder, 
 
         // 采用getView时生成随机推荐，这里初始化3个item就够了（LMBanner内部也是根据view pager设置下标
         // 来循环的）
-        List<FavorBean> list = new ArrayList<>();
-        list.add(new FavorBean());
-        list.add(new FavorBean());
-        list.add(new FavorBean());
+        List<Star> list = new ArrayList<>();
+        list.add(new Star());
+        list.add(new Star());
+        list.add(new Star());
         HeadBannerAdapter adapter = new HeadBannerAdapter();
         lmBanners.setAdapter(adapter, list);
 
@@ -199,40 +198,40 @@ public class StarListActivity extends GBaseActivity implements IStarListHolder, 
     /**
      * tabLayout 标题对应数量
      *
-     * @param bean
+     * @param countList
      */
     @Override
-    public void onStarCountLoaded(StarCountBean bean) {
+    public void onStarCountLoaded(List<Integer> countList) {
         if (pagerAdapter == null) {
-            initFragments(bean);
+            initFragments(countList);
         }
         else {
             tabLayout.removeAllTabs();
-            tabLayout.addTab(tabLayout.newTab().setText(titles[0] + "(" + bean.getAllNumber() + ")"));
-            tabLayout.addTab(tabLayout.newTab().setText(titles[1] + "(" + bean.getTopNumber() + ")"));
-            tabLayout.addTab(tabLayout.newTab().setText(titles[2] + "(" + bean.getBottomNumber() + ")"));
-            tabLayout.addTab(tabLayout.newTab().setText(titles[3] + "(" + bean.getHalfNumber() + ")"));
+            tabLayout.addTab(tabLayout.newTab().setText(titles[0] + "(" + countList.get(0) + ")"));
+            tabLayout.addTab(tabLayout.newTab().setText(titles[1] + "(" + countList.get(1) + ")"));
+            tabLayout.addTab(tabLayout.newTab().setText(titles[2] + "(" + countList.get(2) + ")"));
+            tabLayout.addTab(tabLayout.newTab().setText(titles[3] + "(" + countList.get(3) + ")"));
         }
     }
 
-    private void initFragments(StarCountBean bean) {
+    private void initFragments(List<Integer> bean) {
         pagerAdapter = new StarListPagerAdapter(getSupportFragmentManager());
         StarListFragment fragmentAll = new StarListFragment();
-        fragmentAll.setStarMode(GDBProperites.STAR_MODE_ALL);
+        fragmentAll.setStarMode(DataConstants.STAR_MODE_ALL);
         fragmentAll.setSortMode(curSortMode);
-        pagerAdapter.addFragment(fragmentAll, titles[0] + "(" + bean.getAllNumber() + ")");
+        pagerAdapter.addFragment(fragmentAll, titles[0] + "(" + bean.get(0) + ")");
         StarListFragment fragment1 = new StarListFragment();
-        fragment1.setStarMode(GDBProperites.STAR_MODE_TOP);
+        fragment1.setStarMode(DataConstants.STAR_MODE_TOP);
         fragment1.setSortMode(curSortMode);
-        pagerAdapter.addFragment(fragment1, titles[1] + "(" + bean.getTopNumber() + ")");
+        pagerAdapter.addFragment(fragment1, titles[1] + "(" + bean.get(1) + ")");
         StarListFragment fragment0 = new StarListFragment();
-        fragment0.setStarMode(GDBProperites.STAR_MODE_BOTTOM);
+        fragment0.setStarMode(DataConstants.STAR_MODE_BOTTOM);
         fragment0.setSortMode(curSortMode);
-        pagerAdapter.addFragment(fragment0, titles[2] + "(" + bean.getBottomNumber() + ")");
+        pagerAdapter.addFragment(fragment0, titles[2] + "(" + bean.get(2) + ")");
         StarListFragment fragment05 = new StarListFragment();
-        fragment05.setStarMode(GDBProperites.STAR_MODE_HALF);
+        fragment05.setStarMode(DataConstants.STAR_MODE_HALF);
         fragment05.setSortMode(curSortMode);
-        pagerAdapter.addFragment(fragment05, titles[3] + "(" + bean.getHalfNumber() + ")");
+        pagerAdapter.addFragment(fragment05, titles[3] + "(" + bean.get(3) + ")");
         viewpager.setAdapter(pagerAdapter);
         tabLayout.addTab(tabLayout.newTab().setText(titles[0]));
         tabLayout.addTab(tabLayout.newTab().setText(titles[1]));
@@ -510,11 +509,11 @@ public class StarListActivity extends GBaseActivity implements IStarListHolder, 
         bannerSettingDialog.show(getSupportFragmentManager(), "BannerAnimDialogFragment");
     }
 
-    private void onClickBannerItem(FavorBean bean) {
-        ActivityManager.startStarActivity(this, bean.getStarId());
+    private void onClickBannerItem(Star bean) {
+        ActivityManager.startStarActivity(this, bean.getId());
     }
 
-    private class HeadBannerAdapter implements LBaseAdapter<FavorBean>, View.OnClickListener {
+    private class HeadBannerAdapter implements LBaseAdapter<Star>, View.OnClickListener {
 
         private RequestOptions requestOptions;
 
@@ -523,13 +522,13 @@ public class StarListActivity extends GBaseActivity implements IStarListHolder, 
         }
 
         @Override
-        public View getView(LMBanners lBanners, Context context, int position, FavorBean bean) {
+        public View getView(LMBanners lBanners, Context context, int position, Star bean) {
             View view = LayoutInflater.from(context).inflate(R.layout.adapter_gdb_star_list_banner, null);
 
             bean = starPresenter.nextFavorStar();
             if (bean != null) {
                 ImageView imageView = (ImageView) view.findViewById(R.id.iv_star);
-                String path = GdbImageProvider.getStarRandomPath(bean.getStarName(), null);
+                String path = GdbImageProvider.getStarRandomPath(bean.getName(), null);
 
                 Glide.with(GdbApplication.getInstance())
                         .load(path)
@@ -545,7 +544,7 @@ public class StarListActivity extends GBaseActivity implements IStarListHolder, 
 
         @Override
         public void onClick(View v) {
-            FavorBean bean = (FavorBean) v.getTag();
+            Star bean = (Star) v.getTag();
             onClickBannerItem(bean);
         }
 

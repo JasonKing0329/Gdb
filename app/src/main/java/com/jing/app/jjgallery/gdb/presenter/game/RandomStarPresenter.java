@@ -1,12 +1,16 @@
 package com.jing.app.jjgallery.gdb.presenter.game;
 
+import com.jing.app.jjgallery.gdb.GdbApplication;
 import com.jing.app.jjgallery.gdb.model.bean.RandomStarBean;
-import com.jing.app.jjgallery.gdb.model.db.GdbProviderHelper;
 import com.jing.app.jjgallery.gdb.util.DebugLog;
 import com.jing.app.jjgallery.gdb.view.game.IRandomStarView;
-import com.king.service.gdb.bean.FavorBean;
-import com.king.service.gdb.bean.GDBProperites;
-import com.king.service.gdb.bean.Star;
+import com.king.app.gdb.data.entity.RecordStar;
+import com.king.app.gdb.data.entity.RecordStarDao;
+import com.king.app.gdb.data.entity.Star;
+import com.king.app.gdb.data.entity.StarDao;
+import com.king.app.gdb.data.param.DataConstants;
+
+import org.greenrobot.greendao.query.QueryBuilder;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -29,7 +33,6 @@ public class RandomStarPresenter {
 
     private IRandomStarView view;
     private List<RandomStarBean> starList;
-    private List<FavorBean> favorList;
     private Random random;
 
     private boolean isFromAll, isFromFavor, isTypeAll, isType1, isType0, isTypeHalf;
@@ -39,7 +42,7 @@ public class RandomStarPresenter {
         random = new Random();
     }
 
-    public void random(boolean fromAll, final boolean fromFavor
+    public void random(boolean fromAll, final boolean isFavor
             , final boolean typeAll, final boolean type1, final boolean type0, final boolean typeHalf
             , final String number, final boolean isOnly) {
 
@@ -56,7 +59,7 @@ public class RandomStarPresenter {
         }
 
         // 数据源没有变化，直接从当前starList产生数据
-        if (fromAll == isFromAll && fromFavor == isFromFavor
+        if (fromAll == isFromAll && isFavor == isFromFavor
                 && typeAll == isTypeAll && type1 == isType1 && type0 == isType0 && typeHalf == isTypeHalf
                 && starList != null) {
             randomFromStarList(nNumber, isOnly);
@@ -65,7 +68,7 @@ public class RandomStarPresenter {
         else {
             DebugLog.e("load list");
             isFromAll = fromAll;
-            isFromFavor = fromFavor;
+            isFromFavor = isFavor;
             isType0 = type0;
             isType1 = type1;
             isTypeAll = typeAll;
@@ -82,70 +85,25 @@ public class RandomStarPresenter {
                         starList.clear();
                     }
 
-                    if (fromFavor) {
-                        // 加载favor关系
-                        if (favorList == null) {
-                            favorList = GdbProviderHelper.getProvider().getFavors();
-                        }
-
-                        for (FavorBean bean:favorList) {
-                            Star star = GdbProviderHelper.getProvider().queryStarById(bean.getStarId());
-                            if (star != null) {
-                                if (typeAll) {
-                                    RandomStarBean rsb = new RandomStarBean();
-                                    rsb.setStarId(star.getId());
-                                    rsb.setName(star.getName());
-                                    starList.add(rsb);
-                                }
-                                // 多选关系
-                                else {
-                                    if (type1) {
-                                        if (star.getBeTop() > 0 && star.getBeBottom() == 0) {
-                                            RandomStarBean rsb = new RandomStarBean();
-                                            rsb.setStarId(star.getId());
-                                            rsb.setName(star.getName());
-                                            starList.add(rsb);
-                                        }
-                                    }
-                                    if (type0) {
-                                        if (star.getBeBottom() > 0 && star.getBeTop() == 0) {
-                                            RandomStarBean rsb = new RandomStarBean();
-                                            rsb.setStarId(star.getId());
-                                            rsb.setName(star.getName());
-                                            starList.add(rsb);
-                                        }
-                                    }
-                                    if (typeHalf) {
-                                        if (star.getBeBottom() > 0 && star.getBeTop() > 0) {
-                                            RandomStarBean rsb = new RandomStarBean();
-                                            rsb.setStarId(star.getId());
-                                            rsb.setName(star.getName());
-                                            starList.add(rsb);
-                                        }
-                                    }
-                                }
-                            }
-                        }
-
-                        e.onNext(new Object());
+                    if (isFavor) {
                     }
                     else {
                         List<Star> slist = new ArrayList<>();
                         if (typeAll) {
-                            slist = GdbProviderHelper.getProvider().getStars(GDBProperites.STAR_MODE_ALL);
+                            slist = queryStar(DataConstants.STAR_MODE_ALL, isFavor);
                         }
                         // 多选关系
                         else {
                             if (type0) {
-                                List<Star> list = GdbProviderHelper.getProvider().getStars(GDBProperites.STAR_MODE_BOTTOM);
+                                List<Star> list = queryStar(DataConstants.STAR_MODE_BOTTOM, isFavor);
                                 slist.addAll(list);
                             }
                             if (type1) {
-                                List<Star> list = GdbProviderHelper.getProvider().getStars(GDBProperites.STAR_MODE_TOP);
+                                List<Star> list = queryStar(DataConstants.STAR_MODE_TOP, isFavor);
                                 slist.addAll(list);
                             }
                             if (typeHalf) {
-                                List<Star> list = GdbProviderHelper.getProvider().getStars(GDBProperites.STAR_MODE_HALF);
+                                List<Star> list = queryStar(DataConstants.STAR_MODE_HALF, isFavor);
                                 slist.addAll(list);
                             }
                         }
@@ -175,6 +133,27 @@ public class RandomStarPresenter {
                     });
         }
 
+    }
+
+    private List<Star> queryStar(String mode, boolean isFavor) {
+        StarDao dao = GdbApplication.getInstance().getDaoSession().getStarDao();
+        QueryBuilder<Star> builder = dao.queryBuilder();
+        if (DataConstants.STAR_MODE_TOP.equals(mode)) {
+            builder.where(StarDao.Properties.Betop.gt(0)
+                , StarDao.Properties.Bebottom.eq(0));
+        }
+        else if (DataConstants.STAR_MODE_BOTTOM.equals(mode)) {
+            builder.where(StarDao.Properties.Bebottom.gt(0)
+                    , StarDao.Properties.Betop.eq(0));
+        }
+        else if (DataConstants.STAR_MODE_HALF.equals(mode)) {
+            builder.where(StarDao.Properties.Bebottom.gt(0)
+                    , StarDao.Properties.Betop.gt(0));
+        }
+        if (isFavor) {
+            builder.where(StarDao.Properties.Favor.gt(0));
+        }
+        return builder.build().list();
     }
 
     private void randomFromStarList(int number, boolean isOnly) {

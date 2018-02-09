@@ -6,7 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.jing.app.jjgallery.gdb.R;
-import com.king.service.gdb.bean.Record;
+import com.king.app.gdb.data.entity.Record;
 
 import java.util.List;
 

@@ -14,7 +14,7 @@ import com.jing.app.jjgallery.gdb.R;
 import com.jing.app.jjgallery.gdb.model.GdbImageProvider;
 import com.jing.app.jjgallery.gdb.model.bean.StarProxy;
 import com.jing.app.jjgallery.gdb.util.GlideUtil;
-import com.king.service.gdb.bean.Record;
+import com.king.app.gdb.data.entity.Record;
 
 import java.util.List;
 import java.util.Random;
@@ -99,7 +99,7 @@ public class SwipeAdapter extends BaseAdapter {
             holder.ivRecord.setImageResource(R.drawable.default_cover);
         }
 
-        if (star.getFavorBean() != null) {
+        if (star.getStar().getFavor() > 0) {
             holder.ivFavor.setVisibility(View.VISIBLE);
             holder.ivFavor.setSelected(true);
         }

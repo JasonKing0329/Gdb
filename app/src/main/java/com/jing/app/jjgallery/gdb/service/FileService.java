@@ -6,13 +6,14 @@ import android.os.Binder;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 
+import com.jing.app.jjgallery.gdb.GdbApplication;
 import com.jing.app.jjgallery.gdb.model.conf.Configuration;
-import com.jing.app.jjgallery.gdb.model.db.GdbProviderHelper;
 import com.jing.app.jjgallery.gdb.util.DebugLog;
 import com.jing.app.jjgallery.gdb.util.FileUtil;
-import com.king.service.gdb.bean.GDBProperites;
-import com.king.service.gdb.bean.Record;
-import com.king.service.gdb.bean.Star;
+import com.king.app.gdb.data.entity.Record;
+import com.king.app.gdb.data.entity.RecordDao;
+import com.king.app.gdb.data.entity.Star;
+import com.king.app.gdb.data.entity.StarDao;
 
 import java.io.File;
 import java.util.HashMap;
@@ -105,7 +106,8 @@ public class FileService extends Service {
 
     private void removeUselessRecords() {
         File file = new File(Configuration.GDB_IMG_RECORD);
-        List<Record> list = GdbProviderHelper.getProvider().getAllRecords();
+        RecordDao dao = GdbApplication.getInstance().getDaoSession().getRecordDao();
+        List<Record> list = dao.queryBuilder().build().list();
         useMap = new HashMap<>();
         for (Record record:list) {
             useMap.put(record.getName(), true);
@@ -118,7 +120,8 @@ public class FileService extends Service {
 
     private void removeUselessStars() {
         File file = new File(Configuration.GDB_IMG_STAR);
-        List<Star> list = GdbProviderHelper.getProvider().getStars(GDBProperites.STAR_MODE_ALL);
+        StarDao dao = GdbApplication.getInstance().getDaoSession().getStarDao();
+        List<Star> list = dao.queryBuilder().build().list();
         useMap = new HashMap<>();
         for (Star star:list) {
             useMap.put(star.getName(), true);

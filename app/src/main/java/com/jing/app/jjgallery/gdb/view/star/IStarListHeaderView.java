@@ -1,6 +1,6 @@
 package com.jing.app.jjgallery.gdb.view.star;
 
-import com.king.service.gdb.bean.StarCountBean;
+import java.util.List;
 
 /**
  * 描述:
@@ -8,7 +8,7 @@ import com.king.service.gdb.bean.StarCountBean;
  * <p/>创建时间: 2017/7/12 9:36
  */
 public interface IStarListHeaderView {
-    void onStarCountLoaded(StarCountBean bean);
+    void onStarCountLoaded(List<Integer> countList);
 
     void onFavorListLoaded();
 }

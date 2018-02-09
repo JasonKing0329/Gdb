@@ -16,12 +16,10 @@ import com.jing.app.jjgallery.gdb.model.GdbImageProvider;
 import com.jing.app.jjgallery.gdb.util.FormatUtil;
 import com.jing.app.jjgallery.gdb.util.GlideUtil;
 import com.jing.app.jjgallery.gdb.view.pub.CircleImageView;
-import com.king.service.gdb.bean.Record;
-import com.king.service.gdb.bean.RecordOneVOne;
-import com.king.service.gdb.bean.RecordThree;
-import com.king.service.gdb.bean.Star;
+import com.king.app.gdb.data.entity.Record;
+import com.king.app.gdb.data.entity.Star;
+import com.king.app.gdb.data.param.DataConstants;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -81,42 +79,26 @@ public class RecordCardHolder {
         else {
             tvDeprecated.setVisibility(View.GONE);
         }
-
-        if (record instanceof RecordOneVOne) {
-            RecordOneVOne rRecord = (RecordOneVOne) record;
-            tvScene.setText(rRecord.getSceneName());
-
-            // show star different with current star
-            String name = rRecord.getStar1().getName();
-            int id = rRecord.getStar1().getId();
-            if (id == currentStar.getId()) {
-                name = rRecord.getStar2().getName();
+        tvScene.setText(record.getScene());
+        if (record.getType() == DataConstants.VALUE_RECORD_TYPE_1V1) {
+            for (Star star:record.getStarList()) {
+                if (star.getId() != currentStar.getId()) {
+                    Glide.with(GdbApplication.getInstance())
+                            .load(GdbImageProvider.getStarRandomPath(star.getName(), null))
+                            .apply(GlideUtil.getStarOptions())
+                            .into(ivStar1);
+                    ivStar2.setVisibility(View.GONE);
+                    break;
+                }
             }
-            Glide.with(GdbApplication.getInstance())
-                    .load(GdbImageProvider.getStarRandomPath(name, null))
-                    .apply(GlideUtil.getStarOptions())
-                    .into(ivStar1);
-            ivStar2.setVisibility(View.GONE);
         }
-        else if (record instanceof RecordThree) {
-            RecordThree rRecord = (RecordThree) record;
-            List<Star> starList = new ArrayList<>();
-            if (rRecord.getStarTopList() != null) {
-                starList.addAll(rRecord.getStarTopList());
-            }
-            if (rRecord.getStarBottomList() != null) {
-                starList.addAll(rRecord.getStarBottomList());
-            }
-            if (rRecord.getStarMixList() != null) {
-                starList.addAll(rRecord.getStarMixList());
-            }
-
+        else if (record.getType() == DataConstants.VALUE_RECORD_TYPE_3W) {
             ivStar1.setImageResource(R.drawable.ic_def_person);
             ivStar2.setImageResource(R.drawable.ic_def_person);
             ivStar2.setVisibility(View.VISIBLE);
             ImageView[] views = new ImageView[]{ivStar1, ivStar2};
             int imageViewIndex = 0;
-            for (Star star:starList) {
+            for (Star star:record.getStarList()) {
                 if (star.getId() == currentStar.getId()) {
                     continue;
                 }

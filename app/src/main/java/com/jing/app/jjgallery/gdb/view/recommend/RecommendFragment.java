@@ -26,10 +26,10 @@ import com.jing.app.jjgallery.gdb.presenter.GdbGuidePresenter;
 import com.jing.app.jjgallery.gdb.presenter.record.FilterPresenter;
 import com.jing.app.jjgallery.gdb.util.GlideUtil;
 import com.jing.app.jjgallery.gdb.util.LMBannerViewUtil;
+import com.jing.app.jjgallery.gdb.util.ListUtil;
 import com.jing.app.jjgallery.gdb.view.pub.ProgressProvider;
-import com.king.service.gdb.bean.GDBProperites;
-import com.king.service.gdb.bean.Record;
-import com.king.service.gdb.bean.RecordOneVOne;
+import com.king.app.gdb.data.entity.Record;
+import com.king.app.gdb.data.entity.Star;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -119,24 +119,18 @@ public class RecommendFragment extends BaseFragmentV4 implements IRecommend, Vie
 
     private String getRecordStarText(Record record) {
 
-        StringBuffer buffer = new StringBuffer();
-        if (record instanceof RecordOneVOne) {
-            RecordOneVOne oRecord = (RecordOneVOne) record;
-            if (oRecord.getStar1() == null) {
-                buffer.append(GDBProperites.STAR_UNKNOWN);
-            }
-            else {
-                buffer.append(oRecord.getStar1().getName());
-            }
-            buffer.append(" & ");
-            if (oRecord.getStar2() == null) {
-                buffer.append(GDBProperites.STAR_UNKNOWN);
-            }
-            else {
-                buffer.append(oRecord.getStar2().getName());
+        List<Star> starList = record.getStarList();
+        StringBuffer starBuffer = new StringBuffer();
+        if (!ListUtil.isEmpty(starList)) {
+            for (Star star:starList) {
+                starBuffer.append("&").append(star.getName());
             }
         }
-        return buffer.toString();
+        String starText = starBuffer.toString();
+        if (starText.length() > 1) {
+            starText = starText.substring(1);
+        }
+        return starText;
     }
 
     @Override

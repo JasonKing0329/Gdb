@@ -25,9 +25,8 @@ import com.jing.app.jjgallery.gdb.util.GlideUtil;
 import com.jing.app.jjgallery.gdb.util.LMBannerViewUtil;
 import com.jing.app.jjgallery.gdb.view.pub.PullZoomRecyclerView;
 import com.jing.app.jjgallery.gdb.view.pub.dialog.DefaultDialogManager;
-import com.king.service.gdb.bean.Record;
-import com.king.service.gdb.bean.RecordOneVOne;
-import com.king.service.gdb.bean.Star;
+import com.king.app.gdb.data.entity.Record;
+import com.king.app.gdb.data.entity.Star;
 
 import java.util.List;
 import java.util.Random;
@@ -325,12 +324,12 @@ public class StarRecordsAdapter extends RecyclerListAdapter {
             numberView.setText(String.format(recyclerView.getContext().getString(R.string.gdb_star_file_numbers), listData.size()));
 
             StringBuffer buffer = new StringBuffer();
-            if (star.getStar().getBeTop() > 0) {
-                buffer.append("top(").append(star.getStar().getBeTop()).append(")");
+            if (star.getStar().getBetop() > 0) {
+                buffer.append("top(").append(star.getStar().getBetop()).append(")");
                 buffer.append("   ");
             }
-            if (star.getStar().getBeBottom() > 0) {
-                buffer.append("bottom(").append(star.getStar().getBeBottom()).append(")");
+            if (star.getStar().getBebottom() > 0) {
+                buffer.append("bottom(").append(star.getStar().getBebottom()).append(")");
             }
             typeView.setText(buffer.toString());
 
@@ -341,9 +340,9 @@ public class StarRecordsAdapter extends RecyclerListAdapter {
             scoreView.setText(buffer.toString());
 
             buffer = new StringBuffer();
-            buffer.append("cock avg(").append(FormatUtil.formatScore(star.getStar().getcAverage(), 1)).append(")")
-                    .append("  ").append("max(").append(star.getStar().getcMax()).append(")")
-                    .append("  ").append("min(").append(star.getStar().getcMin()).append(")");
+            buffer.append("cock avg(").append(FormatUtil.formatScore(star.getStar().getCaverage(), 1)).append(")")
+                    .append("  ").append("max(").append(star.getStar().getCmax()).append(")")
+                    .append("  ").append("min(").append(star.getStar().getCmax()).append(")");
             cscoreView.setText(buffer.toString());
 
             ivFavor.setSelected(isStarFavor);
@@ -462,20 +461,5 @@ public class StarRecordsAdapter extends RecyclerListAdapter {
                 adapter.notifyDataSetChanged();
             }
         }
-
-        /**
-         * define whether current star is star1 or star2 to apply in different style during transition animation
-         * @param record
-         * @return
-         */
-        private boolean currentIsStar1(Star star, RecordOneVOne record) {
-            if (star != null) {
-                if (record.getStar1() != null && record.getStar1().getId() == star.getId()) {
-                    return true;
-                }
-            }
-            return false;
-        }
-
     }
 }

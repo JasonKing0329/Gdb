@@ -20,10 +20,8 @@ import com.jing.app.jjgallery.gdb.view.adapter.SwipeAdapter;
 import com.jing.app.jjgallery.gdb.view.pub.dialog.DefaultDialogManager;
 import com.jing.app.jjgallery.gdb.view.pub.swipeview.SwipeFlingAdapterView;
 import com.jing.app.jjgallery.gdb.view.record.SortDialogFragment;
-import com.king.service.gdb.bean.FavorBean;
-import com.king.service.gdb.bean.Record;
-import com.king.service.gdb.bean.RecordOneVOne;
-import com.king.service.gdb.bean.Star;
+import com.king.app.gdb.data.entity.Record;
+import com.king.app.gdb.data.entity.Star;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -104,22 +102,17 @@ public class StarSwipeActivity extends GBaseActivity implements IStarSwipeView {
             @Override
             public void onLeftCardExit(Object dataObject) {
                 final StarProxy star = (StarProxy) dataObject;
-                if (star.getFavorBean() != null) {
-                    new DefaultDialogManager().showOptionDialog(StarSwipeActivity.this, null, "Are you sure to make " + star.getStar().getName() + " unfavor?"
-                            , getString(R.string.ok), null, getString(R.string.cancel)
-                            , new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialogInterface, int i) {
-                                    if (i == DialogInterface.BUTTON_POSITIVE) {
-                                        FavorBean bean = new FavorBean();
-                                        bean.setStarId(star.getStar().getId());
-                                        bean.setFavor(0);
-                                        bean.setStarName(star.getStar().getName());
-                                        presenter.saveFavor(bean);
-                                    }
+                new DefaultDialogManager().showOptionDialog(StarSwipeActivity.this, null, "Are you sure to make " + star.getStar().getName() + " unfavor?"
+                        , getString(R.string.ok), null, getString(R.string.cancel)
+                        , new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                if (i == DialogInterface.BUTTON_POSITIVE) {
+                                    star.getStar().setFavor(0);
+                                    presenter.saveFavor(star.getStar());
                                 }
-                            }, null);
-                }
+                            }
+                        }, null);
                 updateRecords();
             }
 
@@ -130,24 +123,19 @@ public class StarSwipeActivity extends GBaseActivity implements IStarSwipeView {
             @Override
             public void onRightCardExit(Object dataObject) {
                 final StarProxy star = (StarProxy) dataObject;
-                if (star.getFavorBean() == null) {
-                    new DefaultDialogManager().openInputDialog(StarSwipeActivity.this, "Mark favor to " + star.getStar().getName()
-                            , new DefaultDialogManager.OnDialogActionListener() {
-                                @Override
-                                public void onOk(String name) {
-                                    try {
-                                        int favor = Integer.parseInt(name);
-                                        FavorBean bean = new FavorBean();
-                                        bean.setStarId(star.getStar().getId());
-                                        bean.setFavor(favor);
-                                        bean.setStarName(star.getStar().getName());
-                                        presenter.saveFavor(bean);
-                                    } catch (Exception e) {
+                new DefaultDialogManager().openInputDialog(StarSwipeActivity.this, "Mark favor to " + star.getStar().getName()
+                        , new DefaultDialogManager.OnDialogActionListener() {
+                            @Override
+                            public void onOk(String name) {
+                                try {
+                                    int favor = Integer.parseInt(name);
+                                    star.getStar().setFavor(favor);
+                                    presenter.saveFavor(star.getStar());
+                                } catch (Exception e) {
 
-                                    }
                                 }
-                    });
-                }
+                            }
+                        });
                 updateRecords();
             }
 
@@ -257,21 +245,6 @@ public class StarSwipeActivity extends GBaseActivity implements IStarSwipeView {
         // That means, the view will be put by layer from bottom to top, the top child is the last array index child
         View topView = sfvStars.getChildAt(sfvStars.getChildCount() - 1);
         return topView.findViewById(R.id.iv_star);
-    }
-
-    /**
-     * define whether current star is star1 or star2 to apply in different style during transition animation
-     * @param record
-     * @return
-     */
-    private boolean currentIsStar1(RecordOneVOne record) {
-        Star star = getCurrentStar().getStar();
-        if (star != null) {
-            if (record.getStar1() != null && record.getStar1().getId() == star.getId()) {
-                return true;
-            }
-        }
-        return false;
     }
 
     /**

@@ -33,7 +33,7 @@ public class StarActivity extends GBaseActivity {
     public Unbinder initView() {
         getSupportActionBar().hide();
         starFragment = new StarFragment();
-        starFragment.setStarId(getIntent().getIntExtra(KEY_STAR_ID, -1));
+        starFragment.setStarId(getIntent().getLongExtra(KEY_STAR_ID, -1));
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.container, starFragment)
                 .commit();

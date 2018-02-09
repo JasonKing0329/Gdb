@@ -19,12 +19,10 @@ import com.jing.app.jjgallery.gdb.view.settings.SettingsActivity;
 import com.jing.app.jjgallery.gdb.view.star.StarActivity;
 import com.jing.app.jjgallery.gdb.view.star.StarListActivity;
 import com.jing.app.jjgallery.gdb.view.star.StarSwipeActivity;
-import com.jing.app.jjgallery.gdb.view.surf.SurfActivity;
 import com.jing.app.jjgallery.gdb.view.surf.SurfHttpActivity;
 import com.jing.app.jjgallery.gdb.view.surf.SurfLocalActivity;
-import com.king.service.gdb.bean.Record;
-import com.king.service.gdb.bean.Star;
-import com.king.service.gdb.game.Constants;
+import com.king.app.gdb.data.entity.Record;
+import com.king.app.gdb.data.entity.Star;
 
 import java.io.File;
 
@@ -82,9 +80,9 @@ public class ActivityManager {
         from.startActivity(intent);
     }
 
-    public static void startStarActivity(Activity from, int starId) {
+    public static void startStarActivity(Activity from, long starId) {
         Bundle bundle = new Bundle();
-        bundle.putInt(StarActivity.KEY_STAR_ID, starId);
+        bundle.putLong(StarActivity.KEY_STAR_ID, starId);
         Intent intent = new Intent().setClass(from, StarActivity.class);
         intent.putExtras(bundle);
         from.startActivity(intent);
@@ -156,27 +154,6 @@ public class ActivityManager {
     public static void startManageActivity(Activity from) {
         Intent intent = new Intent().setClass(from, ManageActivity.class);
         from.startActivity(intent);
-    }
-
-    public static void startGdbGameGroupActivity(Activity from, int seasonId) {
-//        Intent intent = new Intent().setClass(from, GroupActivity.class);
-//        intent.putExtra(GroupActivity.KEY_SEASON_ID, seasonId);
-//        from.startActivity(intent);
-//        applyAnimation(from);
-    }
-
-    public static void startGdbGameBattleActivity(Activity from, int seasonId) {
-//        Intent intent = new Intent().setClass(from, BattleActivity.class);
-//        intent.putExtra(BattleActivity.KEY_SEASON_ID, seasonId);
-//        from.startActivity(intent);
-//        applyAnimation(from);
-    }
-
-    public static void startGdbGameCrossActivity(Activity from, int seasonId) {
-//        Intent intent = new Intent().setClass(from, CrossActivity.class);
-//        intent.putExtra(CrossActivity.KEY_SEASON_ID, seasonId);
-//        from.startActivity(intent);
-//        applyAnimation(from);
     }
 
 }

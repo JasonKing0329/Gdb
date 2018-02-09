@@ -6,7 +6,7 @@ import com.jing.app.jjgallery.gdb.model.SettingProperties;
 import com.jing.app.jjgallery.gdb.model.bean.recommend.FilterBean;
 import com.jing.app.jjgallery.gdb.model.bean.recommend.FilterModel;
 import com.jing.app.jjgallery.gdb.util.DebugLog;
-import com.king.service.gdb.sqlbrite.table.ISortRecord;
+import com.king.app.gdb.data.ISortRecord;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -8,9 +8,8 @@ import com.jing.app.jjgallery.gdb.http.AppHttpClient;
 import com.jing.app.jjgallery.gdb.http.Command;
 import com.jing.app.jjgallery.gdb.http.bean.response.AppCheckBean;
 import com.jing.app.jjgallery.gdb.http.bean.response.GdbRespBean;
-import com.jing.app.jjgallery.gdb.model.db.GdbProviderHelper;
+import com.jing.app.jjgallery.gdb.model.db.GPropertiesExtendDao;
 import com.jing.app.jjgallery.gdb.view.update.IGdbUpdateView;
-import com.king.service.gdb.GDBProvider;
 
 import java.io.File;
 
@@ -60,19 +59,11 @@ public class GdbUpdatePresenter {
     }
 
     public static String getDbVersionName() {
-        return getDbVersionName(GdbProviderHelper.getProvider());
-    }
-
-    public static String getDbVersionName(GDBProvider provider) {
-        String versionName = provider.getVersionName();
-        if (versionName == null) {
-            versionName = "0";
-        }
-        return versionName;
+        return new GPropertiesExtendDao().getVersion();
     }
 
     private void requestGdbDatabase() {
-        String versionName = getDbVersionName(GdbProviderHelper.getProvider());
+        String versionName = getDbVersionName();
         Disposable disposable = AppHttpClient.getInstance().getAppService().checkGdbDatabaseUpdate(Command.TYPE_GDB_DATABASE, versionName)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

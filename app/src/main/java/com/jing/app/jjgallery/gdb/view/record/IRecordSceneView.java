@@ -1,6 +1,6 @@
 package com.jing.app.jjgallery.gdb.view.record;
 
-import com.king.service.gdb.bean.SceneBean;
+import com.jing.app.jjgallery.gdb.model.db.SceneBean;
 
 import java.util.List;
 

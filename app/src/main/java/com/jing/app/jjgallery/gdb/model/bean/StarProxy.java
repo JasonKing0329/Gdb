@@ -1,7 +1,6 @@
 package com.jing.app.jjgallery.gdb.model.bean;
 
-import com.king.service.gdb.bean.FavorBean;
-import com.king.service.gdb.bean.Star;
+import com.king.app.gdb.data.entity.Star;
 
 /**
  * Created by JingYang on 2016/8/2 0002.
@@ -10,8 +9,6 @@ import com.king.service.gdb.bean.Star;
 public class StarProxy {
     private Star star;
     private String imagePath;
-    private int favor;
-    private FavorBean favorBean;
 
     public Star getStar() {
         return star;
@@ -29,19 +26,4 @@ public class StarProxy {
         this.imagePath = imagePath;
     }
 
-    public int getFavor() {
-        return favor;
-    }
-
-    public void setFavor(int favor) {
-        this.favor = favor;
-    }
-
-    public FavorBean getFavorBean() {
-        return favorBean;
-    }
-
-    public void setFavorBean(FavorBean favorBean) {
-        this.favorBean = favorBean;
-    }
 }

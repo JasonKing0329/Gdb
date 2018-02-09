@@ -1,18 +1,14 @@
 package com.jing.app.jjgallery.gdb.presenter.star;
 
-import android.os.AsyncTask;
-
+import com.jing.app.jjgallery.gdb.GdbApplication;
 import com.jing.app.jjgallery.gdb.model.GdbImageProvider;
 import com.jing.app.jjgallery.gdb.model.RecordComparator;
 import com.jing.app.jjgallery.gdb.model.bean.StarProxy;
-import com.jing.app.jjgallery.gdb.model.conf.DBInfor;
 import com.jing.app.jjgallery.gdb.model.conf.PreferenceValue;
-import com.jing.app.jjgallery.gdb.model.db.GdbProviderHelper;
 import com.jing.app.jjgallery.gdb.view.star.IStarView;
-import com.king.service.gdb.GDBProvider;
-import com.king.service.gdb.bean.FavorBean;
-import com.king.service.gdb.bean.Record;
-import com.king.service.gdb.bean.Star;
+import com.king.app.gdb.data.entity.Record;
+import com.king.app.gdb.data.entity.Star;
+import com.king.app.gdb.data.entity.StarDao;
 
 import java.util.Collections;
 import java.util.List;
@@ -44,22 +40,21 @@ public class StarPresenter {
         }
     }
 
-    public void saveFavor(FavorBean bean) {
-        GdbProviderHelper.getProvider().saveFavor(bean);
+    public boolean isStarFavor(Star star) {
+        return star.getFavor() > 0;
     }
 
-    public boolean isStarFavor(int starId) {
-        return GdbProviderHelper.getProvider().isStarFavor(starId);
-    }
-
-    public void loadStar(final int starId) {
+    public void loadStar(final long starId) {
         Observable.create(new ObservableOnSubscribe<StarProxy>() {
             @Override
             public void subscribe(@NonNull ObservableEmitter<StarProxy> e) throws Exception {
+                StarDao dao = GdbApplication.getInstance().getDaoSession().getStarDao();
                 // load star
-                Star star = GdbProviderHelper.getProvider().queryStarById(starId);
+                Star star = dao.queryBuilder()
+                        .where(StarDao.Properties.Id.eq(starId))
+                        .build().unique();
                 // load records
-                GdbProviderHelper.getProvider().loadStarRecords(star);
+                star.getRecordList();
 
                 StarProxy proxy = new StarProxy();
                 proxy.setStar(star);
@@ -84,4 +79,8 @@ public class StarPresenter {
                 });
     }
 
+    public void saveFavor(Star star) {
+        StarDao dao = GdbApplication.getInstance().getDaoSession().getStarDao();
+        dao.update(star);
+    }
 }

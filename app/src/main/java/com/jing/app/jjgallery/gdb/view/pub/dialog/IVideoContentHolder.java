@@ -1,7 +1,7 @@
 package com.jing.app.jjgallery.gdb.view.pub.dialog;
 
 import com.jing.app.jjgallery.gdb.IFragmentHolder;
-import com.king.service.gdb.bean.Record;
+import com.king.app.gdb.data.entity.Record;
 
 /**
  * 描述:
