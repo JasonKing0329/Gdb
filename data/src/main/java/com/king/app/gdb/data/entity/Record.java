@@ -1,15 +1,15 @@
 package com.king.app.gdb.data.entity;
 
+import org.greenrobot.greendao.DaoException;
 import org.greenrobot.greendao.annotation.Entity;
+import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.JoinEntity;
+import org.greenrobot.greendao.annotation.NotNull;
 import org.greenrobot.greendao.annotation.ToMany;
 import org.greenrobot.greendao.annotation.ToOne;
 
 import java.util.List;
-import org.greenrobot.greendao.annotation.Generated;
-import org.greenrobot.greendao.DaoException;
-import org.greenrobot.greendao.annotation.NotNull;
 
 /**
  * 描述:
@@ -37,12 +37,12 @@ public class Record {
     private String specialDesc;
     private long lastModifyTime;
     private int type;
-    private long record_detail_id;
+    private long recordDetailId;
 
-    @ToOne(joinProperty = "record_detail_id")
+    @ToOne(joinProperty = "recordDetailId")
     private RecordType1v1 recordType1v1;
 
-    @ToOne(joinProperty = "record_detail_id")
+    @ToOne(joinProperty = "recordDetailId")
     private RecordType3w recordType3w;
 
     @ToMany(referencedJoinProperty = "recordId")
@@ -64,11 +64,11 @@ public class Record {
     @Generated(hash = 765166123)
     private transient RecordDao myDao;
 
-    @Generated(hash = 1027853147)
+    @Generated(hash = 1313977001)
     public Record(Long id, String scene, String directory, String name, int hdLevel,
             int score, int scoreFeel, int scoreStar, int scorePassion, int scoreCum,
             int scoreSpecial, int scoreBareback, int deprecated, String specialDesc,
-            long lastModifyTime, int type, long record_detail_id) {
+            long lastModifyTime, int type, long recordDetailId) {
         this.id = id;
         this.scene = scene;
         this.directory = directory;
@@ -85,7 +85,7 @@ public class Record {
         this.specialDesc = specialDesc;
         this.lastModifyTime = lastModifyTime;
         this.type = type;
-        this.record_detail_id = record_detail_id;
+        this.recordDetailId = recordDetailId;
     }
 
     @Generated(hash = 477726293)
@@ -220,21 +220,21 @@ public class Record {
         this.type = type;
     }
 
-    public long getRecord_detail_id() {
-        return this.record_detail_id;
+    public long getRecordDetailId() {
+        return this.recordDetailId;
     }
 
-    public void setRecord_detail_id(long record_detail_id) {
-        this.record_detail_id = record_detail_id;
+    public void setRecordDetailId(long recordDetailId) {
+        this.recordDetailId = recordDetailId;
     }
 
     @Generated(hash = 1847110640)
     private transient Long recordType1v1__resolvedKey;
 
     /** To-one relationship, resolved on first access. */
-    @Generated(hash = 544127354)
+    @Generated(hash = 363482163)
     public RecordType1v1 getRecordType1v1() {
-        long __key = this.record_detail_id;
+        long __key = this.recordDetailId;
         if (recordType1v1__resolvedKey == null
                 || !recordType1v1__resolvedKey.equals(__key)) {
             final DaoSession daoSession = this.daoSession;
@@ -252,16 +252,16 @@ public class Record {
     }
 
     /** called by internal mechanisms, do not call yourself. */
-    @Generated(hash = 1363696477)
+    @Generated(hash = 1956655918)
     public void setRecordType1v1(@NotNull RecordType1v1 recordType1v1) {
         if (recordType1v1 == null) {
             throw new DaoException(
-                    "To-one property 'record_detail_id' has not-null constraint; cannot set to-one to null");
+                    "To-one property 'recordDetailId' has not-null constraint; cannot set to-one to null");
         }
         synchronized (this) {
             this.recordType1v1 = recordType1v1;
-            record_detail_id = recordType1v1.getId();
-            recordType1v1__resolvedKey = record_detail_id;
+            recordDetailId = recordType1v1.getId();
+            recordType1v1__resolvedKey = recordDetailId;
         }
     }
 
@@ -269,9 +269,9 @@ public class Record {
     private transient Long recordType3w__resolvedKey;
 
     /** To-one relationship, resolved on first access. */
-    @Generated(hash = 386164528)
+    @Generated(hash = 1781989542)
     public RecordType3w getRecordType3w() {
-        long __key = this.record_detail_id;
+        long __key = this.recordDetailId;
         if (recordType3w__resolvedKey == null
                 || !recordType3w__resolvedKey.equals(__key)) {
             final DaoSession daoSession = this.daoSession;
@@ -289,16 +289,16 @@ public class Record {
     }
 
     /** called by internal mechanisms, do not call yourself. */
-    @Generated(hash = 1709955991)
+    @Generated(hash = 122607578)
     public void setRecordType3w(@NotNull RecordType3w recordType3w) {
         if (recordType3w == null) {
             throw new DaoException(
-                    "To-one property 'record_detail_id' has not-null constraint; cannot set to-one to null");
+                    "To-one property 'recordDetailId' has not-null constraint; cannot set to-one to null");
         }
         synchronized (this) {
             this.recordType3w = recordType3w;
-            record_detail_id = recordType3w.getId();
-            recordType3w__resolvedKey = record_detail_id;
+            recordDetailId = recordType3w.getId();
+            recordType3w__resolvedKey = recordDetailId;
         }
     }
 

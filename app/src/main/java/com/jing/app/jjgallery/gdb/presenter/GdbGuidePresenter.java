@@ -307,7 +307,9 @@ public class GdbGuidePresenter {
         recordCursor = new RecordCursor();
         recordCursor.offset = 0;
         recordCursor.number = number;
-        return recordExtendDao.getLatestRecords(recordCursor);
+        List<Record> list = recordExtendDao.getLatestRecords(recordCursor);
+        recordCursor.offset += list.size();
+        return list;
     }
 
     /**
@@ -406,6 +408,7 @@ public class GdbGuidePresenter {
         @Override
         protected List<Record> doInBackground(Integer... params) {
             List<Record> list = recordExtendDao.getLatestRecords(recordCursor);
+            recordCursor.offset += list.size();
             return list;
         }
     }

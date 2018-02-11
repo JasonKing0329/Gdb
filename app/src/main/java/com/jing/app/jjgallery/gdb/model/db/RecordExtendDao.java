@@ -1,11 +1,15 @@
 package com.jing.app.jjgallery.gdb.model.db;
 
 import android.database.Cursor;
+import android.text.TextUtils;
 
 import com.jing.app.jjgallery.gdb.GdbApplication;
+import com.jing.app.jjgallery.gdb.model.conf.PreferenceValue;
 import com.king.app.gdb.data.RecordCursor;
 import com.king.app.gdb.data.entity.Record;
 import com.king.app.gdb.data.entity.RecordDao;
+
+import org.greenrobot.greendao.query.QueryBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,8 +30,50 @@ public class RecordExtendDao {
                 .build().list();
     }
 
-    public List<Record> getRecords(String sortColumn, boolean desc, boolean includeDeprecated, RecordCursor cursor, String like, String scene) {
-        return null;
+    public List<Record> getRecords(int sortMode, boolean desc, boolean includeDeprecated, RecordCursor cursor, String like, String scene) {
+        RecordDao dao = GdbApplication.getInstance().getDaoSession().getRecordDao();
+        QueryBuilder<Record> builder = dao.queryBuilder();
+        if (!TextUtils.isEmpty(like)) {
+            builder.where(RecordDao.Properties.Name.like("%" + like + "%"));
+        }
+        if (!TextUtils.isEmpty(scene)) {
+            builder.where(RecordDao.Properties.Name.eq(scene));
+        }
+        if (!includeDeprecated) {
+            builder.where(RecordDao.Properties.Deprecated.eq(0));
+        }
+        sortByColumn(builder, sortMode, desc);
+        builder.offset(cursor.offset);
+        builder.limit(cursor.number);
+        return builder.build().list();
+    }
+
+    private void sortByColumn(QueryBuilder<Record> builder, int sortValue, boolean desc) {
+
+        if (sortValue == PreferenceValue.GDB_SR_ORDERBY_DATE) {
+            builder.orderRaw(RecordDao.Properties.LastModifyTime.columnName + (desc ? " DESC":" ASC"));
+        }
+        else if (sortValue == PreferenceValue.GDB_SR_ORDERBY_SCORE) {
+            builder.orderRaw(RecordDao.Properties.Score.columnName + (desc ? " DESC":" ASC"));
+        }
+        else if (sortValue == PreferenceValue.GDB_SR_ORDERBY_PASSION) {
+            builder.orderRaw(RecordDao.Properties.ScorePassion.columnName + (desc ? " DESC":" ASC"));
+        }
+        else if (sortValue == PreferenceValue.GDB_SR_ORDERBY_CUM) {
+            builder.orderRaw(RecordDao.Properties.ScoreCum.columnName + (desc ? " DESC":" ASC"));
+        }
+        else if (sortValue == PreferenceValue.GDB_SR_ORDERBY_STAR) {
+            builder.orderRaw(RecordDao.Properties.ScoreStar.columnName + (desc ? " DESC":" ASC"));
+        }
+        else if (sortValue == PreferenceValue.GDB_SR_ORDERBY_SCOREFEEL) {
+            builder.orderRaw(RecordDao.Properties.ScoreFeel.columnName + (desc ? " DESC":" ASC"));
+        }
+        else if (sortValue == PreferenceValue.GDB_SR_ORDERBY_SPECIAL) {
+            builder.orderRaw(RecordDao.Properties.ScoreSpecial.columnName + (desc ? " DESC":" ASC"));
+        }
+        else {// sort by name
+            builder.orderRaw(RecordDao.Properties.Name.columnName + (desc ? " DESC":" ASC"));
+        }
     }
 
     public List<SceneBean> getSceneList() {

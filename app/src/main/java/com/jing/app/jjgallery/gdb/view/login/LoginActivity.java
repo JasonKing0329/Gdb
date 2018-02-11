@@ -21,6 +21,7 @@ import com.jing.app.jjgallery.gdb.model.conf.ConfManager;
 import com.jing.app.jjgallery.gdb.model.conf.Configuration;
 import com.jing.app.jjgallery.gdb.model.login.LoginParams;
 import com.jing.app.jjgallery.gdb.presenter.LoginPresenter;
+import com.jing.app.jjgallery.gdb.util.DBExportor;
 import com.jing.app.jjgallery.gdb.util.DebugLog;
 import com.jing.app.jjgallery.gdb.util.PermissionUtil;
 import com.jing.app.jjgallery.gdb.view.pub.ProgressButton;
@@ -120,6 +121,7 @@ public class LoginActivity extends GBaseActivity implements ILoginView {
     }
 
     private void startInit() {
+        DBExportor.execute();
         Observable.create(new ObservableOnSubscribe<Boolean>() {
             @Override
             public void subscribe(@NonNull ObservableEmitter<Boolean> e) throws Exception {
@@ -137,7 +139,8 @@ public class LoginActivity extends GBaseActivity implements ILoginView {
                 ConfManager.initParams(LoginActivity.this);
                 // 加载扩展resource资源
 //                JResource.initializeColors();
-
+                // create dao
+                GdbApplication.getInstance().createGreenDao();
                 // 检查扩展配置
                 boolean hasPref = ConfManager.checkExtendConf();
 

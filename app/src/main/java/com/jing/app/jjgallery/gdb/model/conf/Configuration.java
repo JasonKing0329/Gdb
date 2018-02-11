@@ -10,6 +10,7 @@ import java.io.IOException;
 public class Configuration {
 
 	public static final boolean DEBUG = true;
+	public static final String DB_NAME = "gdata.db";
 	public static final String TAG_AUTO_VIEW = "fe_autoview";
 	public static final String TAG_CONFIG = "fe_Configuration";
 	
@@ -27,6 +28,8 @@ public class Configuration {
 	public static final String APP_DIR_IMG_SAVEAS = APP_ROOT + "/saveas";
 	public static final String APP_DIR_DB_HISTORY = APP_ROOT + "/history";
 	public static final String APP_DIR_GAME = APP_ROOT + "/game";
+
+	public static final String APP_DIR_EXPORT = APP_ROOT + "/export";
 
 	public static final String DATABASE = "fileencrypt";
 	public static final String EXTEND_RES_DIR = APP_ROOT + "/res";
@@ -81,6 +84,10 @@ public class Configuration {
 				file.mkdir();
 			}
 			file = new File(APP_DIR_GAME);
+			if (!file.exists()) {
+				file.mkdir();
+			}
+			file = new File(APP_DIR_EXPORT);
 			if (!file.exists()) {
 				file.mkdir();
 			}

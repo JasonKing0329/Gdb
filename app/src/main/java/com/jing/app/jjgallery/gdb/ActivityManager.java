@@ -1,13 +1,11 @@
 package com.jing.app.jjgallery.gdb;
 
 import android.app.Activity;
-import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
-import com.jing.app.jjgallery.gdb.model.ObjectCache;
 import com.jing.app.jjgallery.gdb.model.conf.ConfManager;
 import com.jing.app.jjgallery.gdb.view.game.RandomActivity;
 import com.jing.app.jjgallery.gdb.view.home.GHomeActivity;
@@ -103,17 +101,18 @@ public class ActivityManager {
      * @param pairs transition转场动画
      */
     public static void startRecordActivity(Context from, Record record, android.util.Pair<View, String>[] pairs) {
-        ObjectCache.putData(record);
         Intent intent = new Intent().setClass(from, RecordActivity.class);
-        if (from instanceof Activity) {
-            if (pairs == null) {
-                from.startActivity(intent);
-            }
-            else {
-                ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation((Activity) from, pairs);
-                from.startActivity(intent, options.toBundle());
-            }
-        }
+        intent.putExtra(RecordActivity.KEY_RECORD_ID, record.getId());
+        from.startActivity(intent);
+//        if (from instanceof Activity) {
+//            if (pairs == null) {
+//                from.startActivity(intent);
+//            }
+//            else {
+//                ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation((Activity) from, pairs);
+//                from.startActivity(intent, options.toBundle());
+//            }
+//        }
     }
 
     public static boolean startGameActivity(Activity from) {

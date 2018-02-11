@@ -25,7 +25,6 @@ public class GHomeHeader extends RecyclerView.ViewHolder {
     RecyclerView rvStars;
 
     private OnStarListener onStarListener;
-    private GHomeBean homeBean;
 
     private HomeStarAdapter adapter;
 
@@ -44,8 +43,6 @@ public class GHomeHeader extends RecyclerView.ViewHolder {
     }
 
     public void bindView(GHomeBean bean) {
-
-        homeBean = bean;
 
         if (adapter == null) {
             adapter = new HomeStarAdapter();

@@ -117,7 +117,8 @@ public class RecordListPresenter {
                     cursor.number = -1;
                 }
 
-                List<Record> list = recordExtendDao.getRecords(RecordComparator.getSortColumn(sortMode), desc, includeDeprecated, cursor, like, scene);
+                List<Record> list = recordExtendDao.getRecords(sortMode, desc, includeDeprecated, cursor, like, scene);
+                cursor.offset += list.size();
 
                 // 加载可播放的需要从全部记录里通过对比video目录文件信息来挑选
                 if (showCanBePlayed) {
@@ -167,7 +168,8 @@ public class RecordListPresenter {
             RecordCursor cursor = (RecordCursor) params[4];
             String like = (String) params[5];
             String scene = (String) params[6];
-            List<Record> list = recordExtendDao.getRecords(RecordComparator.getSortColumn(sortMode), desc, includeDeprecated, cursor, like, scene);
+            List<Record> list = recordExtendDao.getRecords(sortMode, desc, includeDeprecated, cursor, like, scene);
+            cursor.offset += list.size();
 
             if (showCanBePlayed) {
                 list = pickCanBePlayedRecord(list);

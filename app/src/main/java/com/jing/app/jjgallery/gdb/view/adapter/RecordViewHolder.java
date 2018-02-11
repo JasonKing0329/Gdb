@@ -304,7 +304,7 @@ public class RecordViewHolder {
                 sortScoreView.setVisibility(View.VISIBLE);
                 sortScoreView.setText("" + item.getScoreCum());
                 break;
-            case PreferenceValue.GDB_SR_ORDERBY_FK:
+            case PreferenceValue.GDB_SR_ORDERBY_PASSION:
                 sortScoreView.setVisibility(View.VISIBLE);
                 sortScoreView.setText("" + item.getScorePassion());
                 break;

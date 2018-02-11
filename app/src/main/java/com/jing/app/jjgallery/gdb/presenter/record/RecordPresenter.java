@@ -95,4 +95,8 @@ public class RecordPresenter {
         }
         return null;
     }
+
+    public Record getRecord() {
+        return mRecord;
+    }
 }

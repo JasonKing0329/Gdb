@@ -17,7 +17,7 @@ public class PreferenceValue {
     public static final int GDB_SR_ORDERBY_NAME = 1;
     public static final int GDB_SR_ORDERBY_DATE = 2;
     public static final int GDB_SR_ORDERBY_SCORE =3;
-    public static final int GDB_SR_ORDERBY_FK =4;
+    public static final int GDB_SR_ORDERBY_PASSION =4;
     public static final int GDB_SR_ORDERBY_CUM =5;
     public static final int GDB_SR_ORDERBY_STAR1 =6;
     public static final int GDB_SR_ORDERBY_STARCC1 =7;
@@ -49,4 +49,13 @@ public class PreferenceValue {
 
     public static final int STAR_LIST_VIEW_LIST =0;
     public static final int STAR_LIST_VIEW_GRID =1;
+
+    public static final String SORT_COLUMN_KEY_NAME = "Name";
+    public static final String SORT_COLUMN_KEY_DATE = "Date";
+    public static final String SORT_COLUMN_KEY_SCORE = "Score";
+    public static final String SORT_COLUMN_KEY_PASSION = "Passion";
+    public static final String SORT_COLUMN_KEY_CUM = "Cum";
+    public static final String SORT_COLUMN_KEY_FEEL = "ScoreFeel";
+    public static final String SORT_COLUMN_KEY_SPECIAL = "Special";
+    public static final String SORT_COLUMN_KEY_STAR = "Star";
 }

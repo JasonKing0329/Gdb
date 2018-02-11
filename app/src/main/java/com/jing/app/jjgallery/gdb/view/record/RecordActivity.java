@@ -157,7 +157,6 @@ public class RecordActivity extends GBaseActivity implements IRecordView {
     @BindView(R.id.tv_3w_flag3)
     TextView tv3wFlag3;
 
-    private Record record;
     private RecordPresenter mPresenter;
 
     private String videoPath;
@@ -214,7 +213,7 @@ public class RecordActivity extends GBaseActivity implements IRecordView {
 
     @Override
     public void showRecord(Record record) {
-        initHeadPart();
+        initHeadPart(record);
 
         // RecordOneVOne和RecordThree都是继承于RecordSingleScene
         if (record.getType() == DataConstants.VALUE_RECORD_TYPE_1V1) {
@@ -292,9 +291,9 @@ public class RecordActivity extends GBaseActivity implements IRecordView {
         }
         RecordStar bottom = mPresenter.getRelationBottom();
         if (bottom == null) {
-            tvStar1.setText(DataConstants.STAR_UNKNOWN);
+            tvStar2.setText(DataConstants.STAR_UNKNOWN);
         } else {
-            tvStar1.setText(bottom.getStar().getName() + "(" + bottom.getScore() + "/" + bottom.getScoreC() + ")");
+            tvStar2.setText(bottom.getStar().getName() + "(" + bottom.getScore() + "/" + bottom.getScoreC() + ")");
             Glide.with(this)
                     .load(GdbImageProvider.getStarRandomPath(bottom.getStar().getName(), null))
                     .apply(starOptions)
@@ -323,7 +322,7 @@ public class RecordActivity extends GBaseActivity implements IRecordView {
             Glide.with(this)
                     .load(GdbImageProvider.getStarRandomPath(star.getStar().getName(), null))
                     .apply(starOptions)
-                    .into(ivStar2);
+                    .into(iv3wStar1);
         } else {
             tv3wFlag1.setText(DataConstants.STAR_UNKNOWN);
             tv3wStar1.setText(DataConstants.STAR_UNKNOWN);
@@ -335,7 +334,7 @@ public class RecordActivity extends GBaseActivity implements IRecordView {
             Glide.with(this)
                     .load(GdbImageProvider.getStarRandomPath(star.getStar().getName(), null))
                     .apply(starOptions)
-                    .into(ivStar2);
+                    .into(iv3wStar2);
         } else {
             tv3wFlag2.setText(DataConstants.STAR_UNKNOWN);
             tv3wStar2.setText(DataConstants.STAR_UNKNOWN);
@@ -347,7 +346,7 @@ public class RecordActivity extends GBaseActivity implements IRecordView {
             Glide.with(this)
                     .load(GdbImageProvider.getStarRandomPath(star.getStar().getName(), null))
                     .apply(starOptions)
-                    .into(ivStar2);
+                    .into(iv3wStar3);
         } else {
             tv3wFlag3.setText(DataConstants.STAR_UNKNOWN);
             tv3wStar3.setText(DataConstants.STAR_UNKNOWN);
@@ -355,7 +354,7 @@ public class RecordActivity extends GBaseActivity implements IRecordView {
         initFkDetails(record);
     }
 
-    private void initHeadPart() {
+    private void initHeadPart(Record record) {
         boolean showImage;
         if (GdbImageProvider.hasRecordFolder(record.getName())) {
             headPathList = GdbImageProvider.getRecordPathList(record.getName());
@@ -511,7 +510,7 @@ public class RecordActivity extends GBaseActivity implements IRecordView {
     @OnClick(R.id.iv_play)
     public void onClickPlay() {
         VideoDialogFragment dialog = new VideoDialogFragment();
-        dialog.setRecord(record);
+        dialog.setRecord(mPresenter.getRecord());
         dialog.setVideoPath(videoPath);
         dialog.show(getSupportFragmentManager(), "VideoDialogFragment");
     }

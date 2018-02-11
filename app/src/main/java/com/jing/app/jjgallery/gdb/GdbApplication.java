@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 
+import com.jing.app.jjgallery.gdb.model.conf.Configuration;
+import com.jing.app.jjgallery.gdb.model.db.GDataContext;
 import com.jing.app.jjgallery.gdb.service.FileService;
 import com.jing.app.jjgallery.gdb.util.DebugLog;
 import com.king.app.gdb.data.entity.DaoMaster;
@@ -173,7 +175,7 @@ public class GdbApplication extends Application {
      * 需要由外部调用，如果在onCreate里直接初始化会创建新的数据库
      */
     public void createGreenDao() {
-        helper = new DaoMaster.DevOpenHelper(getApplicationContext(), "gdata.db");
+        helper = new DaoMaster.DevOpenHelper(new GDataContext(this), Configuration.DB_NAME);
         Database db = helper.getWritableDb();
         daoSession = new DaoMaster(db).newSession();
 
