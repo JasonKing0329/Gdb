@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/group_item"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <com.jing.app.jjgallery.gdb.view.pub.CircleImageView
+        android:id="@+id/iv_head"
+        android:layout_width="@dimen/starlist_pad_circle_size"
+        android:layout_height="@dimen/starlist_pad_circle_size"
+        android:scaleType="centerCrop"
+        android:layout_marginTop="15dp"
+        android:layout_centerHorizontal="true"/>
+
+    <TextView
+        android:id="@+id/tv_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_below="@id/iv_head"
+        android:textSize="15dp"
+        android:textColor="@color/gdb_record_text_normal_light_dim"
+        android:layout_marginTop="10dp"
+        android:maxLines="1"
+        android:ellipsize="end"/>
+
+    <ImageView
+        android:id="@+id/iv_favor"
+        android:layout_width="@dimen/starlist_grid_favor_size"
+        android:layout_height="@dimen/starlist_grid_favor_size"
+        android:scaleType="fitCenter"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="20dp"
+        android:paddingBottom="0dp"
+        android:src="@drawable/selector_favor_red"
+        android:background="?android:attr/selectableItemBackgroundBorderless"
+        android:layout_above="@id/tv_name"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="0dp"/>
+</RelativeLayout>

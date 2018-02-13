@@ -1,15 +1,18 @@
 package com.jing.app.jjgallery.gdb.view.star;
 
+import com.jing.app.jjgallery.gdb.BaseView;
 import com.jing.app.jjgallery.gdb.model.bean.StarProxy;
 
 import java.util.List;
 
 /**
- * 描述:
- * <p/>作者：景阳
- * <p/>创建时间: 2017/7/12 9:36
+ * @desc
+ * @auth 景阳
+ * @time 2018/2/13 0013 11:41
  */
-public interface IStarListView {
+
+public interface StarListView extends BaseView {
+
     void onLoadStarList(List<StarProxy> list);
     void onLoadStarError(String message);
 }

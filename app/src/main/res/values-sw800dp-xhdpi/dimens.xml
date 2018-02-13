@@ -134,23 +134,24 @@
     <dimen name="gdb_swipe_star_name_text">30dp</dimen>
     <dimen name="gdb_swipe_action_height">70dp</dimen>
     <dimen name="gdb_swipe_head_height">520dp</dimen><!--gdb_star_header_height + gdb_swipe_action_height-->
-    <dimen name="gdb_record_card_width">460dp</dimen>
+    <dimen name="gdb_record_card_width">390dp</dimen>
     <!--1280 - gdb_swipe_head_height - 20 = gdb_record_card_height-->
-    <dimen name="gdb_record_card_height">740dp</dimen>
+    <dimen name="gdb_record_card_height">560dp</dimen>
     <!--gdb_record_card_width * 9/16 = gdb_record_card_record_height-->
-    <dimen name="gdb_record_card_record_height">258dp</dimen>
+    <dimen name="gdb_record_card_record_height">220dp</dimen>
     <dimen name="gdb_record_card_icon_size">160dp</dimen>
     <!--gdb_record_card_record_height - (gdb_record_card_icon_size - 30) = gdb_record_card_icon_top-->
     <dimen name="gdb_record_card_icon_top">128dp</dimen>
     <!--gdb_record_card_bottom_margin_hor*2 + gdb_record_card_bottom_gap*2 + gdb_record_card_bottom_image_size*3 = gdb_record_card_width-->
-    <dimen name="gdb_record_card_bottom_margin_hor">18dp</dimen>
+    <dimen name="gdb_record_card_bottom_margin_hor">15dp</dimen>
     <dimen name="gdb_record_card_bottom_gap">2dp</dimen>
-    <dimen name="gdb_record_card_bottom_image_size">140dp</dimen>
+    <dimen name="gdb_record_card_bottom_image_size">120dp</dimen>
 
     <dimen name="path_indicator_height">48dp</dimen>
     <dimen name="path_indicator_text_size">10dp</dimen>
     <dimen name="starlist_grid_img_height">139dp</dimen>
     <dimen name="starlist_grid_favor_size">50dp</dimen>
+    <dimen name="starlist_pad_circle_size">130dp</dimen>
     <dimen name="home_star_gap">20dp</dimen>
     <dimen name="loading_cicular_size">80dp</dimen>
 </resources>

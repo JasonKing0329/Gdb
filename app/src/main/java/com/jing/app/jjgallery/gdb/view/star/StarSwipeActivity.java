@@ -14,6 +14,7 @@ import com.jing.app.jjgallery.gdb.model.SettingProperties;
 import com.jing.app.jjgallery.gdb.model.bean.StarProxy;
 import com.jing.app.jjgallery.gdb.model.conf.PreferenceValue;
 import com.jing.app.jjgallery.gdb.presenter.star.StarSwipePresenter;
+import com.jing.app.jjgallery.gdb.util.DisplayHelper;
 import com.jing.app.jjgallery.gdb.view.adapter.RecordCardAdapter;
 import com.jing.app.jjgallery.gdb.view.adapter.RecordsListAdapter;
 import com.jing.app.jjgallery.gdb.view.adapter.SwipeAdapter;
@@ -27,9 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
-import butterknife.Unbinder;
 
 /**
  * 描述:
@@ -69,9 +68,7 @@ public class StarSwipeActivity extends GBaseActivity implements IStarSwipeView {
     }
 
     @Override
-    protected Unbinder initView() {
-        Unbinder unbinder = ButterKnife.bind(this);
-
+    protected void initView() {
         getSupportActionBar().hide();
 
         LinearLayoutManager manager = new LinearLayoutManager(this);
@@ -149,7 +146,6 @@ public class StarSwipeActivity extends GBaseActivity implements IStarSwipeView {
 
             }
         });
-        return unbinder;
     }
 
     @Override
@@ -282,7 +278,12 @@ public class StarSwipeActivity extends GBaseActivity implements IStarSwipeView {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.iv_list:
-                ActivityManager.startStarListActivity(this);
+                if (DisplayHelper.isTabModel(this)) {
+                    ActivityManager.startStarPadActivity(this);
+                }
+                else {
+                    ActivityManager.startStarListActivity(this);
+                }
                 finish();
                 break;
             case R.id.iv_back:

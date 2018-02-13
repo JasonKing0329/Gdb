@@ -37,7 +37,7 @@ public class RecordExtendDao {
             builder.where(RecordDao.Properties.Name.like("%" + like + "%"));
         }
         if (!TextUtils.isEmpty(scene)) {
-            builder.where(RecordDao.Properties.Name.eq(scene));
+            builder.where(RecordDao.Properties.Scene.eq(scene));
         }
         if (!includeDeprecated) {
             builder.where(RecordDao.Properties.Deprecated.eq(0));

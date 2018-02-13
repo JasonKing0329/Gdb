@@ -8,7 +8,6 @@ import android.widget.TextView;
 import com.jing.app.jjgallery.gdb.IFragmentHolder;
 import com.jing.app.jjgallery.gdb.R;
 import com.jing.app.jjgallery.gdb.presenter.game.RandomNumPresenter;
-import com.jing.app.jjgallery.gdb.view.pub.ProgressProvider;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -75,9 +74,7 @@ public class RandomNumFragment extends BaseRandomFragment implements IRandomNumV
 
     @Override
     public void onErrorMessage(String msg) {
-        if (getActivity() instanceof ProgressProvider) {
-            ((ProgressProvider) getActivity()).showToastLong(msg);
-        }
+        showToastLong(msg);
     }
 
     @Override

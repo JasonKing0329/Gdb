@@ -131,6 +131,47 @@ public class SettingProperties {
     }
 
     /**
+     * gdb star pad record界面默认排序模式
+     * @return see PreferenceValue.ORDERBY_XXX
+     */
+    public static int getStarPadRecordOrderMode() {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(GdbApplication.getInstance());
+        String mode = preferences.getString(PreferenceKey.PREF_GDB_STAR_PAD_RECORD_ORDER, "" + PreferenceValue.GDB_SR_ORDERBY_NONE);
+        return Integer.parseInt(mode);
+    }
+
+    /**
+     * 设置gdb star pad record默认排序模式
+     * @param mode see PreferenceValue.SORDER_COVER_XXX
+     */
+    public static void setStarPadRecordOrderMode(int mode) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(GdbApplication.getInstance());
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString(PreferenceKey.PREF_GDB_STAR_PAD_RECORD_ORDER, "" + mode);
+        editor.commit();
+        saveAsDefaultPreference();
+    }
+
+    /**
+     * 设置gdb star pad record默认排序模式
+     */
+    public static boolean isStarPadRecordOrderDesc() {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(GdbApplication.getInstance());
+        return preferences.getBoolean(PreferenceKey.PREF_GDB_STAR_PAD_RECORD_DESC, false);
+    }
+
+    /**
+     * 设置gdb star pad record默认排序模式
+     */
+    public static void setStarPadRecordOrderDesc(boolean desc) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(GdbApplication.getInstance());
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putBoolean(PreferenceKey.PREF_GDB_STAR_PAD_RECORD_DESC, desc);
+        editor.commit();
+        saveAsDefaultPreference();
+    }
+
+    /**
      * gdb record list界面默认排序模式
      * @return see PreferenceValue.ORDERBY_XXX
      */
@@ -559,6 +600,25 @@ public class SettingProperties {
     public static boolean isGdbStarRecordsCardMode() {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(GdbApplication.getInstance());
         return preferences.getBoolean(PreferenceKey.PREF_GDB_STAR_RECORDS_CARD, false);
+    }
+
+    /**
+     * star pad record list, card mode
+     * @param cardMode
+     */
+    public static void setStarPadRecordsCardMode(boolean cardMode) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(GdbApplication.getInstance());
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putBoolean(PreferenceKey.PREF_GDB_STAR_PAD_RECORDS_CARD, cardMode);
+        editor.commit();
+    }
+
+    /**
+     * star pad record list, card mode
+     */
+    public static boolean isStarPadRecordsCardMode() {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(GdbApplication.getInstance());
+        return preferences.getBoolean(PreferenceKey.PREF_GDB_STAR_PAD_RECORDS_CARD, false);
     }
 
     /**

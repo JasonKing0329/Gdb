@@ -11,8 +11,6 @@ import com.jing.app.jjgallery.gdb.http.bean.data.FileBean;
 import com.king.lib.jindicator.IndicatorView;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
 
 /**
  * 描述: 文件目录浏览，封装本地文件、网络文件浏览的公共部分
@@ -40,9 +38,7 @@ public abstract class SurfActivity<T extends SurfFragment> extends GBaseActivity
     }
 
     @Override
-    protected Unbinder initView() {
-        Unbinder unbinder = ButterKnife.bind(this);
-
+    protected void initView() {
         indicatorView.addPath(getRootPathName());
         indicatorView.setPathIndicatorListener(new IndicatorView.PathIndicatorListener() {
             @Override
@@ -66,7 +62,6 @@ public abstract class SurfActivity<T extends SurfFragment> extends GBaseActivity
         });
 
         initFragment();
-        return unbinder;
     }
 
     protected abstract String getRootPathName();

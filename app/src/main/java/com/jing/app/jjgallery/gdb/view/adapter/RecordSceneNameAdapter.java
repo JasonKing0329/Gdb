@@ -84,10 +84,10 @@ public class RecordSceneNameAdapter extends RecyclerView.Adapter<RecordSceneName
     private Drawable getBackground(View view, int color) {
         GradientDrawable normal = new GradientDrawable();
         normal.setColor(color);
-        normal.setCornerRadius(ScreenUtils.dp2px(view.getContext(), 10));
+        normal.setCornerRadius(ScreenUtils.dp2px(10));
         GradientDrawable press = new GradientDrawable();
         press.setColor(Color.argb(0x66, 0, 0, 0));
-        press.setCornerRadius(ScreenUtils.dp2px(view.getContext(), 10));
+        press.setCornerRadius(ScreenUtils.dp2px(10));
         StateListDrawable drawable = new StateListDrawable();
         drawable.addState(new int[] { android.R.attr.state_pressed }, press);
         drawable.addState(new int[] {}, normal);

@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.support.v4.app.FragmentManager;
 import android.text.TextUtils;
 
+import com.jing.app.jjgallery.gdb.BaseView;
 import com.jing.app.jjgallery.gdb.GdbApplication;
 import com.jing.app.jjgallery.gdb.R;
 import com.jing.app.jjgallery.gdb.http.Command;
@@ -17,7 +18,6 @@ import com.jing.app.jjgallery.gdb.presenter.UpdatePresenter;
 import com.jing.app.jjgallery.gdb.util.DebugLog;
 import com.jing.app.jjgallery.gdb.view.download.DownloadDialogFragment;
 import com.jing.app.jjgallery.gdb.view.download.v4.DownloadDialogFragmentV4;
-import com.jing.app.jjgallery.gdb.view.pub.ProgressProvider;
 import com.jing.app.jjgallery.gdb.view.pub.dialog.DefaultDialogManager;
 
 import java.util.ArrayList;
@@ -101,7 +101,7 @@ public class UpdateManager implements IUpdateView {
     @Override
     public void onAppIsLatest() {
         if (showMessageWarning) {
-            ((ProgressProvider) mContext).showToastLong(mContext.getString(R.string.app_is_latest), ProgressProvider.TOAST_INFOR);
+            ((BaseView) mContext).showToastLong(mContext.getString(R.string.app_is_latest), BaseView.TOAST_INFOR);
         }
     }
 
@@ -109,7 +109,7 @@ public class UpdateManager implements IUpdateView {
     public void onServiceDisConnected() {
         DebugLog.e("服务器连接失败");
         if (showMessageWarning) {
-            ((ProgressProvider) mContext).showToastLong(mContext.getString(R.string.gdb_server_offline), ProgressProvider.TOAST_ERROR);
+            ((BaseView) mContext).showToastLong(mContext.getString(R.string.gdb_server_offline), BaseView.TOAST_ERROR);
         }
     }
 
@@ -117,7 +117,7 @@ public class UpdateManager implements IUpdateView {
     public void onRequestError() {
         DebugLog.e("更新app失败");
         if (showMessageWarning) {
-            ((ProgressProvider) mContext).showToastLong(mContext.getString(R.string.gdb_request_fail), ProgressProvider.TOAST_ERROR);
+            ((BaseView) mContext).showToastLong(mContext.getString(R.string.gdb_request_fail), BaseView.TOAST_ERROR);
         }
     }
 

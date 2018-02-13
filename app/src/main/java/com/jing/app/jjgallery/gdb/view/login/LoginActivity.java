@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 
 import com.jing.app.jjgallery.gdb.ActivityManager;
+import com.jing.app.jjgallery.gdb.BaseView;
 import com.jing.app.jjgallery.gdb.GBaseActivity;
 import com.jing.app.jjgallery.gdb.GdbApplication;
 import com.jing.app.jjgallery.gdb.R;
@@ -25,7 +26,6 @@ import com.jing.app.jjgallery.gdb.util.DBExportor;
 import com.jing.app.jjgallery.gdb.util.DebugLog;
 import com.jing.app.jjgallery.gdb.util.PermissionUtil;
 import com.jing.app.jjgallery.gdb.view.pub.ProgressButton;
-import com.jing.app.jjgallery.gdb.view.pub.ProgressProvider;
 import com.jing.app.jjgallery.gdb.view.pub.dialog.DefaultDialogManager;
 import com.jing.app.jjgallery.gdb.view.settings.SettingsActivity;
 import com.jing.app.jjgallery.gdb.view.update.UpdateListener;
@@ -36,9 +36,7 @@ import java.io.FileFilter;
 import java.io.IOException;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
-import butterknife.Unbinder;
 import id.zelory.compressor.Compressor;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
@@ -83,9 +81,8 @@ public class LoginActivity extends GBaseActivity implements ILoginView {
     }
 
     @Override
-    protected Unbinder initView() {
-        Unbinder unbinder = ButterKnife.bind(this);
-        return unbinder;
+    protected void initView() {
+
     }
 
     @Override
@@ -218,7 +215,7 @@ public class LoginActivity extends GBaseActivity implements ILoginView {
         // Open SettingActivity when application is started for the first time.
         // Application will be considered as initialized only after sign in successfully.
         if (TextUtils.isEmpty(SettingProperties.getGdbServerBaseUrl(this))) {
-            showToastLong(getString(R.string.server_not_conf), ProgressProvider.TOAST_WARNING);
+            showToastLong(getString(R.string.server_not_conf), BaseView.TOAST_WARNING);
             startSetting();
         }
         else {
@@ -286,7 +283,7 @@ public class LoginActivity extends GBaseActivity implements ILoginView {
     public void onSignFailed(int type, String msg) {
         switch (type) {
             case LoginParams.TYPE_ERROR_WRONG_PWD:
-                showToastLong(msg, ProgressProvider.TOAST_ERROR);
+                showToastLong(msg, BaseView.TOAST_ERROR);
                 break;
             case LoginParams.TYPE_ERROR_CANCEL_FINGERPRINT:
                 if (!updateManager.isShowing()) {
@@ -297,7 +294,7 @@ public class LoginActivity extends GBaseActivity implements ILoginView {
                 break;
             case LoginParams.TYPE_ERROR_UNREGIST_FINGERPRINT:
                 showLoginForm();
-                showToastLong(msg, ProgressProvider.TOAST_ERROR);
+                showToastLong(msg, BaseView.TOAST_ERROR);
                 break;
         }
     }

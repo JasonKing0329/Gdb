@@ -27,8 +27,6 @@ import com.jing.app.jjgallery.gdb.view.update.GdbUpdateListener;
 import com.jing.app.jjgallery.gdb.view.update.GdbUpdateManager;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
 
 /**
  * 描述:
@@ -65,13 +63,10 @@ public class GHomeActivity extends GBaseActivity implements NavigationView.OnNav
     }
 
     @Override
-    public Unbinder initView() {
-        Unbinder unbinder = ButterKnife.bind(this);
-
+    public void initView() {
         initActionBar();
         initDrawer();
         initContent();
-        return unbinder;
     }
 
     private void initActionBar() {

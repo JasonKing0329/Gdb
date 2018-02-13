@@ -9,14 +9,14 @@ import android.view.View;
 import com.jing.app.jjgallery.gdb.model.conf.ConfManager;
 import com.jing.app.jjgallery.gdb.view.game.RandomActivity;
 import com.jing.app.jjgallery.gdb.view.home.GHomeActivity;
-import com.jing.app.jjgallery.gdb.view.pub.ProgressProvider;
 import com.jing.app.jjgallery.gdb.view.record.RecordActivity;
 import com.jing.app.jjgallery.gdb.view.record.RecordListActivity;
 import com.jing.app.jjgallery.gdb.view.settings.ManageActivity;
 import com.jing.app.jjgallery.gdb.view.settings.SettingsActivity;
 import com.jing.app.jjgallery.gdb.view.star.StarActivity;
-import com.jing.app.jjgallery.gdb.view.star.StarListActivity;
+import com.jing.app.jjgallery.gdb.view.star.phone.StarPhoneActivity;
 import com.jing.app.jjgallery.gdb.view.star.StarSwipeActivity;
+import com.jing.app.jjgallery.gdb.view.star.pad.StarPadActivity;
 import com.jing.app.jjgallery.gdb.view.surf.SurfHttpActivity;
 import com.jing.app.jjgallery.gdb.view.surf.SurfLocalActivity;
 import com.king.app.gdb.data.entity.Record;
@@ -32,7 +32,7 @@ public class ActivityManager {
 
     public static boolean startHomeActivity(Activity from) {
         if (!new File(ConfManager.GDB_DB_PATH).exists()) {
-            ((ProgressProvider) from).showToastLong(from.getString(R.string.gdb_no_conf), ProgressProvider.TOAST_WARNING);
+            ((BaseView) from).showToastLong(from.getString(R.string.gdb_no_conf), BaseView.TOAST_WARNING);
             return false;
         }
         Intent intent = new Intent().setClass(from, GHomeActivity.class);
@@ -47,7 +47,13 @@ public class ActivityManager {
     }
 
     public static boolean startStarListActivity(Activity from) {
-        Intent intent = new Intent().setClass(from, StarListActivity.class);
+        Intent intent = new Intent().setClass(from, StarPhoneActivity.class);
+        from.startActivity(intent);
+        return true;
+    }
+
+    public static boolean startStarPadActivity(Activity from) {
+        Intent intent = new Intent().setClass(from, StarPadActivity.class);
         from.startActivity(intent);
         return true;
     }

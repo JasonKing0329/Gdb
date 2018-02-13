@@ -44,7 +44,7 @@ public class PointDescLayout extends LinearLayout {
             return;
         }
 
-        int itemMargin = ScreenUtils.dp2px(getContext(), 15);
+        int itemMargin = ScreenUtils.dp2px(15);
         int itemWidth = (ScreenUtils.getScreenWidth(getContext()) - itemMargin * (keys.size() + 1)) / keys.size();
         int maxWidth = getContext().getResources().getDimensionPixelSize(R.dimen.gdb_record_fk_size_max);
         if (itemWidth > maxWidth) {

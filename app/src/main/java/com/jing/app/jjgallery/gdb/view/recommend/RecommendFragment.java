@@ -27,7 +27,6 @@ import com.jing.app.jjgallery.gdb.presenter.record.FilterPresenter;
 import com.jing.app.jjgallery.gdb.util.GlideUtil;
 import com.jing.app.jjgallery.gdb.util.LMBannerViewUtil;
 import com.jing.app.jjgallery.gdb.util.ListUtil;
-import com.jing.app.jjgallery.gdb.view.pub.ProgressProvider;
 import com.king.app.gdb.data.entity.Record;
 import com.king.app.gdb.data.entity.Star;
 
@@ -112,9 +111,7 @@ public class RecommendFragment extends BaseFragmentV4 implements IRecommend, Vie
 
     @Override
     public void onRecordsLoadedFailed(String message) {
-        if (getActivity() instanceof ProgressProvider) {
-            ((ProgressProvider) getActivity()).showToastLong("Load recommend failed: " + message);
-        }
+        showToastLong("Load recommend failed: " + message);
     }
 
     private String getRecordStarText(Record record) {

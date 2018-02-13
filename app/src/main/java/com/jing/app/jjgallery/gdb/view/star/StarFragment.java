@@ -16,7 +16,6 @@ import com.jing.app.jjgallery.gdb.view.adapter.StarRecordsAdapter;
 import com.jing.app.jjgallery.gdb.view.pub.ActionBar;
 import com.jing.app.jjgallery.gdb.view.pub.ActionBarManager;
 import com.jing.app.jjgallery.gdb.view.pub.BannerAnimDialogFragment;
-import com.jing.app.jjgallery.gdb.view.pub.ProgressProvider;
 import com.jing.app.jjgallery.gdb.view.pub.PullZoomRecyclerView;
 import com.jing.app.jjgallery.gdb.view.record.SortDialogFragment;
 import com.king.app.gdb.data.entity.Record;
@@ -71,9 +70,7 @@ public class StarFragment extends BaseFragmentV4 implements IStarView, StarRecor
     }
 
     public void initValue() {
-        if (getActivity() instanceof ProgressProvider) {
-            ((ProgressProvider) getActivity()).showProgressCycler();
-        }
+        showProgressCycler();
         mPresenter.loadStar(starId);
         onResume();
     }
@@ -124,9 +121,7 @@ public class StarFragment extends BaseFragmentV4 implements IStarView, StarRecor
         mAdapter.setItemClickListener(this);
         mAdapter.setSortMode(currentSortMode);
         mRecyclerView.setAdapter(mAdapter);
-        if (getActivity() instanceof ProgressProvider) {
-            ((ProgressProvider) getActivity()).dismissProgressCycler();
-        }
+        dismissProgressCycler();
     }
 
     public void onIconClick(View view) {

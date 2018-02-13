@@ -41,9 +41,7 @@ import java.util.List;
 import java.util.Random;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
-import butterknife.Unbinder;
 
 /**
  * Created by JingYang on 2016/8/17 0017.
@@ -180,9 +178,7 @@ public class RecordActivity extends GBaseActivity implements IRecordView {
     }
 
     @Override
-    public Unbinder initView() {
-
-        Unbinder unbinder = ButterKnife.bind(this);
+    public void initView() {
 
         ActionBar mActionBar = getSupportActionBar();
         mActionBar.setHomeButtonEnabled(true);
@@ -190,7 +186,6 @@ public class RecordActivity extends GBaseActivity implements IRecordView {
         mActionBar.setTitle("Record");
 
         mPresenter.loadRecord(getIntent().getLongExtra(KEY_RECORD_ID, -1));
-        return unbinder;
     }
 
     @Override

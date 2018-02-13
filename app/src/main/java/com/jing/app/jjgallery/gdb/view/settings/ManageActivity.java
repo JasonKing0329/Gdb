@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.support.v7.app.ActionBar;
 import android.view.View;
 
+import com.jing.app.jjgallery.gdb.BaseView;
 import com.jing.app.jjgallery.gdb.GBaseActivity;
 import com.jing.app.jjgallery.gdb.R;
 import com.jing.app.jjgallery.gdb.http.Command;
@@ -14,14 +15,11 @@ import com.jing.app.jjgallery.gdb.model.bean.DownloadDialogBean;
 import com.jing.app.jjgallery.gdb.presenter.ManagePresenter;
 import com.jing.app.jjgallery.gdb.service.FileService;
 import com.jing.app.jjgallery.gdb.view.download.v4.DownloadDialogFragmentV4;
-import com.jing.app.jjgallery.gdb.view.pub.ProgressProvider;
 import com.jing.app.jjgallery.gdb.view.pub.dialog.AlertDialogFragmentV4;
 
 import java.util.List;
 
-import butterknife.ButterKnife;
 import butterknife.OnClick;
-import butterknife.Unbinder;
 
 /**
  * 描述:
@@ -43,15 +41,11 @@ public class ManageActivity extends GBaseActivity implements IManageView {
     }
 
     @Override
-    protected Unbinder initView() {
-        Unbinder unbinder = ButterKnife.bind(this);
-
+    protected void initView() {
         ActionBar mActionBar = getSupportActionBar();
         mActionBar.setHomeButtonEnabled(true);
         mActionBar.setDisplayHomeAsUpEnabled(true);
         mActionBar.setTitle("Resource manage");
-
-        return unbinder;
     }
 
     @Override
@@ -113,25 +107,25 @@ public class ManageActivity extends GBaseActivity implements IManageView {
 
     @Override
     public void onServerConnected() {
-        showToastLong(getString(R.string.gdb_server_online), ProgressProvider.TOAST_SUCCESS);
+        showToastLong(getString(R.string.gdb_server_online), BaseView.TOAST_SUCCESS);
         dismissLoadingV4();
     }
 
     @Override
     public void onServerUnavailable() {
-        showToastLong(getString(R.string.gdb_server_offline), ProgressProvider.TOAST_ERROR);
+        showToastLong(getString(R.string.gdb_server_offline), BaseView.TOAST_ERROR);
         dismissLoadingV4();
     }
 
     @Override
     public void onMoveImagesSuccess() {
-        showToastLong(getString(R.string.success), ProgressProvider.TOAST_INFOR);
+        showToastLong(getString(R.string.success), BaseView.TOAST_INFOR);
         dismissLoadingV4();
     }
 
     @Override
     public void onMoveImagesFail() {
-        showToastLong(getString(R.string.failed), ProgressProvider.TOAST_INFOR);
+        showToastLong(getString(R.string.failed), BaseView.TOAST_INFOR);
         dismissLoadingV4();
     }
 
@@ -153,19 +147,19 @@ public class ManageActivity extends GBaseActivity implements IManageView {
 
                 @Override
                 public void onDownloadFinish(List<DownloadItem> downloadList) {
-                    showToastLong(getString(R.string.gdb_download_done), ProgressProvider.TOAST_SUCCESS);
+                    showToastLong(getString(R.string.gdb_download_done), BaseView.TOAST_SUCCESS);
                 }
             });
             downloadDialogFragment.show(getSupportFragmentManager(), "DownloadDialogFragmentV4");
         } else {
-            showToastLong(getString(R.string.gdb_no_new_images), ProgressProvider.TOAST_INFOR);
+            showToastLong(getString(R.string.gdb_no_new_images), BaseView.TOAST_INFOR);
         }
         dismissLoadingV4();
     }
 
     @Override
     public void onRequestFail() {
-        showToastLong(getString(R.string.gdb_request_fail), ProgressProvider.TOAST_ERROR);
+        showToastLong(getString(R.string.gdb_request_fail), BaseView.TOAST_ERROR);
         dismissLoadingV4();
     }
 

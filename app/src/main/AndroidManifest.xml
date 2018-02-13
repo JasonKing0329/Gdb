@@ -49,8 +49,11 @@
             android:screenOrientation="portrait"/>
         <activity android:name=".view.star.StarSwipeActivity"
             android:screenOrientation="portrait"/>
-        <activity android:name=".view.star.StarListActivity"
+        <activity android:name=".view.star.phone.StarPhoneActivity"
             android:screenOrientation="portrait"/>
+        <activity android:name=".view.star.pad.StarPadActivity"
+            android:screenOrientation="landscape"
+            android:theme="@style/AppTheme.NoActionBar"/>
         <activity android:name=".view.star.StarActivity"
             android:screenOrientation="portrait"/>
         <activity android:name=".view.record.RecordActivity"

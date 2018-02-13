@@ -8,18 +8,18 @@ import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.jing.app.jjgallery.gdb.util.DisplayHelper;
-import com.jing.app.jjgallery.gdb.view.pub.ProgressProvider;
 import com.jing.app.jjgallery.gdb.view.pub.dialog.LoadingDialog;
 import com.jing.app.jjgallery.gdb.view.pub.dialog.LoadingDialogV4;
 import com.jing.app.jjgallery.gdb.view.toast.TastyToast;
 
+import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 /**
  * Created by Administrator on 2017/5/20 0020.
  */
 
-public abstract class GBaseActivity extends AppCompatActivity implements ProgressProvider {
+public abstract class GBaseActivity extends AppCompatActivity implements BaseView {
 
     private ProgressDialog progressDialog;
     private Unbinder unbinder;
@@ -39,8 +39,9 @@ public abstract class GBaseActivity extends AppCompatActivity implements Progres
         progressDialog = new ProgressDialog(this);
 
         setContentView(getContentView());
+        unbinder = ButterKnife.bind(this);
         initController();
-        unbinder = initView();
+        initView();
         initBackgroundWork();
     }
 
@@ -48,15 +49,17 @@ public abstract class GBaseActivity extends AppCompatActivity implements Progres
 
     protected abstract void initController();
 
-    protected abstract Unbinder initView();
+    protected abstract void initView();
 
     protected abstract void initBackgroundWork();
 
+    @Override
     public void showProgress(String text) {
         progressDialog.setMessage(text);
         progressDialog.show();
     }
 
+    @Override
     public boolean dismissProgress() {
         if (progressDialog.isShowing()) {
             progressDialog.dismiss();
@@ -65,6 +68,7 @@ public abstract class GBaseActivity extends AppCompatActivity implements Progres
         return  false;
     }
 
+    @Override
     public void showLoading() {
         if (loadingDialog == null) {
             loadingDialog = new LoadingDialog();
@@ -74,6 +78,7 @@ public abstract class GBaseActivity extends AppCompatActivity implements Progres
         }
     }
 
+    @Override
     public boolean dismissLoading() {
         if (loadingDialog != null && loadingDialog.isVisible()) {
             loadingDialog.dismiss();
@@ -107,37 +112,41 @@ public abstract class GBaseActivity extends AppCompatActivity implements Progres
         return dismissProgress();
     }
 
+    @Override
     public void showToastLong(String text) {
         Toast.makeText(this, text, Toast.LENGTH_LONG).show();
     }
 
+    @Override
     public void showToastShort(String text) {
         Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
     }
 
+    @Override
     public void showToastLong(String text, int type) {
         showToastLib(text, type, TastyToast.LENGTH_LONG);
     }
 
+    @Override
     public void showToastShort(String text, int type) {
         showToastLib(text, type, TastyToast.LENGTH_SHORT);
     }
 
     public void showToastLib(String text, int type, int time) {
         switch (type) {
-            case ProgressProvider.TOAST_SUCCESS:
+            case BaseView.TOAST_SUCCESS:
                 TastyToast.makeText(this, text, time, TastyToast.SUCCESS);
                 break;
-            case ProgressProvider.TOAST_ERROR:
+            case BaseView.TOAST_ERROR:
                 TastyToast.makeText(this, text, time, TastyToast.ERROR);
                 break;
-            case ProgressProvider.TOAST_WARNING:
+            case BaseView.TOAST_WARNING:
                 TastyToast.makeText(this, text, time, TastyToast.WARNING);
                 break;
-            case ProgressProvider.TOAST_INFOR:
+            case BaseView.TOAST_INFOR:
                 TastyToast.makeText(this, text, time, TastyToast.INFO);
                 break;
-            case ProgressProvider.TOAST_DEFAULT:
+            case BaseView.TOAST_DEFAULT:
                 TastyToast.makeText(this, text, time, TastyToast.DEFAULT);
                 break;
         }

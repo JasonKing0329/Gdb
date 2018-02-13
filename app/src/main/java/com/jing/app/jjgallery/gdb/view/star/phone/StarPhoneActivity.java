@@ -1,4 +1,4 @@
-package com.jing.app.jjgallery.gdb.view.star;
+package com.jing.app.jjgallery.gdb.view.star.phone;
 
 import android.content.Context;
 import android.support.design.widget.TabLayout;
@@ -18,19 +18,21 @@ import com.allure.lbanners.adapter.LBaseAdapter;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.jing.app.jjgallery.gdb.ActivityManager;
-import com.jing.app.jjgallery.gdb.GBaseActivity;
 import com.jing.app.jjgallery.gdb.GdbApplication;
 import com.jing.app.jjgallery.gdb.GdbConstants;
+import com.jing.app.jjgallery.gdb.MvpActivity;
 import com.jing.app.jjgallery.gdb.R;
 import com.jing.app.jjgallery.gdb.model.GdbImageProvider;
 import com.jing.app.jjgallery.gdb.model.SettingProperties;
 import com.jing.app.jjgallery.gdb.model.conf.PreferenceValue;
-import com.jing.app.jjgallery.gdb.presenter.star.StarListPresenter;
 import com.jing.app.jjgallery.gdb.util.GlideUtil;
 import com.jing.app.jjgallery.gdb.util.LMBannerViewUtil;
 import com.jing.app.jjgallery.gdb.view.pub.ActionBar;
 import com.jing.app.jjgallery.gdb.view.pub.BannerAnimDialogFragment;
 import com.jing.app.jjgallery.gdb.view.pub.WaveSideBarView;
+import com.jing.app.jjgallery.gdb.view.star.IStarListHolder;
+import com.jing.app.jjgallery.gdb.view.star.StarListFragment;
+import com.jing.app.jjgallery.gdb.view.star.StarListPagerAdapter;
 import com.king.app.gdb.data.entity.Star;
 import com.king.app.gdb.data.param.DataConstants;
 
@@ -40,9 +42,7 @@ import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
-import butterknife.Unbinder;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
@@ -53,7 +53,7 @@ import io.reactivex.functions.Consumer;
  * <p/>作者：景阳
  * <p/>创建时间: 2017/7/12 9:33
  */
-public class StarListActivity extends GBaseActivity implements IStarListHolder, IStarListHeaderView {
+public class StarPhoneActivity extends MvpActivity<StarPhonePresenter> implements IStarListHolder, StarPhoneView {
 
     private final String[] titles = new String[]{
             "All", "1", "0", "0.5"
@@ -72,7 +72,6 @@ public class StarListActivity extends GBaseActivity implements IStarListHolder, 
     @BindView(R.id.tv_index)
     TextView tvIndex;
 
-    private StarListPresenter starPresenter;
     private StarListPagerAdapter pagerAdapter;
 
     private ActionBar actionBar;
@@ -93,14 +92,7 @@ public class StarListActivity extends GBaseActivity implements IStarListHolder, 
     }
 
     @Override
-    protected void initController() {
-        starPresenter = new StarListPresenter();
-        starPresenter.setStarListHeaderView(this);
-    }
-
-    @Override
-    protected Unbinder initView() {
-        Unbinder unbinder = ButterKnife.bind(this);
+    protected void initView() {
         initActionbar();
         initBanner();
 
@@ -110,7 +102,6 @@ public class StarListActivity extends GBaseActivity implements IStarListHolder, 
                 pagerAdapter.getItem(viewpager.getCurrentItem()).onLetterChange(letter);
             }
         });
-        curSortMode = GdbConstants.STAR_SORT_NAME;
 
         viewpager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -128,16 +119,20 @@ public class StarListActivity extends GBaseActivity implements IStarListHolder, 
 
             }
         });
-        return unbinder;
     }
 
     @Override
-    protected void initBackgroundWork() {
-        // load favor list for banner, 回调在onFavorListLoaded
-        starPresenter.loadFavorList();
+    protected StarPhonePresenter createPresenter() {
+        return new StarPhonePresenter();
+    }
 
+    @Override
+    protected void initData() {
+        curSortMode = GdbConstants.STAR_SORT_NAME;
+        // load favor list for banner, 回调在onFavorListLoaded
+        presenter.loadFavorList();
         // 查询tabLayout的数据，回调在onStarCountLoaded
-        starPresenter.queryIndicatorData(curSortMode);
+        presenter.loadTitles(curSortMode);
     }
 
     private void initActionbar() {
@@ -195,49 +190,45 @@ public class StarListActivity extends GBaseActivity implements IStarListHolder, 
         lmBanners.setVisibility(View.VISIBLE);
     }
 
-    /**
-     * tabLayout 标题对应数量
-     *
-     * @param countList
-     */
     @Override
-    public void onStarCountLoaded(List<Integer> countList) {
+    public void showTitles(int all, int top, int bottom, int half) {
         if (pagerAdapter == null) {
-            initFragments(countList);
+            pagerAdapter = new StarListPagerAdapter(getSupportFragmentManager());
+            StarListFragment fragmentAll = new StarListFragment();
+            fragmentAll.setStarMode(DataConstants.STAR_MODE_ALL);
+            fragmentAll.setSortMode(curSortMode);
+            pagerAdapter.addFragment(fragmentAll, titles[0] + "(" + all + ")");
+            StarListFragment fragment1 = new StarListFragment();
+            fragment1.setStarMode(DataConstants.STAR_MODE_TOP);
+            fragment1.setSortMode(curSortMode);
+            pagerAdapter.addFragment(fragment1, titles[1] + "(" + top + ")");
+            StarListFragment fragment0 = new StarListFragment();
+            fragment0.setStarMode(DataConstants.STAR_MODE_BOTTOM);
+            fragment0.setSortMode(curSortMode);
+            pagerAdapter.addFragment(fragment0, titles[2] + "(" + bottom + ")");
+            StarListFragment fragment05 = new StarListFragment();
+            fragment05.setStarMode(DataConstants.STAR_MODE_HALF);
+            fragment05.setSortMode(curSortMode);
+            pagerAdapter.addFragment(fragment05, titles[3] + "(" + half + ")");
+            viewpager.setAdapter(pagerAdapter);
+            tabLayout.addTab(tabLayout.newTab().setText(titles[0]));
+            tabLayout.addTab(tabLayout.newTab().setText(titles[1]));
+            tabLayout.addTab(tabLayout.newTab().setText(titles[2]));
+            tabLayout.addTab(tabLayout.newTab().setText(titles[3]));
+            tabLayout.setupWithViewPager(viewpager);
         }
         else {
             tabLayout.removeAllTabs();
-            tabLayout.addTab(tabLayout.newTab().setText(titles[0] + "(" + countList.get(0) + ")"));
-            tabLayout.addTab(tabLayout.newTab().setText(titles[1] + "(" + countList.get(1) + ")"));
-            tabLayout.addTab(tabLayout.newTab().setText(titles[2] + "(" + countList.get(2) + ")"));
-            tabLayout.addTab(tabLayout.newTab().setText(titles[3] + "(" + countList.get(3) + ")"));
+            tabLayout.addTab(tabLayout.newTab().setText(titles[0] + "(" + all + ")"));
+            tabLayout.addTab(tabLayout.newTab().setText(titles[1] + "(" + top + ")"));
+            tabLayout.addTab(tabLayout.newTab().setText(titles[2] + "(" + bottom + ")"));
+            tabLayout.addTab(tabLayout.newTab().setText(titles[3] + "(" + half + ")"));
         }
     }
 
-    private void initFragments(List<Integer> bean) {
-        pagerAdapter = new StarListPagerAdapter(getSupportFragmentManager());
-        StarListFragment fragmentAll = new StarListFragment();
-        fragmentAll.setStarMode(DataConstants.STAR_MODE_ALL);
-        fragmentAll.setSortMode(curSortMode);
-        pagerAdapter.addFragment(fragmentAll, titles[0] + "(" + bean.get(0) + ")");
-        StarListFragment fragment1 = new StarListFragment();
-        fragment1.setStarMode(DataConstants.STAR_MODE_TOP);
-        fragment1.setSortMode(curSortMode);
-        pagerAdapter.addFragment(fragment1, titles[1] + "(" + bean.get(1) + ")");
-        StarListFragment fragment0 = new StarListFragment();
-        fragment0.setStarMode(DataConstants.STAR_MODE_BOTTOM);
-        fragment0.setSortMode(curSortMode);
-        pagerAdapter.addFragment(fragment0, titles[2] + "(" + bean.get(2) + ")");
-        StarListFragment fragment05 = new StarListFragment();
-        fragment05.setStarMode(DataConstants.STAR_MODE_HALF);
-        fragment05.setSortMode(curSortMode);
-        pagerAdapter.addFragment(fragment05, titles[3] + "(" + bean.get(3) + ")");
-        viewpager.setAdapter(pagerAdapter);
-        tabLayout.addTab(tabLayout.newTab().setText(titles[0]));
-        tabLayout.addTab(tabLayout.newTab().setText(titles[1]));
-        tabLayout.addTab(tabLayout.newTab().setText(titles[2]));
-        tabLayout.addTab(tabLayout.newTab().setText(titles[3]));
-        tabLayout.setupWithViewPager(viewpager);
+    @Override
+    public boolean dispatchClickStar(Star star) {
+        return false;
     }
 
     @Override
@@ -313,7 +304,7 @@ public class StarListActivity extends GBaseActivity implements IStarListHolder, 
                     }
                     pagerAdapter.getItem(viewpager.getCurrentItem()).reloadStarList(curSortMode);
                     // 更新tabLayout的数据，回调在onStarCountLoaded
-                    starPresenter.queryIndicatorData(curSortMode);
+                    presenter.loadTitles(curSortMode);
                     break;
                 case R.id.actionbar_index:
                     changeSideBarVisible();
@@ -334,7 +325,7 @@ public class StarListActivity extends GBaseActivity implements IStarListHolder, 
                     }
                     pagerAdapter.getItem(viewpager.getCurrentItem()).reloadStarList(curSortMode);
                     // 更新tabLayout的数据，回调在onStarCountLoaded
-                    starPresenter.queryIndicatorData(curSortMode);
+                    presenter.loadTitles(curSortMode);
                     break;
             }
         }
@@ -385,11 +376,6 @@ public class StarListActivity extends GBaseActivity implements IStarListHolder, 
             pagerAdapter.getItem(viewpager.getCurrentItem()).filterStar(text);
         }
     };
-
-    @Override
-    public StarListPresenter getPresenter() {
-        return starPresenter;
-    }
 
     @Override
     public void hideDetailIndex() {
@@ -472,32 +458,32 @@ public class StarListActivity extends GBaseActivity implements IStarListHolder, 
 
                 @Override
                 public void onRandomAnim(boolean random) {
-                    SettingProperties.setGdbStarListNavAnimRandom(StarListActivity.this, random);
+                    SettingProperties.setGdbStarListNavAnimRandom(StarPhoneActivity.this, random);
                 }
 
                 @Override
                 public boolean isRandomAnim() {
-                    return SettingProperties.isGdbStarListNavAnimRandom(StarListActivity.this);
+                    return SettingProperties.isGdbStarListNavAnimRandom(StarPhoneActivity.this);
                 }
 
                 @Override
                 public int getAnimType() {
-                    return SettingProperties.getGdbStarListNavAnimType(StarListActivity.this);
+                    return SettingProperties.getGdbStarListNavAnimType(StarPhoneActivity.this);
                 }
 
                 @Override
                 public void onSaveAnimType(int type) {
-                    SettingProperties.setGdbStarListNavAnimType(StarListActivity.this, type);
+                    SettingProperties.setGdbStarListNavAnimType(StarPhoneActivity.this, type);
                 }
 
                 @Override
                 public int getAnimTime() {
-                    return SettingProperties.getGdbStarListNavAnimTime(StarListActivity.this);
+                    return SettingProperties.getGdbStarListNavAnimTime(StarPhoneActivity.this);
                 }
 
                 @Override
                 public void onSaveAnimTime(int time) {
-                    SettingProperties.setGdbStarListNavAnimTime(StarListActivity.this, time);
+                    SettingProperties.setGdbStarListNavAnimTime(StarPhoneActivity.this, time);
                 }
 
                 @Override
@@ -525,7 +511,7 @@ public class StarListActivity extends GBaseActivity implements IStarListHolder, 
         public View getView(LMBanners lBanners, Context context, int position, Star bean) {
             View view = LayoutInflater.from(context).inflate(R.layout.adapter_gdb_star_list_banner, null);
 
-            bean = starPresenter.nextFavorStar();
+            bean = presenter.nextFavorStar();
             if (bean != null) {
                 ImageView imageView = (ImageView) view.findViewById(R.id.iv_star);
                 String path = GdbImageProvider.getStarRandomPath(bean.getName(), null);

@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.support.v4.app.FragmentManager;
 import android.text.TextUtils;
 
+import com.jing.app.jjgallery.gdb.BaseView;
 import com.jing.app.jjgallery.gdb.R;
 import com.jing.app.jjgallery.gdb.http.Command;
 import com.jing.app.jjgallery.gdb.http.bean.data.DownloadItem;
@@ -17,7 +18,6 @@ import com.jing.app.jjgallery.gdb.presenter.GdbUpdatePresenter;
 import com.jing.app.jjgallery.gdb.util.DebugLog;
 import com.jing.app.jjgallery.gdb.view.download.DownloadDialogFragment;
 import com.jing.app.jjgallery.gdb.view.download.v4.DownloadDialogFragmentV4;
-import com.jing.app.jjgallery.gdb.view.pub.ProgressProvider;
 import com.jing.app.jjgallery.gdb.view.pub.dialog.DefaultDialogManager;
 
 import java.io.File;
@@ -64,8 +64,8 @@ public class GdbUpdateManager implements IGdbUpdateView {
             mPresenter.checkGdbDatabase();
         }
         else {
-            if (mContext instanceof ProgressProvider) {
-                ((ProgressProvider) mContext).showToastLong(mContext.getString(R.string.server_not_conf), ProgressProvider.TOAST_WARNING);
+            if (mContext instanceof BaseView) {
+                ((BaseView) mContext).showToastLong(mContext.getString(R.string.server_not_conf), BaseView.TOAST_WARNING);
             }
             else {
                 DebugLog.e(mContext.getString(R.string.server_not_conf));
@@ -114,7 +114,7 @@ public class GdbUpdateManager implements IGdbUpdateView {
             updateListener.onUpdateCancel();
         }
         if (showMessageWarning) {
-            ((ProgressProvider) mContext).showToastLong(mContext.getString(R.string.gdb_is_latest), ProgressProvider.TOAST_INFOR);
+            ((BaseView) mContext).showToastLong(mContext.getString(R.string.gdb_is_latest), BaseView.TOAST_INFOR);
         }
     }
 
@@ -125,7 +125,7 @@ public class GdbUpdateManager implements IGdbUpdateView {
             updateListener.onUpdateCancel();
         }
         if (showMessageWarning) {
-            ((ProgressProvider) mContext).showToastLong(mContext.getString(R.string.gdb_server_offline), ProgressProvider.TOAST_ERROR);
+            ((BaseView) mContext).showToastLong(mContext.getString(R.string.gdb_server_offline), BaseView.TOAST_ERROR);
         }
     }
 
@@ -136,7 +136,7 @@ public class GdbUpdateManager implements IGdbUpdateView {
             updateListener.onUpdateCancel();
         }
         if (showMessageWarning) {
-            ((ProgressProvider) mContext).showToastLong(mContext.getString(R.string.gdb_request_fail), ProgressProvider.TOAST_ERROR);
+            ((BaseView) mContext).showToastLong(mContext.getString(R.string.gdb_request_fail), BaseView.TOAST_ERROR);
         }
     }
 

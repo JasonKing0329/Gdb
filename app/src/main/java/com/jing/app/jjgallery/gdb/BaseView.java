@@ -1,12 +1,12 @@
-package com.jing.app.jjgallery.gdb.view.pub;
+package com.jing.app.jjgallery.gdb;
 
 /**
- * Created by JingYang on 2016/7/29 0029.
- * Description:
- * 显示统一样式的等待框以及toast
+ * @desc
+ * @auth 景阳
+ * @time 2018/2/12 0012 20:33
  */
-public interface ProgressProvider {
 
+public interface BaseView {
     int TOAST_DEFAULT = 0;
     int TOAST_SUCCESS = 1;
     int TOAST_ERROR = 2;
@@ -46,4 +46,8 @@ public interface ProgressProvider {
      * 显示默认toast, 短时间
      */
     void showToastShort(String text, int type);
+
+    void showLoading();
+
+    boolean dismissLoading();
 }

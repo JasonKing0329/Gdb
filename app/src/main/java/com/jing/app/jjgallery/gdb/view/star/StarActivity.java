@@ -6,8 +6,6 @@ import android.view.MotionEvent;
 import com.jing.app.jjgallery.gdb.GBaseActivity;
 import com.jing.app.jjgallery.gdb.R;
 
-import butterknife.Unbinder;
-
 /**
  * 通过star page的 record list打开record设置为打开后保留StarActivity，为了防止在star page>record page(finish)>star page>record page(finish)...过程中
  * ，star page(StarActivity)被无限打开，将StarActivity的启动模式设置为singleTask
@@ -30,14 +28,13 @@ public class StarActivity extends GBaseActivity {
     }
 
     @Override
-    public Unbinder initView() {
+    public void initView() {
         getSupportActionBar().hide();
         starFragment = new StarFragment();
         starFragment.setStarId(getIntent().getLongExtra(KEY_STAR_ID, -1));
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.container, starFragment)
                 .commit();
-        return null;
     }
 
     @Override

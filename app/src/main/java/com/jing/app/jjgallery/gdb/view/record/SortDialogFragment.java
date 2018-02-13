@@ -122,7 +122,7 @@ public class SortDialogFragment extends DraggableDialogFragmentV4 implements ISo
         @Override
         protected void initView(View view) {
             ButterKnife.bind(this, view);
-            textPadding = ScreenUtils.dp2px(getContext(), 20);
+            textPadding = ScreenUtils.dp2px(20);
             focusColor = getResources().getColor(R.color.actionbar_bk_orange);
 
             itemAdapter = new ItemAdapter();

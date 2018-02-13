@@ -7,8 +7,6 @@ import com.jing.app.jjgallery.gdb.GBaseActivity;
 import com.jing.app.jjgallery.gdb.R;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
 
 /**
  * 描述:
@@ -35,11 +33,9 @@ public class RandomActivity extends GBaseActivity {
     }
 
     @Override
-    protected Unbinder initView() {
+    protected void initView() {
 
         getSupportActionBar().hide();
-
-        Unbinder unbinder = ButterKnife.bind(this);
 
         adapter = new RandomAdapter(getSupportFragmentManager());
         adapter.addFragment(new RandomNumFragment());
@@ -48,7 +44,6 @@ public class RandomActivity extends GBaseActivity {
 
         tabLayout.setupWithViewPager(viewpager);
 
-        return unbinder;
     }
 
     @Override

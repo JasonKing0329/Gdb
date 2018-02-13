@@ -11,8 +11,8 @@ import com.jing.app.jjgallery.gdb.BaseFragmentV4;
 import com.jing.app.jjgallery.gdb.IFragmentHolder;
 import com.jing.app.jjgallery.gdb.R;
 import com.jing.app.jjgallery.gdb.model.bean.StarProxy;
+import com.jing.app.jjgallery.gdb.util.DisplayHelper;
 import com.jing.app.jjgallery.gdb.view.pub.AutoLoadMoreRecyclerView;
-import com.jing.app.jjgallery.gdb.view.pub.ProgressProvider;
 import com.king.app.gdb.data.entity.Record;
 
 import java.util.List;
@@ -105,7 +105,12 @@ public class GHomeFragment extends BaseFragmentV4 implements IHomeView, GHomeRec
             listAdapter.setOnStarListener(new GHomeHeader.OnStarListener() {
                 @Override
                 public void onStarGroupClicked() {
-                    ActivityManager.startStarListActivity(getActivity());
+                    if (DisplayHelper.isTabModel(getActivity())) {
+                        ActivityManager.startStarPadActivity(getActivity());
+                    }
+                    else {
+                        ActivityManager.startStarListActivity(getActivity());
+                    }
                 }
 
                 @Override
@@ -135,9 +140,7 @@ public class GHomeFragment extends BaseFragmentV4 implements IHomeView, GHomeRec
 
     @Override
     public void onHomeDataLoadFailed(String message) {
-        if (getActivity() instanceof ProgressProvider) {
-            ((ProgressProvider) getActivity()).showToastLong("Load home data error: " + message);
-        }
+        showToastLong("Load home data error: " + message);
     }
 
     @Override

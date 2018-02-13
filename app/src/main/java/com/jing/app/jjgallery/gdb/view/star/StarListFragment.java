@@ -7,19 +7,20 @@ import android.text.TextUtils;
 import android.view.View;
 
 import com.jing.app.jjgallery.gdb.ActivityManager;
-import com.jing.app.jjgallery.gdb.BaseFragmentV4;
 import com.jing.app.jjgallery.gdb.GdbConstants;
 import com.jing.app.jjgallery.gdb.IFragmentHolder;
+import com.jing.app.jjgallery.gdb.MvpFragmentV4;
 import com.jing.app.jjgallery.gdb.R;
 import com.jing.app.jjgallery.gdb.model.SettingProperties;
 import com.jing.app.jjgallery.gdb.model.bean.StarProxy;
 import com.jing.app.jjgallery.gdb.model.conf.PreferenceValue;
+import com.jing.app.jjgallery.gdb.presenter.star.StarListPresenter;
 import com.jing.app.jjgallery.gdb.util.DisplayHelper;
 import com.jing.app.jjgallery.gdb.view.adapter.StarListAdapter;
+import com.jing.app.jjgallery.gdb.view.adapter.StarListCircleAdapter;
 import com.jing.app.jjgallery.gdb.view.adapter.StarListGridAdapter;
 import com.jing.app.jjgallery.gdb.view.adapter.StarListNumAdapter;
 import com.jing.app.jjgallery.gdb.view.pub.PinnedHeaderDecoration;
-import com.jing.app.jjgallery.gdb.view.pub.ProgressProvider;
 
 import java.util.List;
 
@@ -29,7 +30,7 @@ import butterknife.ButterKnife;
 /**
  * Created by Administrator on 2016/7/30 0030.
  */
-public class StarListFragment extends BaseFragmentV4 implements OnStarClickListener, IStarListView {
+public class StarListFragment extends MvpFragmentV4<StarListPresenter> implements OnStarClickListener, StarListView {
 
     @BindView(R.id.rv_star)
     RecyclerView rvStar;
@@ -39,6 +40,7 @@ public class StarListFragment extends BaseFragmentV4 implements OnStarClickListe
     private StarListAdapter mNameAdapter;
     private StarListGridAdapter mGridAdapter;
     private StarListNumAdapter mNumberAdapter;
+    private StarListCircleAdapter mCircleAdapter;
     private IStarListHolder holder;
 
     private int currentViewMode;
@@ -70,7 +72,12 @@ public class StarListFragment extends BaseFragmentV4 implements OnStarClickListe
     protected void initView(View view) {
         ButterKnife.bind(this, view);
 
-        currentViewMode = SettingProperties.getStarListViewMode();
+        if (DisplayHelper.isTabModel(getActivity())) {
+            currentViewMode = PreferenceValue.STAR_LIST_VIEW_CIRCLE;
+        }
+        else {
+            currentViewMode = SettingProperties.getStarListViewMode();
+        }
 
         rvStar.setLayoutManager(new LinearLayoutManager(getActivity()));
 
@@ -111,8 +118,17 @@ public class StarListFragment extends BaseFragmentV4 implements OnStarClickListe
                 }
             }
         });
+    }
 
-        holder.getPresenter().loadStarList(curStarMode, curSortMode, this);
+    @Override
+    protected StarListPresenter createPresenter() {
+        return new StarListPresenter();
+    }
+
+    @Override
+    protected void initData() {
+
+        presenter.loadStarList(curStarMode, curSortMode);
     }
 
     private void updateDetailIndex() {
@@ -131,6 +147,11 @@ public class StarListFragment extends BaseFragmentV4 implements OnStarClickListe
             if (currentViewMode == PreferenceValue.STAR_LIST_VIEW_GRID) {
                 if (mGridAdapter != null) {
                     name = mGridAdapter.getItem(position).getStar().getName();
+                }
+            }
+            else if (currentViewMode == PreferenceValue.STAR_LIST_VIEW_CIRCLE) {
+                if (mCircleAdapter != null) {
+                    name = mCircleAdapter.getItem(position).getStar().getName();
                 }
             }
             else if (mSortMode == GdbConstants.STAR_SORT_RECORDS) {
@@ -159,6 +180,15 @@ public class StarListFragment extends BaseFragmentV4 implements OnStarClickListe
                 }
             }
         }
+        else if (currentViewMode == PreferenceValue.STAR_LIST_VIEW_CIRCLE) {
+            if (curSortMode == GdbConstants.STAR_SORT_NAME) {
+                int pos = mCircleAdapter.getLetterPosition(letter);
+
+                if (pos != -1) {
+                    rvStar.scrollToPosition(pos);
+                }
+            }
+        }
         else {
             int pos = mNameAdapter.getLetterPosition(letter);
 
@@ -172,7 +202,7 @@ public class StarListFragment extends BaseFragmentV4 implements OnStarClickListe
     public void onLoadStarList(List<StarProxy> list) {
         if (currentViewMode == PreferenceValue.STAR_LIST_VIEW_GRID) {
             mGridAdapter = new StarListGridAdapter(list);
-            mGridAdapter.setPresenter(holder.getPresenter());
+            mGridAdapter.setPresenter(presenter);
             mGridAdapter.setOnStarClickListener(this);
 
             int column = 2;
@@ -182,16 +212,25 @@ public class StarListFragment extends BaseFragmentV4 implements OnStarClickListe
             rvStar.setLayoutManager(new GridLayoutManager(getActivity(), column));
             rvStar.setAdapter(mGridAdapter);
         }
+        else if (currentViewMode == PreferenceValue.STAR_LIST_VIEW_CIRCLE) {
+            mCircleAdapter = new StarListCircleAdapter(list);
+            mCircleAdapter.setPresenter(presenter);
+            mCircleAdapter.setOnStarClickListener(this);
+
+            int column = 2;
+            rvStar.setLayoutManager(new GridLayoutManager(getActivity(), column));
+            rvStar.setAdapter(mCircleAdapter);
+        }
         else {
             rvStar.setLayoutManager(new LinearLayoutManager(getActivity()));
             if (mSortMode == GdbConstants.STAR_SORT_RECORDS) {
                 mNumberAdapter = new StarListNumAdapter(list);
-                mNumberAdapter.setPresenter(holder.getPresenter());
+                mNumberAdapter.setPresenter(presenter);
                 mNumberAdapter.setOnStarClickListener(this);
                 rvStar.setAdapter(mNumberAdapter);
             } else {
                 mNameAdapter = new StarListAdapter(getActivity(), list);
-                mNameAdapter.setPresenter(holder.getPresenter());
+                mNameAdapter.setPresenter(presenter);
                 mNameAdapter.setOnStarClickListener(this);
                 rvStar.setAdapter(mNameAdapter);
             }
@@ -200,13 +239,14 @@ public class StarListFragment extends BaseFragmentV4 implements OnStarClickListe
 
     @Override
     public void onLoadStarError(String message) {
-        if (getActivity() instanceof ProgressProvider) {
-            ((ProgressProvider) getActivity()).showToastLong(message);
-        }
+        showToastLong(message);
     }
 
     @Override
     public void onStarClick(StarProxy star) {
+        if (holder != null && holder.dispatchClickStar(star.getStar())) {
+            return;
+        }
         ActivityManager.startStarActivity(getActivity(), star.getStar());
     }
 
@@ -215,6 +255,12 @@ public class StarListFragment extends BaseFragmentV4 implements OnStarClickListe
         if (currentViewMode == SettingProperties.getStarListViewMode()) {
             if (mGridAdapter != null) {
                 mGridAdapter.onStarFilter(text);
+            }
+        }
+        // 网格视图
+        else if (currentViewMode == PreferenceValue.STAR_LIST_VIEW_CIRCLE) {
+            if (mCircleAdapter != null) {
+                mCircleAdapter.onStarFilter(text);
             }
         }
         // 列表视图
@@ -228,7 +274,7 @@ public class StarListFragment extends BaseFragmentV4 implements OnStarClickListe
     public void reloadStarList(int sortMode) {
         if (curSortMode != sortMode) {
             curSortMode = sortMode;
-            holder.getPresenter().loadStarList(curStarMode, curSortMode, this);
+            presenter.loadStarList(curStarMode, curSortMode);
         }
     }
 
@@ -247,8 +293,8 @@ public class StarListFragment extends BaseFragmentV4 implements OnStarClickListe
     }
 
     private void updateViewMode() {
-        if (holder != null && holder.getPresenter() != null) {
-            holder.getPresenter().loadStarList(curStarMode, curSortMode, this);
+        if (holder != null) {
+            presenter.loadStarList(curStarMode, curSortMode);
         }
     }
 

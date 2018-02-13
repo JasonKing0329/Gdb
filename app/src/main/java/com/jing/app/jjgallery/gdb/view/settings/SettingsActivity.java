@@ -19,7 +19,9 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.MenuItem;
 import android.widget.EditText;
+import android.widget.Toast;
 
+import com.jing.app.jjgallery.gdb.BaseView;
 import com.jing.app.jjgallery.gdb.R;
 import com.jing.app.jjgallery.gdb.http.BaseUrl;
 import com.jing.app.jjgallery.gdb.model.conf.PreferenceKey;
@@ -28,8 +30,6 @@ import com.jing.app.jjgallery.gdb.model.login.FingerPrintController;
 import com.jing.app.jjgallery.gdb.presenter.GdbUpdatePresenter;
 import com.jing.app.jjgallery.gdb.presenter.UpdatePresenter;
 import com.jing.app.jjgallery.gdb.presenter.UploadPresenter;
-import com.jing.app.jjgallery.gdb.view.pub.ProgressProvider;
-import com.jing.app.jjgallery.gdb.view.toast.TastyToast;
 import com.jing.app.jjgallery.gdb.view.update.GdbUpdateManager;
 import com.jing.app.jjgallery.gdb.view.update.UpdateManager;
 
@@ -46,7 +46,7 @@ import java.util.List;
  * href="http://developer.android.com/guide/topics/ui/settings.html">Settings
  * API Guide</a> for more information on developing a Settings UI.
  */
-public class SettingsActivity extends AppCompatPreferenceActivity implements ProgressProvider {
+public class SettingsActivity extends AppCompatPreferenceActivity {
     /**
      * Determines whether to always show the simplified settings UI, where
      * settings are presented in a single list. When false, settings are shown
@@ -251,17 +251,21 @@ public class SettingsActivity extends AppCompatPreferenceActivity implements Pro
                 new UploadPresenter(new IUploadView() {
                     @Override
                     public void onUploadSuccess() {
-                        ((SettingsActivity) mContext).showToastLong(mContext.getString(R.string.upload_success), ProgressProvider.TOAST_SUCCESS);
+                        ((SettingsActivity) mContext).showToastLong(mContext.getString(R.string.upload_success), BaseView.TOAST_SUCCESS);
                     }
 
                     @Override
                     public void onUploadFail() {
-                        ((SettingsActivity) mContext).showToastLong(mContext.getString(R.string.upload_fail), ProgressProvider.TOAST_ERROR);
+                        ((SettingsActivity) mContext).showToastLong(mContext.getString(R.string.upload_fail), BaseView.TOAST_ERROR);
                     }
                 }).uploadAppData();
             }
             return false;
         }
+    }
+
+    private void showToastLong(String string, int toastSuccess) {
+        Toast.makeText(this, string, Toast.LENGTH_LONG).show();
     }
 
     public static void limitEditRange(final EditText editText, final int min, final int max) {
@@ -401,66 +405,6 @@ public class SettingsActivity extends AppCompatPreferenceActivity implements Pro
             bindPreferenceSummaryToValue(findPreference(PreferenceKey.PREF_GDB_LATEST_NUM));
         }
 
-    }
-
-    @Override
-    public void showProgressCycler() {
-
-    }
-
-    @Override
-    public boolean dismissProgressCycler() {
-        return false;
-    }
-
-    @Override
-    public void showProgress(String text) {
-
-    }
-
-    @Override
-    public boolean dismissProgress() {
-        return false;
-    }
-
-    @Override
-    public void showToastLong(String text) {
-
-    }
-
-    @Override
-    public void showToastShort(String text) {
-
-    }
-
-    @Override
-    public void showToastLong(String text, int type) {
-        showToastLib(text, type, TastyToast.LENGTH_LONG);
-    }
-
-    @Override
-    public void showToastShort(String text, int type) {
-        showToastLib(text, type, TastyToast.LENGTH_SHORT);
-    }
-
-    public void showToastLib(String text, int type, int time) {
-        switch (type) {
-            case ProgressProvider.TOAST_SUCCESS:
-                TastyToast.makeText(this, text, time, TastyToast.SUCCESS);
-                break;
-            case ProgressProvider.TOAST_ERROR:
-                TastyToast.makeText(this, text, time, TastyToast.ERROR);
-                break;
-            case ProgressProvider.TOAST_WARNING:
-                TastyToast.makeText(this, text, time, TastyToast.WARNING);
-                break;
-            case ProgressProvider.TOAST_INFOR:
-                TastyToast.makeText(this, text, time, TastyToast.INFO);
-                break;
-            case ProgressProvider.TOAST_DEFAULT:
-                TastyToast.makeText(this, text, time, TastyToast.DEFAULT);
-                break;
-        }
     }
 
 }

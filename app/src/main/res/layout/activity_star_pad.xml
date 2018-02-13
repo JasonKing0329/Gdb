@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_weight="1.2"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <android.support.design.widget.TabLayout
+                android:id="@+id/tabLayout"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/actionbar_height"
+                android:background="@color/actionbar_bk_light"
+                app:tabGravity="fill"
+                app:tabMode="fixed"
+                app:tabSelectedTextColor="@color/colorAccent"
+                app:tabTextColor="@color/colorPrimary"
+                app:tabIndicatorColor="@color/colorAccent"/>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <android.support.v4.view.ViewPager
+                    android:id="@+id/viewpager"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+                <TextView
+                    android:id="@+id/tv_index"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:layout_centerHorizontal="true"
+                    android:textColor="@color/white"
+                    android:textSize="30dp"
+                    android:gravity="center"
+                    android:visibility="gone"
+                    android:background="@drawable/shape_oval_index"
+                    app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+            </RelativeLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_weight="3"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/actionbar_height"
+                android:background="@color/actionbar_bk_light"
+                android:orientation="horizontal">
+                <ImageView
+                    android:id="@+id/iv_icon_index"
+                    style="@style/IvStarPadActionIcon"
+                    android:src="@drawable/ic_sort_by_alpha_purple_200_36dp"/>
+                <ImageView
+                    android:id="@+id/iv_icon_num"
+                    style="@style/IvStarPadActionIcon"
+                    android:src="@drawable/ic_looks_one_3f51b5_36dp" />
+                <View
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"/>
+                <ImageView
+                    android:id="@+id/iv_icon_sort"
+                    style="@style/IvStarPadActionIcon"
+                    android:src="@drawable/ic_sort_purple_3f3a71_36dp" />
+                <ImageView
+                    android:id="@+id/iv_icon_mode"
+                    style="@style/IvStarPadActionIcon"
+                    android:src="@drawable/ic_panorama_horizontal_3f51b5_36dp"/>
+            </LinearLayout>
+            <FrameLayout
+                android:id="@+id/group_ft_record"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+        <com.jing.app.jjgallery.gdb.view.pub.WaveSideBarView
+            android:id="@+id/side_bar"
+            android:layout_width="0dp"
+            android:layout_weight="1.3"
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/actionbar_height"
+            android:layout_alignParentRight="true" />
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_weight="3"
+            android:layout_height="match_parent">
+        </RelativeLayout>
+    </LinearLayout>
+</RelativeLayout>

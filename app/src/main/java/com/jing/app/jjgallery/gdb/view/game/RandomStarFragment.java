@@ -13,7 +13,6 @@ import com.jing.app.jjgallery.gdb.R;
 import com.jing.app.jjgallery.gdb.model.bean.RandomStarBean;
 import com.jing.app.jjgallery.gdb.presenter.game.RandomStarPresenter;
 import com.jing.app.jjgallery.gdb.util.DisplayHelper;
-import com.jing.app.jjgallery.gdb.view.pub.ProgressProvider;
 
 import java.util.List;
 
@@ -136,9 +135,7 @@ public class RandomStarFragment extends BaseRandomFragment implements IRandomSta
 
     @Override
     public void onErrorMessage(String msg) {
-        if (getActivity() instanceof ProgressProvider) {
-            ((ProgressProvider) getActivity()).showToastLong(msg);
-        }
+        showToastLong(msg);
     }
 
     @Override

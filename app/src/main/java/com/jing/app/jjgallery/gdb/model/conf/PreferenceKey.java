@@ -100,4 +100,10 @@ public class PreferenceKey {
     public static final String PREF_GDB_STAR_RECORDS_CARD = "pref_gdb_star_records_card";
     // star list, view mode
     public static final String PREF_STAR_LIST_VIEW_MODE = "pref_star_list_view_mode";
+    // star pad record list, card mode
+    public static final String PREF_GDB_STAR_PAD_RECORDS_CARD = "pref_gdb_star_pad_records_card";
+    // gdb star pad record排序方式
+    public static final String PREF_GDB_STAR_PAD_RECORD_ORDER = "pref_gdb_star_pad_record_order";
+    // gdb star pad record排序方式
+    public static final String PREF_GDB_STAR_PAD_RECORD_DESC = "pref_gdb_star_pad_record_desc";
 }

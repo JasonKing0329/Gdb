@@ -12,8 +12,6 @@ import com.jing.app.jjgallery.gdb.R;
 import com.jing.app.jjgallery.gdb.presenter.record.RecordListPresenter;
 import com.jing.app.jjgallery.gdb.view.pub.ActionBar;
 
-import butterknife.Unbinder;
-
 /**
  * 描述:
  * <p/>作者：景阳
@@ -39,10 +37,9 @@ public class RecordListActivity extends GBaseActivity implements IRecordListHold
     }
 
     @Override
-    protected Unbinder initView() {
+    protected void initView() {
         initActionbar();
         onRecordListPage();
-        return null;
     }
 
     @Override
