@@ -103,7 +103,7 @@ public class RecordCommonListFragment extends MvpFragmentV4<RecordCommonListPres
                 mCardAdapter.setOnCardActionListener(new RecordCardAdapter.OnCardActionListener() {
                     @Override
                     public void onClickCardItem(View v, Record record) {
-                        ActivityManager.startRecordActivity(getActivity(), record);
+                        ActivityManager.startRecordPadActivity(getActivity(), record);
                     }
                 });
                 rvRecords.setAdapter(mCardAdapter);
@@ -128,7 +128,7 @@ public class RecordCommonListFragment extends MvpFragmentV4<RecordCommonListPres
                 mListAdapter.setItemClickListener(new RecordsListAdapter.OnRecordItemClickListener() {
                     @Override
                     public void onClickRecordItem(View v, Record record) {
-                        ActivityManager.startRecordActivity(getActivity(), record);
+                        ActivityManager.startRecordPadActivity(getActivity(), record);
                     }
                 });
                 rvRecords.setAdapter(mListAdapter);

@@ -9,14 +9,15 @@ import android.view.View;
 import com.jing.app.jjgallery.gdb.model.conf.ConfManager;
 import com.jing.app.jjgallery.gdb.view.game.RandomActivity;
 import com.jing.app.jjgallery.gdb.view.home.GHomeActivity;
-import com.jing.app.jjgallery.gdb.view.record.RecordActivity;
 import com.jing.app.jjgallery.gdb.view.record.RecordListActivity;
+import com.jing.app.jjgallery.gdb.view.record.pad.RecordPadActivity;
+import com.jing.app.jjgallery.gdb.view.record.phone.RecordPhoneActivity;
 import com.jing.app.jjgallery.gdb.view.settings.ManageActivity;
 import com.jing.app.jjgallery.gdb.view.settings.SettingsActivity;
 import com.jing.app.jjgallery.gdb.view.star.StarActivity;
-import com.jing.app.jjgallery.gdb.view.star.phone.StarPhoneActivity;
 import com.jing.app.jjgallery.gdb.view.star.StarSwipeActivity;
 import com.jing.app.jjgallery.gdb.view.star.pad.StarPadActivity;
+import com.jing.app.jjgallery.gdb.view.star.phone.StarPhoneActivity;
 import com.jing.app.jjgallery.gdb.view.surf.SurfHttpActivity;
 import com.jing.app.jjgallery.gdb.view.surf.SurfLocalActivity;
 import com.king.app.gdb.data.entity.Record;
@@ -96,6 +97,10 @@ public class ActivityManager {
         startStarActivity(from, star.getId());
     }
 
+    public static void startRecordPadActivity(Context from, Record record) {
+        startRecordPadActivity(from, record, null);
+    }
+
     public static void startRecordActivity(Context from, Record record) {
         startRecordActivity(from, record, null);
     }
@@ -106,9 +111,30 @@ public class ActivityManager {
      * @param record
      * @param pairs transition转场动画
      */
+    public static void startRecordPadActivity(Context from, Record record, android.util.Pair<View, String>[] pairs) {
+        Intent intent = new Intent().setClass(from, RecordPadActivity.class);
+        intent.putExtra(RecordPadActivity.KEY_RECORD_ID, record.getId());
+        from.startActivity(intent);
+//        if (from instanceof Activity) {
+//            if (pairs == null) {
+//                from.startActivity(intent);
+//            }
+//            else {
+//                ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation((Activity) from, pairs);
+//                from.startActivity(intent, options.toBundle());
+//            }
+//        }
+    }
+
+    /**
+     * support transition animation
+     * @param from
+     * @param record
+     * @param pairs transition转场动画
+     */
     public static void startRecordActivity(Context from, Record record, android.util.Pair<View, String>[] pairs) {
-        Intent intent = new Intent().setClass(from, RecordActivity.class);
-        intent.putExtra(RecordActivity.KEY_RECORD_ID, record.getId());
+        Intent intent = new Intent().setClass(from, RecordPhoneActivity.class);
+        intent.putExtra(RecordPhoneActivity.KEY_RECORD_ID, record.getId());
         from.startActivity(intent);
 //        if (from instanceof Activity) {
 //            if (pairs == null) {

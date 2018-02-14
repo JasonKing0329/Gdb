@@ -1,4 +1,4 @@
-package com.jing.app.jjgallery.gdb.view.record;
+package com.jing.app.jjgallery.gdb.view.record.phone;
 
 import android.content.Context;
 import android.content.Intent;
@@ -17,8 +17,8 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.github.siyamed.shapeimageview.CircularImageView;
 import com.jing.app.jjgallery.gdb.ActivityManager;
-import com.jing.app.jjgallery.gdb.GBaseActivity;
 import com.jing.app.jjgallery.gdb.GdbApplication;
+import com.jing.app.jjgallery.gdb.MvpActivity;
 import com.jing.app.jjgallery.gdb.R;
 import com.jing.app.jjgallery.gdb.model.GdbImageProvider;
 import com.jing.app.jjgallery.gdb.model.SettingProperties;
@@ -47,7 +47,7 @@ import butterknife.OnClick;
  * Created by JingYang on 2016/8/17 0017.
  * Description:
  */
-public class RecordActivity extends GBaseActivity implements IRecordView {
+public class RecordPhoneActivity extends MvpActivity<RecordPresenter> implements IRecordView {
 
     public static final String KEY_RECORD_ID = "key_record_id";
 
@@ -155,8 +155,6 @@ public class RecordActivity extends GBaseActivity implements IRecordView {
     @BindView(R.id.tv_3w_flag3)
     TextView tv3wFlag3;
 
-    private RecordPresenter mPresenter;
-
     private String videoPath;
 
     private List<String> headPathList;
@@ -171,26 +169,25 @@ public class RecordActivity extends GBaseActivity implements IRecordView {
     }
 
     @Override
-    public void initController() {
-        mPresenter = new RecordPresenter(this);
-        recordOptions = GlideUtil.getRecordOptions();
-        starOptions = GlideUtil.getStarOptions();
-    }
-
-    @Override
     public void initView() {
 
         ActionBar mActionBar = getSupportActionBar();
         mActionBar.setHomeButtonEnabled(true);
         mActionBar.setDisplayHomeAsUpEnabled(true);
         mActionBar.setTitle("Record");
-
-        mPresenter.loadRecord(getIntent().getLongExtra(KEY_RECORD_ID, -1));
     }
 
     @Override
-    public void initBackgroundWork() {
+    protected RecordPresenter createPresenter() {
+        return new RecordPresenter();
+    }
 
+    @Override
+    protected void initData() {
+        recordOptions = GlideUtil.getRecordOptions();
+        starOptions = GlideUtil.getStarOptions();
+
+        presenter.loadRecord(getIntent().getLongExtra(KEY_RECORD_ID, -1));
     }
 
     @Override
@@ -203,7 +200,7 @@ public class RecordActivity extends GBaseActivity implements IRecordView {
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        mPresenter.loadRecord(intent.getLongExtra(KEY_RECORD_ID, -1));
+        presenter.loadRecord(intent.getLongExtra(KEY_RECORD_ID, -1));
     }
 
     @Override
@@ -274,7 +271,7 @@ public class RecordActivity extends GBaseActivity implements IRecordView {
         tvRim.setText("" + record.getScoreRim());
         tvCshow.setText("" + record.getScoreCshow());
 
-        RecordStar top = mPresenter.getRelationTop();
+        RecordStar top = presenter.getRelationTop();
         if (top == null) {
             tvStar1.setText(DataConstants.STAR_UNKNOWN);
         } else {
@@ -284,7 +281,7 @@ public class RecordActivity extends GBaseActivity implements IRecordView {
                     .apply(starOptions)
                     .into(ivStar1);
         }
-        RecordStar bottom = mPresenter.getRelationBottom();
+        RecordStar bottom = presenter.getRelationBottom();
         if (bottom == null) {
             tvStar2.setText(DataConstants.STAR_UNKNOWN);
         } else {
@@ -312,7 +309,7 @@ public class RecordActivity extends GBaseActivity implements IRecordView {
         // load star
         if (starList.size() > 0) {
             RecordStar star = starList.get(0);
-            tv3wFlag1.setText(mPresenter.getRelationFlag(star));
+            tv3wFlag1.setText(presenter.getRelationFlag(star));
             tv3wStar1.setText(star.getStar().getName() + "(" + star.getScore() + "/" + star.getScoreC() + ")");
             Glide.with(this)
                     .load(GdbImageProvider.getStarRandomPath(star.getStar().getName(), null))
@@ -324,7 +321,7 @@ public class RecordActivity extends GBaseActivity implements IRecordView {
         }
         if (starList.size() > 1) {
             RecordStar star = starList.get(1);
-            tv3wFlag2.setText(mPresenter.getRelationFlag(star));
+            tv3wFlag2.setText(presenter.getRelationFlag(star));
             tv3wStar2.setText(star.getStar().getName() + "(" + star.getScore() + "/" + star.getScoreC() + ")");
             Glide.with(this)
                     .load(GdbImageProvider.getStarRandomPath(star.getStar().getName(), null))
@@ -336,7 +333,7 @@ public class RecordActivity extends GBaseActivity implements IRecordView {
         }
         if (starList.size() > 2) {
             RecordStar star = starList.get(2);
-            tv3wFlag3.setText(mPresenter.getRelationFlag(star));
+            tv3wFlag3.setText(presenter.getRelationFlag(star));
             tv3wStar3.setText(star.getStar().getName() + "(" + star.getScore() + "/" + star.getScoreC() + ")");
             Glide.with(this)
                     .load(GdbImageProvider.getStarRandomPath(star.getStar().getName(), null))
@@ -474,29 +471,29 @@ public class RecordActivity extends GBaseActivity implements IRecordView {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.group_star1:
-                ActivityManager.startStarActivity(RecordActivity.this, mPresenter.getRelationTop().getStarId());
+                ActivityManager.startStarActivity(RecordPhoneActivity.this, presenter.getRelationTop().getStarId());
                 break;
             case R.id.group_star2:
-                ActivityManager.startStarActivity(RecordActivity.this, mPresenter.getRelationBottom().getStarId());
+                ActivityManager.startStarActivity(RecordPhoneActivity.this, presenter.getRelationBottom().getStarId());
                 break;
             case R.id.group_scene:
                 break;
             case R.id.group_3w_star1:
-                RecordStar relation = mPresenter.getRelation(1);
+                RecordStar relation = presenter.getRelation(1);
                 if (relation != null) {
-                    ActivityManager.startStarActivity(RecordActivity.this, relation.getStarId());
+                    ActivityManager.startStarActivity(RecordPhoneActivity.this, relation.getStarId());
                 }
                 break;
             case R.id.group_3w_star2:
-                relation = mPresenter.getRelation(2);
+                relation = presenter.getRelation(2);
                 if (relation != null) {
-                    ActivityManager.startStarActivity(RecordActivity.this, relation.getStarId());
+                    ActivityManager.startStarActivity(RecordPhoneActivity.this, relation.getStarId());
                 }
                 break;
             case R.id.group_3w_star3:
-                relation = mPresenter.getRelation(3);
+                relation = presenter.getRelation(3);
                 if (relation != null) {
-                    ActivityManager.startStarActivity(RecordActivity.this, relation.getStarId());
+                    ActivityManager.startStarActivity(RecordPhoneActivity.this, relation.getStarId());
                 }
                 break;
         }
@@ -505,7 +502,7 @@ public class RecordActivity extends GBaseActivity implements IRecordView {
     @OnClick(R.id.iv_play)
     public void onClickPlay() {
         VideoDialogFragment dialog = new VideoDialogFragment();
-        dialog.setRecord(mPresenter.getRecord());
+        dialog.setRecord(presenter.getRecord());
         dialog.setVideoPath(videoPath);
         dialog.show(getSupportFragmentManager(), "VideoDialogFragment");
     }
@@ -545,32 +542,32 @@ public class RecordActivity extends GBaseActivity implements IRecordView {
             bannerSettingDialog.setOnAnimSettingListener(new BannerAnimDialogFragment.OnAnimSettingListener() {
                 @Override
                 public void onRandomAnim(boolean random) {
-                    SettingProperties.setGdbRecordNavAnimRandom(RecordActivity.this, random);
+                    SettingProperties.setGdbRecordNavAnimRandom(RecordPhoneActivity.this, random);
                 }
 
                 @Override
                 public boolean isRandomAnim() {
-                    return SettingProperties.isGdbRecordNavAnimRandom(RecordActivity.this);
+                    return SettingProperties.isGdbRecordNavAnimRandom(RecordPhoneActivity.this);
                 }
 
                 @Override
                 public int getAnimType() {
-                    return SettingProperties.getGdbRecordNavAnimType(RecordActivity.this);
+                    return SettingProperties.getGdbRecordNavAnimType(RecordPhoneActivity.this);
                 }
 
                 @Override
                 public void onSaveAnimType(int type) {
-                    SettingProperties.setGdbRecordNavAnimType(RecordActivity.this, type);
+                    SettingProperties.setGdbRecordNavAnimType(RecordPhoneActivity.this, type);
                 }
 
                 @Override
                 public int getAnimTime() {
-                    return SettingProperties.getGdbRecordNavAnimTime(RecordActivity.this);
+                    return SettingProperties.getGdbRecordNavAnimTime(RecordPhoneActivity.this);
                 }
 
                 @Override
                 public void onSaveAnimTime(int time) {
-                    SettingProperties.setGdbRecordNavAnimTime(RecordActivity.this, time);
+                    SettingProperties.setGdbRecordNavAnimTime(RecordPhoneActivity.this, time);
                 }
 
                 @Override

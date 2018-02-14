@@ -56,8 +56,11 @@
             android:theme="@style/AppTheme.NoActionBar"/>
         <activity android:name=".view.star.StarActivity"
             android:screenOrientation="portrait"/>
-        <activity android:name=".view.record.RecordActivity"
+        <activity android:name=".view.record.phone.RecordPhoneActivity"
             android:screenOrientation="portrait"/>
+        <activity android:name=".view.record.pad.RecordPadActivity"
+            android:screenOrientation="landscape"
+            android:theme="@style/AppTheme.NoActionBar"/>
         <activity android:name=".view.record.RecordListActivity"
             android:screenOrientation="portrait"/>
         <activity android:name=".view.record.RecordSceneActivity"

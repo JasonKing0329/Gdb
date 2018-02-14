@@ -1,11 +1,18 @@
 package com.jing.app.jjgallery.gdb.presenter.record;
 
+import com.jing.app.jjgallery.gdb.BasePresenter;
 import com.jing.app.jjgallery.gdb.GdbApplication;
-import com.jing.app.jjgallery.gdb.view.record.IRecordView;
+import com.jing.app.jjgallery.gdb.model.conf.Configuration;
+import com.jing.app.jjgallery.gdb.view.record.phone.IRecordView;
 import com.king.app.gdb.data.entity.Record;
 import com.king.app.gdb.data.entity.RecordDao;
 import com.king.app.gdb.data.entity.RecordStar;
 import com.king.app.gdb.data.param.DataConstants;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
@@ -20,14 +27,13 @@ import io.reactivex.schedulers.Schedulers;
  * <p/>作者：景阳
  * <p/>创建时间: 2017/7/13 10:40
  */
-public class RecordPresenter {
+public class RecordPresenter extends BasePresenter<IRecordView> {
 
     private Record mRecord;
 
-    private IRecordView recordView;
+    @Override
+    public void onCreate() {
 
-    public RecordPresenter(IRecordView recordView) {
-        this.recordView = recordView;
     }
 
     public void loadRecord(final long recordId) {
@@ -47,7 +53,7 @@ public class RecordPresenter {
                     @Override
                     public void accept(Record record) throws Exception {
                         mRecord = record;
-                        recordView.showRecord(record);
+                        view.showRecord(record);
                     }
                 }, new Consumer<Throwable>() {
                     @Override
@@ -98,5 +104,38 @@ public class RecordPresenter {
 
     public Record getRecord() {
         return mRecord;
+    }
+
+    public List<String> getRecordImages() {
+        List<String> list = new ArrayList<>();
+        // record目录
+        File file = new File(Configuration.GDB_IMG_RECORD + "/" + mRecord.getName() + ".png");
+        if (file.exists()) {
+            list.add(file.getPath());
+        }
+        // record/name目录
+        file = new File(Configuration.GDB_IMG_RECORD + "/" + mRecord.getName());
+        if (file.exists()) {
+            File files[] = file.listFiles();
+            for (File f:files) {
+                if (!f.isDirectory() && !f.getName().equals(".nomedia")) {
+                    list.add(f.getPath());
+                }
+            }
+        }
+        // shuffle
+        Collections.shuffle(list);
+
+        // cu 优先
+        file = new File(Configuration.GDB_IMG_RECORD + "/" + mRecord.getName() + "/cu");
+        if (file.exists()) {
+            File files[] = file.listFiles();
+            for (File f:files) {
+                if (!f.isDirectory() && !f.getName().equals(".nomedia")) {
+                    list.add(0, f.getPath());
+                }
+            }
+        }
+        return list;
     }
 }
