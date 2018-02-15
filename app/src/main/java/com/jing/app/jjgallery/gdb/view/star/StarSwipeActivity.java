@@ -15,6 +15,7 @@ import com.jing.app.jjgallery.gdb.model.bean.StarProxy;
 import com.jing.app.jjgallery.gdb.model.conf.PreferenceValue;
 import com.jing.app.jjgallery.gdb.presenter.star.StarSwipePresenter;
 import com.jing.app.jjgallery.gdb.util.DisplayHelper;
+import com.jing.app.jjgallery.gdb.view.adapter.OnRecordItemClickListener;
 import com.jing.app.jjgallery.gdb.view.adapter.RecordCardAdapter;
 import com.jing.app.jjgallery.gdb.view.adapter.RecordsListAdapter;
 import com.jing.app.jjgallery.gdb.view.adapter.SwipeAdapter;
@@ -250,7 +251,7 @@ public class StarSwipeActivity extends GBaseActivity implements IStarSwipeView {
     private void updateVerticalList(Star star) {
         if (recordsListAdapter == null) {
             recordsListAdapter = new RecordsListAdapter(this, star.getRecordList());
-            recordsListAdapter.setItemClickListener(new RecordsListAdapter.OnRecordItemClickListener() {
+            recordsListAdapter.setItemClickListener(new OnRecordItemClickListener() {
                 @Override
                 public void onClickRecordItem(View v, Record record) {
                     // set anchor views of transition animation

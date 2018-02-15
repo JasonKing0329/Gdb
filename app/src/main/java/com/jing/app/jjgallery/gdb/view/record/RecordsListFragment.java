@@ -1,5 +1,6 @@
 package com.jing.app.jjgallery.gdb.view.record;
 
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.util.Pair;
 import android.view.View;
@@ -12,6 +13,8 @@ import com.jing.app.jjgallery.gdb.model.SettingProperties;
 import com.jing.app.jjgallery.gdb.presenter.record.RecordListPresenter;
 import com.jing.app.jjgallery.gdb.util.DebugLog;
 import com.jing.app.jjgallery.gdb.util.DisplayHelper;
+import com.jing.app.jjgallery.gdb.view.adapter.OnRecordItemClickListener;
+import com.jing.app.jjgallery.gdb.view.adapter.RecordsGridAdapter;
 import com.jing.app.jjgallery.gdb.view.adapter.RecordsListAdapter;
 import com.jing.app.jjgallery.gdb.view.pub.AutoLoadMoreRecyclerView;
 import com.king.app.gdb.data.entity.Record;
@@ -19,20 +22,20 @@ import com.king.app.gdb.data.entity.Record;
 import java.util.List;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 
 /**
  * 描述:
  * <p/>作者：景阳
  * <p/>创建时间: 2017/5/24 9:59
  */
-public class RecordsListFragment extends MvpFragmentV4<RecordListPresenter> implements IRecordListView, RecordsListAdapter.OnRecordItemClickListener {
+public class RecordsListFragment extends MvpFragmentV4<RecordListPresenter> implements IRecordListView, OnRecordItemClickListener {
 
     @BindView(R.id.rv_records)
     AutoLoadMoreRecyclerView rvRecords;
 
     private IRecordListHolder holder;
     private RecordsListAdapter mAdapter;
+    private RecordsGridAdapter mGridAdapter;
 
     private int currentSortMode = -1;
     private boolean currentSortDesc = true;
@@ -61,9 +64,16 @@ public class RecordsListFragment extends MvpFragmentV4<RecordListPresenter> impl
 
     @Override
     protected void initView(View view) {
-        ButterKnife.bind(this, view);
-        rvRecords.setLayoutManager(new LinearLayoutManager(getActivity()));
-        rvRecords.setEnableLoadMore(true);
+
+        if (DisplayHelper.isTabModel(getActivity())) {
+            GridLayoutManager manager = new GridLayoutManager(getActivity(), 3);
+            rvRecords.setLayoutManager(manager);
+            rvRecords.setEnableLoadMore(true);
+        }
+        else {
+            rvRecords.setLayoutManager(new LinearLayoutManager(getActivity()));
+            rvRecords.setEnableLoadMore(true);
+        }
         rvRecords.setOnLoadMoreListener(loadMoreListener);
 
     }
@@ -121,16 +131,31 @@ public class RecordsListFragment extends MvpFragmentV4<RecordListPresenter> impl
             DebugLog.e("activity finished");
             return;
         }
-        if (mAdapter == null) {
-            mAdapter = new RecordsListAdapter(getActivity(), list);
-            mAdapter.setSortMode(currentSortMode);
-            mAdapter.setItemClickListener(this);
-            rvRecords.setAdapter(mAdapter);
+        if (DisplayHelper.isTabModel(getActivity())) {
+            if (mGridAdapter == null) {
+                mGridAdapter = new RecordsGridAdapter(list);
+                mGridAdapter.setSortMode(currentSortMode);
+                mGridAdapter.setItemClickListener(this);
+                rvRecords.setAdapter(mGridAdapter);
+            }
+            else {
+                mGridAdapter.setRecordList(list);
+                mGridAdapter.setSortMode(currentSortMode);
+                mGridAdapter.notifyDataSetChanged();
+            }
         }
         else {
-            mAdapter.setRecordList(list);
-            mAdapter.setSortMode(currentSortMode);
-            mAdapter.notifyDataSetChanged();
+            if (mAdapter == null) {
+                mAdapter = new RecordsListAdapter(getActivity(), list);
+                mAdapter.setSortMode(currentSortMode);
+                mAdapter.setItemClickListener(this);
+                rvRecords.setAdapter(mAdapter);
+            }
+            else {
+                mAdapter.setRecordList(list);
+                mAdapter.setSortMode(currentSortMode);
+                mAdapter.notifyDataSetChanged();
+            }
         }
         // 回到顶端
         rvRecords.scrollToPosition(0);
@@ -152,9 +177,17 @@ public class RecordsListFragment extends MvpFragmentV4<RecordListPresenter> impl
      */
     @Override
     public void showMoreRecords(List<Record> list) {
-        int originSize = mAdapter.getItemCount();
-        recordList.addAll(list);
-        mAdapter.notifyItemRangeInserted(originSize - 1, list.size());
+        int originSize;
+        if (DisplayHelper.isTabModel(getActivity())) {
+            originSize = mGridAdapter.getItemCount();
+            recordList.addAll(list);
+            mGridAdapter.notifyItemRangeInserted(originSize - 1, list.size());
+        }
+        else {
+            originSize = mAdapter.getItemCount();
+            recordList.addAll(list);
+            mAdapter.notifyItemRangeInserted(originSize - 1, list.size());
+        }
     }
 
     public void changeSortType() {

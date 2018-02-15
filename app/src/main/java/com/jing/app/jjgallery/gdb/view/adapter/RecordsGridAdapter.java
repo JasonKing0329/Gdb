@@ -1,11 +1,9 @@
 package com.jing.app.jjgallery.gdb.view.adapter;
 
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.jing.app.jjgallery.gdb.R;
 import com.king.app.gdb.data.entity.Record;
 
 import java.util.List;
@@ -14,18 +12,15 @@ import java.util.List;
  * Created by JingYang on 2016/8/2 0002.
  * Description:
  */
-public class RecordsListAdapter extends RecyclerView.Adapter<RecordHolder> implements View.OnClickListener {
+public class RecordsGridAdapter extends RecyclerView.Adapter<RecordGridHolder> implements View.OnClickListener {
 
     private List<Record> recordList;
-    private int nameColorNormal, nameColorBareback;
     private OnRecordItemClickListener itemClickListener;
 
     private int sortMode;
 
-    public RecordsListAdapter(Context context, List<Record> list) {
+    public RecordsGridAdapter(List<Record> list) {
         this.recordList = list;
-        nameColorNormal = context.getResources().getColor(R.color.gdb_record_text_normal_light);
-        nameColorBareback = context.getResources().getColor(R.color.gdb_record_text_bareback_light);
     }
 
     public void setRecordList(List<Record> recordList) {
@@ -41,14 +36,14 @@ public class RecordsListAdapter extends RecyclerView.Adapter<RecordHolder> imple
     }
 
     @Override
-    public RecordHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        RecordHolder holder = new RecordHolder(parent);
-        holder.setParameters(nameColorNormal, nameColorBareback, RecordsListAdapter.this);
+    public RecordGridHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        RecordGridHolder holder = new RecordGridHolder(parent);
+        holder.setParameters(this);
         return holder;
     }
 
     @Override
-    public void onBindViewHolder(RecordHolder holder, int position) {
+    public void onBindViewHolder(RecordGridHolder holder, int position) {
         holder.setSortMode(sortMode);
         holder.bind(recordList.get(position), position);
     }

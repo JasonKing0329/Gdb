@@ -12,6 +12,7 @@ import com.jing.app.jjgallery.gdb.MvpFragmentV4;
 import com.jing.app.jjgallery.gdb.R;
 import com.jing.app.jjgallery.gdb.model.SettingProperties;
 import com.jing.app.jjgallery.gdb.util.ScreenUtils;
+import com.jing.app.jjgallery.gdb.view.adapter.OnRecordItemClickListener;
 import com.jing.app.jjgallery.gdb.view.adapter.RecordCardAdapter;
 import com.jing.app.jjgallery.gdb.view.adapter.RecordsListAdapter;
 import com.jing.app.jjgallery.gdb.view.record.SortDialogFragment;
@@ -125,7 +126,7 @@ public class RecordCommonListFragment extends MvpFragmentV4<RecordCommonListPres
             if (mListAdapter == null) {
                 mListAdapter = new RecordsListAdapter(getActivity(), list);
                 mListAdapter.setSortMode(currentSortMode);
-                mListAdapter.setItemClickListener(new RecordsListAdapter.OnRecordItemClickListener() {
+                mListAdapter.setItemClickListener(new OnRecordItemClickListener() {
                     @Override
                     public void onClickRecordItem(View v, Record record) {
                         ActivityManager.startRecordPadActivity(getActivity(), record);
