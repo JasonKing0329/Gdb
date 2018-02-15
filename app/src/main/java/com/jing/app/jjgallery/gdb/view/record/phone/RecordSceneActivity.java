@@ -1,4 +1,4 @@
-package com.jing.app.jjgallery.gdb.view.record;
+package com.jing.app.jjgallery.gdb.view.record.phone;
 
 import android.content.Context;
 import android.support.v4.app.Fragment;
@@ -10,6 +10,10 @@ import android.widget.PopupMenu;
 import com.jing.app.jjgallery.gdb.GBaseActivity;
 import com.jing.app.jjgallery.gdb.R;
 import com.jing.app.jjgallery.gdb.view.pub.ActionBar;
+import com.jing.app.jjgallery.gdb.view.record.IRecordListHolder;
+import com.jing.app.jjgallery.gdb.view.record.IRecordSceneHolder;
+import com.jing.app.jjgallery.gdb.view.record.RecordSceneFragment;
+import com.jing.app.jjgallery.gdb.view.record.RecordsListFragment;
 
 /**
  * 描述:

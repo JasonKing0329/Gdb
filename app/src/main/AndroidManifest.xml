@@ -61,13 +61,13 @@
         <activity android:name=".view.record.pad.RecordPadActivity"
             android:screenOrientation="landscape"
             android:theme="@style/AppTheme.NoActionBar"/>
-        <activity android:name=".view.record.RecordListActivity"
+        <activity android:name=".view.record.phone.RecordListActivity"
             android:screenOrientation="portrait"/>
         <activity android:name=".view.record.pad.RecordListPadActivity"
             android:screenOrientation="landscape"
             android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar"/>
-        <activity android:name=".view.record.RecordSceneActivity"
+        <activity android:name=".view.record.phone.RecordSceneActivity"
             android:screenOrientation="portrait"/>
         <activity android:name=".view.surf.SurfHttpActivity"
             android:screenOrientation="portrait"/>

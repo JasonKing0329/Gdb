@@ -10,7 +10,7 @@ import android.view.View;
 import com.jing.app.jjgallery.gdb.model.conf.ConfManager;
 import com.jing.app.jjgallery.gdb.view.game.RandomActivity;
 import com.jing.app.jjgallery.gdb.view.home.GHomeActivity;
-import com.jing.app.jjgallery.gdb.view.record.RecordListActivity;
+import com.jing.app.jjgallery.gdb.view.record.phone.RecordListActivity;
 import com.jing.app.jjgallery.gdb.view.record.pad.RecordListPadActivity;
 import com.jing.app.jjgallery.gdb.view.record.pad.RecordPadActivity;
 import com.jing.app.jjgallery.gdb.view.record.phone.RecordPhoneActivity;
