@@ -5,26 +5,26 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
-import com.jing.app.jjgallery.gdb.BaseFragmentV4;
 import com.jing.app.jjgallery.gdb.GdbConstants;
 import com.jing.app.jjgallery.gdb.IFragmentHolder;
+import com.jing.app.jjgallery.gdb.MvpFragmentV4;
 import com.jing.app.jjgallery.gdb.R;
 import com.jing.app.jjgallery.gdb.model.SettingProperties;
 import com.jing.app.jjgallery.gdb.model.db.SceneBean;
+import com.jing.app.jjgallery.gdb.presenter.record.RecordScenePresenter;
 import com.jing.app.jjgallery.gdb.view.adapter.RecordSceneNameAdapter;
 import com.jing.app.jjgallery.gdb.view.pub.dialog.HsvColorDialogFragment;
 
 import java.util.List;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 
 /**
  * 描述:
  * <p/>作者：景阳
  * <p/>创建时间: 2017/7/12 16:12
  */
-public class RecordSceneFragment extends BaseFragmentV4 implements IRecordSceneView {
+public class RecordSceneFragment extends MvpFragmentV4<RecordScenePresenter> implements IRecordSceneView {
 
     private IRecordSceneHolder holder;
 
@@ -39,10 +39,11 @@ public class RecordSceneFragment extends BaseFragmentV4 implements IRecordSceneV
 
     private int curSortType;
 
+    private String focusScene;
+
     @Override
     protected void bindFragmentHolder(IFragmentHolder holder) {
         this.holder = (IRecordSceneHolder) holder;
-        this.holder.getPresenter().setRecordSceneView(this);
     }
 
     @Override
@@ -52,17 +53,23 @@ public class RecordSceneFragment extends BaseFragmentV4 implements IRecordSceneV
 
     @Override
     protected void initView(View view) {
-        ButterKnife.bind(this, view);
-
         GridLayoutManager manager = new GridLayoutManager(getActivity(), 3);
         rvScenes.setLayoutManager(manager);
-
-        curSortType = GdbConstants.SCENE_SORT_NAME;
-        holder.getPresenter().loadRecordScenes();
     }
 
     @Override
-    public void onScenesLoaded(List<SceneBean> data) {
+    protected RecordScenePresenter createPresenter() {
+        return new RecordScenePresenter();
+    }
+
+    @Override
+    protected void initData() {
+        curSortType = GdbConstants.SCENE_SORT_NAME;
+        presenter.loadRecordScenes();
+    }
+
+    @Override
+    public void showScenes(List<SceneBean> data) {
         sceneList = data;
         sceneAdapter = new RecordSceneNameAdapter(data);
         sceneAdapter.setOnSceneItemClickListener(new RecordSceneNameAdapter.OnSceneItemClickListener() {
@@ -72,12 +79,18 @@ public class RecordSceneFragment extends BaseFragmentV4 implements IRecordSceneV
             }
         });
         rvScenes.setAdapter(sceneAdapter);
+
+        // 初始化仅一次
+        if (focusScene != null) {
+            focusToScene(focusScene);
+            focusScene = null;
+        }
     }
 
     public void sortByName() {
         if (curSortType != GdbConstants.SCENE_SORT_NAME) {
             curSortType = GdbConstants.SCENE_SORT_NAME;
-            holder.getPresenter().sortScenes(sceneList, curSortType);
+            presenter.sortScenes(curSortType);
             sceneAdapter.notifyDataSetChanged();
         }
     }
@@ -85,7 +98,7 @@ public class RecordSceneFragment extends BaseFragmentV4 implements IRecordSceneV
     public void sortByAvg() {
         if (curSortType != GdbConstants.SCENE_SORT_AVG) {
             curSortType = GdbConstants.SCENE_SORT_AVG;
-            holder.getPresenter().sortScenes(sceneList, curSortType);
+            presenter.sortScenes(curSortType);
             sceneAdapter.notifyDataSetChanged();
         }
     }
@@ -93,7 +106,7 @@ public class RecordSceneFragment extends BaseFragmentV4 implements IRecordSceneV
     public void sortByNumber() {
         if (curSortType != GdbConstants.SCENE_SORT_NUMBER) {
             curSortType = GdbConstants.SCENE_SORT_NUMBER;
-            holder.getPresenter().sortScenes(sceneList, curSortType);
+            presenter.sortScenes(curSortType);
             sceneAdapter.notifyDataSetChanged();
         }
     }
@@ -101,9 +114,15 @@ public class RecordSceneFragment extends BaseFragmentV4 implements IRecordSceneV
     public void sortByMax() {
         if (curSortType != GdbConstants.SCENE_SORT_MAX) {
             curSortType = GdbConstants.SCENE_SORT_MAX;
-            holder.getPresenter().sortScenes(sceneList, curSortType);
+            presenter.sortScenes(curSortType);
             sceneAdapter.notifyDataSetChanged();
         }
+    }
+
+    @Override
+    public void sortFinished(List<SceneBean> list) {
+        sceneAdapter.setList(list);
+        sceneAdapter.notifyDataSetChanged();
     }
 
     public void editColor() {
@@ -131,5 +150,14 @@ public class RecordSceneFragment extends BaseFragmentV4 implements IRecordSceneV
             }
         });
         colorDialog.show(getFragmentManager(), "HsvColorDialogFragment");
+    }
+
+    public void setFocusScene(String focusScene) {
+        this.focusScene = focusScene;
+    }
+
+    public void focusToScene(String scene) {
+        this.focusScene = scene;
+        rvScenes.scrollToPosition(presenter.getFocusScenePosition(scene));
     }
 }

@@ -5,11 +5,13 @@ import android.util.Pair;
 import android.view.View;
 
 import com.jing.app.jjgallery.gdb.ActivityManager;
-import com.jing.app.jjgallery.gdb.BaseFragmentV4;
 import com.jing.app.jjgallery.gdb.IFragmentHolder;
+import com.jing.app.jjgallery.gdb.MvpFragmentV4;
 import com.jing.app.jjgallery.gdb.R;
 import com.jing.app.jjgallery.gdb.model.SettingProperties;
+import com.jing.app.jjgallery.gdb.presenter.record.RecordListPresenter;
 import com.jing.app.jjgallery.gdb.util.DebugLog;
+import com.jing.app.jjgallery.gdb.util.DisplayHelper;
 import com.jing.app.jjgallery.gdb.view.adapter.RecordsListAdapter;
 import com.jing.app.jjgallery.gdb.view.pub.AutoLoadMoreRecyclerView;
 import com.king.app.gdb.data.entity.Record;
@@ -24,7 +26,7 @@ import butterknife.ButterKnife;
  * <p/>作者：景阳
  * <p/>创建时间: 2017/5/24 9:59
  */
-public class RecordsListFragment extends BaseFragmentV4 implements IRecordListView, RecordsListAdapter.OnRecordItemClickListener {
+public class RecordsListFragment extends MvpFragmentV4<RecordListPresenter> implements IRecordListView, RecordsListAdapter.OnRecordItemClickListener {
 
     @BindView(R.id.rv_records)
     AutoLoadMoreRecyclerView rvRecords;
@@ -50,7 +52,6 @@ public class RecordsListFragment extends BaseFragmentV4 implements IRecordListVi
     @Override
     protected void bindFragmentHolder(IFragmentHolder holder) {
         this.holder = (IRecordListHolder) holder;
-        this.holder.getPresenter().setRecordListView(this);
     }
 
     @Override
@@ -65,9 +66,6 @@ public class RecordsListFragment extends BaseFragmentV4 implements IRecordListVi
         rvRecords.setEnableLoadMore(true);
         rvRecords.setOnLoadMoreListener(loadMoreListener);
 
-        currentSortMode = SettingProperties.getGdbRecordOrderMode(getActivity());
-        // 加载records
-        loadNewRecords();
     }
 
     private AutoLoadMoreRecyclerView.OnLoadMoreListener loadMoreListener = new AutoLoadMoreRecyclerView.OnLoadMoreListener() {
@@ -79,6 +77,18 @@ public class RecordsListFragment extends BaseFragmentV4 implements IRecordListVi
             }
         }
     };
+
+    @Override
+    protected RecordListPresenter createPresenter() {
+        return new RecordListPresenter();
+    }
+
+    @Override
+    protected void initData() {
+        currentSortMode = SettingProperties.getGdbRecordOrderMode(getActivity());
+        // 加载records
+        loadNewRecords();
+    }
 
     /**
      * actionbar 输入字符
@@ -93,9 +103,9 @@ public class RecordsListFragment extends BaseFragmentV4 implements IRecordListVi
     /**
      * 修改排序类型、关键词变化，重新加载list
      */
-    private void loadNewRecords() {
+    public void loadNewRecords() {
         // 重新加载records
-        holder.getPresenter().loadRecordList(currentSortMode, currentSortDesc, showDeprecated, showCanBePlayed
+        presenter.loadRecordList(currentSortMode, currentSortDesc, showDeprecated, showCanBePlayed
                 , keywords, keyScene);
     }
 
@@ -104,7 +114,7 @@ public class RecordsListFragment extends BaseFragmentV4 implements IRecordListVi
      * @param list
      */
     @Override
-    public void onLoadRecordList(List<Record> list) {
+    public void showRecordList(List<Record> list) {
         this.recordList = list;
         // activity已结束
         if (getActivity() == null || getActivity().isDestroyed()) {
@@ -132,7 +142,7 @@ public class RecordsListFragment extends BaseFragmentV4 implements IRecordListVi
      */
     private void loadMoreRecords() {
         // 加到当前size后
-        holder.getPresenter().loadMoreRecords(currentSortMode, currentSortDesc, showDeprecated, showCanBePlayed
+        presenter.loadMoreRecords(currentSortMode, currentSortDesc, showDeprecated, showCanBePlayed
                 , keywords, keyScene);
     }
 
@@ -141,7 +151,7 @@ public class RecordsListFragment extends BaseFragmentV4 implements IRecordListVi
      * @param list
      */
     @Override
-    public void onMoreRecordsLoaded(List<Record> list) {
+    public void showMoreRecords(List<Record> list) {
         int originSize = mAdapter.getItemCount();
         recordList.addAll(list);
         mAdapter.notifyItemRangeInserted(originSize - 1, list.size());
@@ -182,7 +192,12 @@ public class RecordsListFragment extends BaseFragmentV4 implements IRecordListVi
         pairs[0] = Pair.create(v.findViewById(R.id.record_thumb), getString(R.string.anim_record_page_img));
         pairs[1] = Pair.create(v.findViewById(R.id.record_score), getString(R.string.anim_record_page_score));
         pairs[2] = Pair.create(v.findViewById(R.id.record_scene), getString(R.string.anim_record_page_scene));
-        ActivityManager.startRecordActivity(getActivity(), record, pairs);
+        if (DisplayHelper.isTabModel(getActivity())) {
+            ActivityManager.startRecordPadActivity(getActivity(), record, pairs);
+        }
+        else {
+            ActivityManager.startRecordActivity(getActivity(), record, pairs);
+        }
     }
 
     @Override

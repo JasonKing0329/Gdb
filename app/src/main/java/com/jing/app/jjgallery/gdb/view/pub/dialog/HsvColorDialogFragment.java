@@ -9,6 +9,7 @@ import android.widget.EditText;
 
 import com.jing.app.jjgallery.gdb.IFragmentHolder;
 import com.jing.app.jjgallery.gdb.R;
+import com.jing.app.jjgallery.gdb.util.ScreenUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -46,6 +47,11 @@ public class HsvColorDialogFragment extends DraggableDialogFragmentV4 {
         ftColor.setColorAngle(colorAngle);
         getDialog().setOnDismissListener(onDismissListener);
         return ftColor;
+    }
+
+    @Override
+    protected int getMinWidth() {
+        return ScreenUtils.getScreenWidth(getActivity()) * 1 / 2;
     }
 
     public void setOnHsvColorListener(OnHsvColorListener onHsvColorListener) {

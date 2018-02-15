@@ -593,4 +593,9 @@ public class RecordPhoneActivity extends MvpActivity<RecordPresenter> implements
             return view;
         }
     }
+
+    @OnClick(R.id.group_scene)
+    public void onClick() {
+        ActivityManager.startRecordListPadActivity(this, presenter.getRecord().getScene());
+    }
 }

@@ -1,7 +1,6 @@
 package com.jing.app.jjgallery.gdb;
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -29,19 +28,19 @@ public abstract class BaseFragmentV4 extends Fragment implements BaseView {
 
     private Unbinder unbinder;
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof IFragmentHolder) {
-            bindFragmentHolder((IFragmentHolder) context);
-        }
-    }
-
     protected abstract void bindFragmentHolder(IFragmentHolder holder);
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
+        if (getActivity() instanceof IFragmentHolder) {
+            bindFragmentHolder((IFragmentHolder) getActivity());
+        }
+
+        if (getParentFragment() instanceof IFragmentHolder) {
+            bindFragmentHolder((IFragmentHolder) getParentFragment());
+        }
 
         View view = inflater.inflate(getLayoutRes(), container, false);
         unbinder = ButterKnife.bind(this, view);

@@ -6,6 +6,8 @@ package com.jing.app.jjgallery.gdb;
 
 public class GdbConstants {
 
+    public static final String KEY_SCENE_ALL = "All";
+
     public static final String KEY_REQEUST_CODE = "request_code";
     public static final int REQUEST_SELECT_IMAGE = 101;
     public static final String DATA_SELECT_IMAGE = "data_select_image";

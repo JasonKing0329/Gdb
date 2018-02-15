@@ -293,6 +293,6 @@ public class RecordPadActivity extends MvpActivity<RecordPresenter> implements I
 
     @OnClick(R.id.group_scene)
     public void onClick() {
-
+        ActivityManager.startRecordListPadActivity(this, presenter.getRecord().getScene());
     }
 }

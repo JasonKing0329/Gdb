@@ -9,7 +9,6 @@ import android.widget.PopupMenu;
 
 import com.jing.app.jjgallery.gdb.GBaseActivity;
 import com.jing.app.jjgallery.gdb.R;
-import com.jing.app.jjgallery.gdb.presenter.record.RecordListPresenter;
 import com.jing.app.jjgallery.gdb.view.pub.ActionBar;
 
 /**
@@ -25,8 +24,6 @@ public class RecordSceneActivity extends GBaseActivity implements IRecordSceneHo
     private RecordsListFragment ftList;
     private Fragment ftCurrent;
 
-    private RecordListPresenter recordPresenter;
-
     @Override
     protected int getContentView() {
         return R.layout.activity_gdb_record_scene;
@@ -34,7 +31,7 @@ public class RecordSceneActivity extends GBaseActivity implements IRecordSceneHo
 
     @Override
     protected void initController() {
-        recordPresenter = new RecordListPresenter();
+
     }
 
     @Override
@@ -96,11 +93,6 @@ public class RecordSceneActivity extends GBaseActivity implements IRecordSceneHo
         actionBar.addSearchIcon();
         actionBar.addBackIcon();
         actionBar.addPlayIcon();
-    }
-
-    @Override
-    public RecordListPresenter getPresenter() {
-        return recordPresenter;
     }
 
     @Override

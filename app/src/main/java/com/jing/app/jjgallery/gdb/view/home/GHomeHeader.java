@@ -9,6 +9,7 @@ import android.view.View;
 import com.jing.app.jjgallery.gdb.ActivityManager;
 import com.jing.app.jjgallery.gdb.R;
 import com.jing.app.jjgallery.gdb.model.bean.StarProxy;
+import com.jing.app.jjgallery.gdb.util.DisplayHelper;
 import com.jing.app.jjgallery.gdb.view.pub.cardslider.CardSnapHelper;
 import com.jing.app.jjgallery.gdb.view.recommend.RecommendFragment;
 import butterknife.BindView;
@@ -64,7 +65,12 @@ public class GHomeHeader extends RecyclerView.ViewHolder {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.group_recommend:
-                ActivityManager.startRecordListActivity((Activity) view.getContext());
+                if (DisplayHelper.isTabModel(view.getContext())) {
+                    ActivityManager.startRecordListPadActivity((Activity) view.getContext());
+                }
+                else {
+                    ActivityManager.startRecordListActivity((Activity) view.getContext());
+                }
                 break;
             case R.id.group_starlist:
                 onStarListener.onStarGroupClicked();

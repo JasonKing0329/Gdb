@@ -24,6 +24,7 @@ import com.jing.app.jjgallery.gdb.model.SettingProperties;
 import com.jing.app.jjgallery.gdb.model.bean.recommend.FilterModel;
 import com.jing.app.jjgallery.gdb.presenter.GdbGuidePresenter;
 import com.jing.app.jjgallery.gdb.presenter.record.FilterPresenter;
+import com.jing.app.jjgallery.gdb.util.DisplayHelper;
 import com.jing.app.jjgallery.gdb.util.GlideUtil;
 import com.jing.app.jjgallery.gdb.util.LMBannerViewUtil;
 import com.jing.app.jjgallery.gdb.util.ListUtil;
@@ -207,8 +208,12 @@ public class RecommendFragment extends BaseFragmentV4 implements IRecommend, Vie
             imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    // start record list
-                    ActivityManager.startRecordListActivity(getActivity());
+                    if (DisplayHelper.isTabModel(getActivity())) {
+                        ActivityManager.startRecordListPadActivity(getActivity());
+                    }
+                    else {
+                        ActivityManager.startRecordListActivity(getActivity());
+                    }
                 }
             });
 

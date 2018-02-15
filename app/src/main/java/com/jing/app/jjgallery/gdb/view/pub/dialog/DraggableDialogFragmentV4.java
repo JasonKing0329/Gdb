@@ -105,6 +105,7 @@ public abstract class DraggableDialogFragmentV4 extends BaseDialogFragmentV4 {
             public void run() {
                 DebugLog.e("groupFtContent height=" + groupFtContent.getHeight());
                 limitMaxHeihgt();
+                limitMinWidth();
             }
         });
     }
@@ -126,12 +127,29 @@ public abstract class DraggableDialogFragmentV4 extends BaseDialogFragmentV4 {
         }
     }
 
+    private void limitMinWidth() {
+        int minWidth = getMinWidth();
+        if (minWidth > 0) {
+            ViewGroup.LayoutParams params = groupFtContent.getLayoutParams();
+            params.width = minWidth;
+            groupFtContent.setLayoutParams(params);
+        }
+    }
+
     /**
      * 子类可选择覆盖
      * @return
      */
     protected int getMaxHeight() {
         return ScreenUtils.getScreenHeight(getActivity()) * 3 / 5;
+    }
+
+    /**
+     * 子类可选择覆盖
+     * @return
+     */
+    protected int getMinWidth() {
+        return 0;
     }
 
     protected abstract View getToolbarView(ViewGroup groupToolbar);

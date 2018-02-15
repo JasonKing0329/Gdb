@@ -48,6 +48,16 @@ public class RecordSceneNameAdapter extends RecyclerView.Adapter<RecordSceneName
         hsvAngle = SettingProperties.getGdbSceneHsvAngle();
     }
 
+    public void setList(List<SceneBean> list) {
+        this.list = list;
+        if (list != null) {
+            colorList = new ArrayList<>();
+            for (int i = 0; i < list.size(); i ++) {
+                colorList.add(0);
+            }
+        }
+    }
+
     public void updateBgColors(int start, int angle) {
         hsvStart = start;
         hsvAngle = angle;

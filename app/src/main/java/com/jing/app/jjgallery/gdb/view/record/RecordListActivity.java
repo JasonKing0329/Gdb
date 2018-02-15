@@ -9,7 +9,6 @@ import android.view.View;
 
 import com.jing.app.jjgallery.gdb.GBaseActivity;
 import com.jing.app.jjgallery.gdb.R;
-import com.jing.app.jjgallery.gdb.presenter.record.RecordListPresenter;
 import com.jing.app.jjgallery.gdb.view.pub.ActionBar;
 
 /**
@@ -19,7 +18,6 @@ import com.jing.app.jjgallery.gdb.view.pub.ActionBar;
  */
 public class RecordListActivity extends GBaseActivity implements IRecordListHolder {
 
-    private RecordListPresenter recordPresenter;
     private RecordsListFragment recordFragment;
 
     private ActionBar actionBar;
@@ -33,7 +31,7 @@ public class RecordListActivity extends GBaseActivity implements IRecordListHold
 
     @Override
     protected void initController() {
-        recordPresenter = new RecordListPresenter();
+
     }
 
     @Override
@@ -133,9 +131,4 @@ public class RecordListActivity extends GBaseActivity implements IRecordListHold
             recordFragment.filterRecord(text);
         }
     };
-
-    @Override
-    public RecordListPresenter getPresenter() {
-        return recordPresenter;
-    }
 }

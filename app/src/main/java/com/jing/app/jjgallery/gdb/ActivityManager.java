@@ -4,12 +4,14 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 
 import com.jing.app.jjgallery.gdb.model.conf.ConfManager;
 import com.jing.app.jjgallery.gdb.view.game.RandomActivity;
 import com.jing.app.jjgallery.gdb.view.home.GHomeActivity;
 import com.jing.app.jjgallery.gdb.view.record.RecordListActivity;
+import com.jing.app.jjgallery.gdb.view.record.pad.RecordListPadActivity;
 import com.jing.app.jjgallery.gdb.view.record.pad.RecordPadActivity;
 import com.jing.app.jjgallery.gdb.view.record.phone.RecordPhoneActivity;
 import com.jing.app.jjgallery.gdb.view.settings.ManageActivity;
@@ -62,6 +64,20 @@ public class ActivityManager {
     public static boolean startRecordListActivity(Activity from) {
         Intent intent = new Intent().setClass(from, RecordListActivity.class);
         from.startActivity(intent);
+        return true;
+    }
+
+    public static boolean startRecordListPadActivity(Activity from, String scene) {
+        Intent intent = new Intent().setClass(from, RecordListPadActivity.class);
+        if (!TextUtils.isEmpty(scene)) {
+            intent.putExtra(RecordListPadActivity.KEY_SCENE_NAME, scene);
+        }
+        from.startActivity(intent);
+        return true;
+    }
+
+    public static boolean startRecordListPadActivity(Activity from) {
+        startRecordListPadActivity(from, null);
         return true;
     }
 
