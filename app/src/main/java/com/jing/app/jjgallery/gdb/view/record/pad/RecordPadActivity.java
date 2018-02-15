@@ -1,5 +1,6 @@
 package com.jing.app.jjgallery.gdb.view.record.pad;
 
+import android.content.Intent;
 import android.graphics.Rect;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -128,6 +129,13 @@ public class RecordPadActivity extends MvpActivity<RecordPresenter> implements I
     }
 
     @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+        initData();
+    }
+
+    @Override
     public void showRecord(Record record) {
 
         showImages(record);
@@ -149,7 +157,7 @@ public class RecordPadActivity extends MvpActivity<RecordPresenter> implements I
         starAdapter.setOnStarItemListener(new RecordStarAdapter.OnStarItemListener() {
             @Override
             public void onClickStar(RecordStar relation) {
-                ActivityManager.startStarActivity(RecordPadActivity.this, relation.getStar());
+                ActivityManager.startStarPageActivity(RecordPadActivity.this, relation.getStar().getId());
             }
         });
         rvStars.setAdapter(starAdapter);
@@ -250,6 +258,7 @@ public class RecordPadActivity extends MvpActivity<RecordPresenter> implements I
             keyList.add("Special");
             contentList.add(record.getScoreFkType6() + " ");
         }
+        groupFk.removeAllViews();
         groupFk.addPoint(keyList, contentList);
     }
 
@@ -288,6 +297,7 @@ public class RecordPadActivity extends MvpActivity<RecordPresenter> implements I
             keyList.add("Special");
             contentList.add(record.getScoreFkType6() + " ");
         }
+        groupFk.removeAllViews();
         groupFk.addPoint(keyList, contentList);
     }
 

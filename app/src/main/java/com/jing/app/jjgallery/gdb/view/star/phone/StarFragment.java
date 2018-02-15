@@ -1,4 +1,4 @@
-package com.jing.app.jjgallery.gdb.view.star;
+package com.jing.app.jjgallery.gdb.view.star.phone;
 
 import android.support.v7.widget.LinearLayoutManager;
 import android.util.Pair;
@@ -18,6 +18,7 @@ import com.jing.app.jjgallery.gdb.view.pub.ActionBarManager;
 import com.jing.app.jjgallery.gdb.view.pub.BannerAnimDialogFragment;
 import com.jing.app.jjgallery.gdb.view.pub.PullZoomRecyclerView;
 import com.jing.app.jjgallery.gdb.view.record.SortDialogFragment;
+import com.jing.app.jjgallery.gdb.view.star.IStarView;
 import com.king.app.gdb.data.entity.Record;
 import com.king.app.gdb.data.entity.Star;
 

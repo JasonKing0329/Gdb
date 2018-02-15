@@ -10,15 +10,16 @@ import android.view.View;
 import com.jing.app.jjgallery.gdb.model.conf.ConfManager;
 import com.jing.app.jjgallery.gdb.view.game.RandomActivity;
 import com.jing.app.jjgallery.gdb.view.home.GHomeActivity;
-import com.jing.app.jjgallery.gdb.view.record.phone.RecordListActivity;
 import com.jing.app.jjgallery.gdb.view.record.pad.RecordListPadActivity;
 import com.jing.app.jjgallery.gdb.view.record.pad.RecordPadActivity;
+import com.jing.app.jjgallery.gdb.view.record.phone.RecordListActivity;
 import com.jing.app.jjgallery.gdb.view.record.phone.RecordPhoneActivity;
 import com.jing.app.jjgallery.gdb.view.settings.ManageActivity;
 import com.jing.app.jjgallery.gdb.view.settings.SettingsActivity;
-import com.jing.app.jjgallery.gdb.view.star.StarActivity;
 import com.jing.app.jjgallery.gdb.view.star.StarSwipeActivity;
 import com.jing.app.jjgallery.gdb.view.star.pad.StarPadActivity;
+import com.jing.app.jjgallery.gdb.view.star.pad.StarPageActivity;
+import com.jing.app.jjgallery.gdb.view.star.phone.StarActivity;
 import com.jing.app.jjgallery.gdb.view.star.phone.StarPhoneActivity;
 import com.jing.app.jjgallery.gdb.view.surf.SurfHttpActivity;
 import com.jing.app.jjgallery.gdb.view.surf.SurfLocalActivity;
@@ -105,6 +106,14 @@ public class ActivityManager {
         Bundle bundle = new Bundle();
         bundle.putLong(StarActivity.KEY_STAR_ID, starId);
         Intent intent = new Intent().setClass(from, StarActivity.class);
+        intent.putExtras(bundle);
+        from.startActivity(intent);
+    }
+
+    public static void startStarPageActivity(Activity from, long starId) {
+        Bundle bundle = new Bundle();
+        bundle.putLong(StarPageActivity.KEY_STAR_ID, starId);
+        Intent intent = new Intent().setClass(from, StarPageActivity.class);
         intent.putExtras(bundle);
         from.startActivity(intent);
     }

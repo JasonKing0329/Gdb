@@ -1,4 +1,4 @@
-package com.jing.app.jjgallery.gdb.view.star;
+package com.jing.app.jjgallery.gdb.view.star.phone;
 
 import android.content.Intent;
 import android.view.MotionEvent;

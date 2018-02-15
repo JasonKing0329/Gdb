@@ -163,7 +163,12 @@ public class StarSwipeActivity extends GBaseActivity implements IStarSwipeView {
             adapter.setOnSwipeItemListener(new SwipeAdapter.OnSwipeItemListener() {
                 @Override
                 public void onClickStar(StarProxy star) {
-                    ActivityManager.startStarActivity(StarSwipeActivity.this, star.getStar());
+                    if (DisplayHelper.isTabModel(StarSwipeActivity.this)) {
+                        ActivityManager.startStarPageActivity(StarSwipeActivity.this, star.getStar().getId());
+                    }
+                    else {
+                        ActivityManager.startStarActivity(StarSwipeActivity.this, star.getStar());
+                    }
                 }
             });
             sfvStars.setAdapter(adapter);

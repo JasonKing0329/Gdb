@@ -115,7 +115,12 @@ public class GHomeFragment extends BaseFragmentV4 implements IHomeView, GHomeRec
 
                 @Override
                 public void onStarClicked(StarProxy starProxy) {
-                    ActivityManager.startStarActivity(getActivity(), starProxy.getStar());
+                    if (DisplayHelper.isTabModel(getActivity())) {
+                        ActivityManager.startStarPageActivity(getActivity(), starProxy.getStar().getId());
+                    }
+                    else {
+                        ActivityManager.startStarActivity(getActivity(), starProxy.getStar());
+                    }
                 }
             });
             rvRecords.setAdapter(listAdapter);

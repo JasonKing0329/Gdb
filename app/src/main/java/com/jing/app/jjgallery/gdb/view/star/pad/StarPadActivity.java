@@ -122,6 +122,13 @@ public class StarPadActivity extends MvpActivity<StarPadPresenter> implements St
         });
 
         initRecordFragment();
+
+        if (SettingProperties.isStarPadRecordsCardMode()) {
+            ivIconMode.setImageResource(R.drawable.ic_panorama_horizontal_3f51b5_36dp);
+        }
+        else {
+            ivIconMode.setImageResource(R.drawable.ic_panorama_vertical_3f51b5_36dp);
+        }
     }
 
     private void initRecordFragment() {
