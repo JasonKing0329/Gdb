@@ -19,11 +19,10 @@ import com.jing.app.jjgallery.gdb.GBaseActivity;
 import com.jing.app.jjgallery.gdb.GdbApplication;
 import com.jing.app.jjgallery.gdb.IFragmentHolder;
 import com.jing.app.jjgallery.gdb.R;
+import com.jing.app.jjgallery.gdb.model.FilterHelper;
 import com.jing.app.jjgallery.gdb.model.GdbImageProvider;
 import com.jing.app.jjgallery.gdb.model.SettingProperties;
-import com.jing.app.jjgallery.gdb.model.bean.recommend.FilterModel;
 import com.jing.app.jjgallery.gdb.presenter.GdbGuidePresenter;
-import com.jing.app.jjgallery.gdb.presenter.record.FilterPresenter;
 import com.jing.app.jjgallery.gdb.util.DisplayHelper;
 import com.jing.app.jjgallery.gdb.util.GlideUtil;
 import com.jing.app.jjgallery.gdb.util.LMBannerViewUtil;
@@ -47,7 +46,7 @@ public class RecommendFragment extends BaseFragmentV4 implements IRecommend, Vie
 
     private GdbGuidePresenter gdbGuidePresenter;
     private IRecommendHolder recommendHolder;
-    private FilterPresenter filterPresenter;
+    private FilterHelper filterHelper;
 
     /**
      * 过滤器对话框
@@ -77,9 +76,9 @@ public class RecommendFragment extends BaseFragmentV4 implements IRecommend, Vie
         gdbGuidePresenter = recommendHolder.getPresenter();
         gdbGuidePresenter.setRecommendView(this);
 
-        filterPresenter = new FilterPresenter();
+        filterHelper = new FilterHelper();
         // 设置过滤器
-        gdbGuidePresenter.setFilterModel(filterPresenter.getFilters());
+        gdbGuidePresenter.setFilterModel(filterHelper.getFilters());
         // 加载所有记录，通过onRecordRecommand回调
         gdbGuidePresenter.initialize();
     }
@@ -147,7 +146,7 @@ public class RecommendFragment extends BaseFragmentV4 implements IRecommend, Vie
                     filterDialog = new RecordFilterDialogFragment();
                     filterDialog.setOnRecordFilterActionListener(new RecordFilterDialogFragment.OnRecordFilterActionListener() {
                         @Override
-                        public void onSaveFilterModel(FilterModel model) {
+                        public void onSaveFilterModel(com.jing.app.jjgallery.gdb.model.bean.recommend.FilterModel model) {
                             gdbGuidePresenter.setFilterModel(model);
                             gdbGuidePresenter.recommendNext();
                         }
@@ -236,7 +235,7 @@ public class RecommendFragment extends BaseFragmentV4 implements IRecommend, Vie
         // 不显示引导圆点
         lmBanners.hideIndicatorLayout();
         // 轮播切换时间
-        lmBanners.setDurtion(SettingProperties.getGdbRecommendAnimTime(getContext()));
+        lmBanners.setDurtion(SettingProperties.getGdbRecommendAnimTime());
 
 //        mLBanners.setAutoPlay(true);//自动播放
 //        mLBanners.setVertical(false);//是否锤子播放

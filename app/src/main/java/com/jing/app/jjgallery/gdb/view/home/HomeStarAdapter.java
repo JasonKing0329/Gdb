@@ -5,12 +5,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.jing.app.jjgallery.gdb.GdbApplication;
 import com.jing.app.jjgallery.gdb.R;
 import com.jing.app.jjgallery.gdb.model.bean.StarProxy;
+import com.jing.app.jjgallery.gdb.util.DisplayHelper;
 import com.jing.app.jjgallery.gdb.util.GlideUtil;
 
 import java.util.List;
@@ -46,6 +48,13 @@ public class HomeStarAdapter extends RecyclerView.Adapter<HomeStarAdapter.Slider
         holder.groupCard.setTag(position);
         holder.groupCard.setOnClickListener(this);
 
+        if (DisplayHelper.isTabModel(holder.tvName.getContext())) {
+            holder.tvName.setVisibility(View.VISIBLE);
+            holder.tvName.setText(list.get(position).getStar().getName());
+        }
+        else {
+            holder.tvName.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -74,11 +83,13 @@ public class HomeStarAdapter extends RecyclerView.Adapter<HomeStarAdapter.Slider
 
         ViewGroup groupCard;
         ImageView imageView;
+        TextView tvName;
 
         public SliderCard(View itemView) {
             super(itemView);
             groupCard = (ViewGroup) itemView.findViewById(R.id.group_card);
             imageView = (ImageView) itemView.findViewById(R.id.iv_thumb);
+            tvName = (TextView) itemView.findViewById(R.id.tv_name);
         }
     }
 }

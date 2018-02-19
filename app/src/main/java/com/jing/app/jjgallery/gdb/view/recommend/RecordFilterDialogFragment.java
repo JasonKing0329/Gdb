@@ -15,9 +15,10 @@ import android.widget.RadioButton;
 
 import com.jing.app.jjgallery.gdb.IFragmentHolder;
 import com.jing.app.jjgallery.gdb.R;
+import com.jing.app.jjgallery.gdb.model.FilterHelper;
 import com.jing.app.jjgallery.gdb.model.SettingProperties;
 import com.jing.app.jjgallery.gdb.model.bean.recommend.FilterModel;
-import com.jing.app.jjgallery.gdb.presenter.record.FilterPresenter;
+import com.jing.app.jjgallery.gdb.util.DisplayHelper;
 import com.jing.app.jjgallery.gdb.util.LMBannerViewUtil;
 import com.jing.app.jjgallery.gdb.util.ScreenUtils;
 import com.jing.app.jjgallery.gdb.view.pub.dialog.DraggableDialogFragmentV4;
@@ -40,7 +41,7 @@ public class RecordFilterDialogFragment extends DraggableDialogFragmentV4 implem
     private OnRecordFilterActionListener onRecordFilterActionListener;
     private DialogInterface.OnDismissListener onDismissListener;
 
-    private FilterPresenter filterPresenter;
+    private FilterHelper filterPresenter;
 
     @Override
     protected View getToolbarView(ViewGroup groupToolbar) {
@@ -53,7 +54,7 @@ public class RecordFilterDialogFragment extends DraggableDialogFragmentV4 implem
     @Override
     protected Fragment getContentViewFragment() {
 
-        filterPresenter = new FilterPresenter();
+        filterPresenter = new FilterHelper();
         filterModel = filterPresenter.getFilters();
 
         ftFilter = new FilterFragment();
@@ -118,6 +119,8 @@ public class RecordFilterDialogFragment extends DraggableDialogFragmentV4 implem
         RadioButton rbFix;
         @BindView(R.id.et_time)
         EditText etTime;
+        @BindView(R.id.group_viewpager)
+        ViewGroup groupViewpager;
 
         private IFilterContentHolder holder;
 
@@ -131,6 +134,10 @@ public class RecordFilterDialogFragment extends DraggableDialogFragmentV4 implem
         @Override
         protected void initView(View view) {
             ButterKnife.bind(this, view);
+
+            if (DisplayHelper.isTabModel(getActivity())) {
+                groupViewpager.setVisibility(View.GONE);
+            }
 
             cbNr.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
@@ -182,7 +189,7 @@ public class RecordFilterDialogFragment extends DraggableDialogFragmentV4 implem
                 }
             }
 
-            etTime.setText(String.valueOf(SettingProperties.getGdbRecommendAnimTime(getContext())));
+            etTime.setText(String.valueOf(SettingProperties.getGdbRecommendAnimTime()));
 
             cbNr.setChecked(holder.getFilterModel().isSupportNR());
 

@@ -59,7 +59,7 @@
     <dimen name="gdb_record_listitem_img_width">300dp</dimen>
     <dimen name="gdb_record_listitem_img_height">200dp</dimen>
     <dimen name="gdb_sort_grid_height">800dp</dimen>
-    <dimen name="gdb_recommend_height">800dp</dimen>
+    <dimen name="gdb_recommend_height">400dp</dimen>
     <dimen name="gdb_guide_rec_height">450dp</dimen>
     <dimen name="gdb_guide_scroll_item_width">400dp</dimen>
     <dimen name="gdb_guide_scroll_item_height">225dp</dimen>
@@ -110,7 +110,7 @@
     <dimen name="gdb_home_star_size">200dp</dimen>
     <dimen name="gdb_home_star_height">200dp</dimen>
     <dimen name="gdb_home_star_padding">20dp</dimen>
-    <dimen name="gdb_home_record_height">400dp</dimen>
+    <dimen name="gdb_home_record_height">225dp</dimen>
     <dimen name="gdb_home_more_height">100dp</dimen>
     <dimen name="gdb_home_date_size">30dp</dimen>
     <dimen name="gdb_home_date_top">20dp</dimen>
@@ -154,4 +154,7 @@
     <dimen name="starlist_pad_circle_size">130dp</dimen>
     <dimen name="home_star_gap">20dp</dimen>
     <dimen name="loading_cicular_size">80dp</dimen>
+
+    <dimen name="nav_width">600dp</dimen>
+    <dimen name="nav_header_height">340dp</dimen>
 </resources>

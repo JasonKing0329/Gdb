@@ -10,6 +10,7 @@ import android.view.View;
 import com.jing.app.jjgallery.gdb.model.conf.ConfManager;
 import com.jing.app.jjgallery.gdb.view.game.RandomActivity;
 import com.jing.app.jjgallery.gdb.view.home.GHomeActivity;
+import com.jing.app.jjgallery.gdb.view.home.pad.HomePadActivity;
 import com.jing.app.jjgallery.gdb.view.record.pad.RecordListPadActivity;
 import com.jing.app.jjgallery.gdb.view.record.pad.RecordPadActivity;
 import com.jing.app.jjgallery.gdb.view.record.phone.RecordListActivity;
@@ -40,6 +41,16 @@ public class ActivityManager {
             return false;
         }
         Intent intent = new Intent().setClass(from, GHomeActivity.class);
+        from.startActivity(intent);
+        return true;
+    }
+
+    public static boolean startHomePadActivity(Activity from) {
+        if (!new File(ConfManager.GDB_DB_PATH).exists()) {
+            ((BaseView) from).showToastLong(from.getString(R.string.gdb_no_conf), BaseView.TOAST_WARNING);
+            return false;
+        }
+        Intent intent = new Intent().setClass(from, HomePadActivity.class);
         from.startActivity(intent);
         return true;
     }

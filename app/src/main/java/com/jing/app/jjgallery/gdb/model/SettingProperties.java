@@ -316,8 +316,8 @@ public class SettingProperties {
     /**
      * animation type
      */
-    public static int getGdbRecommendAnimTime(Context context) {
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+    public static int getGdbRecommendAnimTime() {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(GdbApplication.getInstance());
         int mode = preferences.getInt(PreferenceKey.PREF_GDB_REC_ANIM_TIME, 5000);
         return mode;
     }

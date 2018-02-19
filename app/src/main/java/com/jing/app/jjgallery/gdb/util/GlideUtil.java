@@ -38,6 +38,16 @@ public class GlideUtil {
     }
 
     /**
+     * record item
+     * @return
+     */
+    public static RequestOptions getRecordAnimOptions() {
+        RequestOptions options = new RequestOptions();
+        options.error(R.drawable.default_cover);
+        return options;
+    }
+
+    /**
      * star item
      * @return
      */

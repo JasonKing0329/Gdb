@@ -24,7 +24,7 @@ public class GdbConstants {
     public static final String FILTER_KEY_NR = "NR";
     public static final String FILTER_KEY_SCORE = "score";
     public static final String FILTER_KEY_SCORE_CUM = "cum";
-    public static final String FILTER_KEY_SCORE_FK = "fk";
+    public static final String FILTER_KEY_SCORE_PASSION = "passion";
     public static final String FILTER_KEY_SCORE_STAR = "star";
     public static final String FILTER_KEY_SCORE_STARC = "starC";
     public static final String FILTER_KEY_SCORE_BJOB = "bjob";

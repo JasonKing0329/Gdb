@@ -1,8 +1,7 @@
-package com.jing.app.jjgallery.gdb.presenter.record;
+package com.jing.app.jjgallery.gdb.model;
 
 import com.google.gson.Gson;
 import com.jing.app.jjgallery.gdb.GdbConstants;
-import com.jing.app.jjgallery.gdb.model.SettingProperties;
 import com.jing.app.jjgallery.gdb.model.bean.recommend.FilterBean;
 import com.jing.app.jjgallery.gdb.model.bean.recommend.FilterModel;
 import com.jing.app.jjgallery.gdb.util.DebugLog;
@@ -16,7 +15,7 @@ import java.util.List;
  * the filter handle process
  */
 
-public class FilterPresenter {
+public class FilterHelper {
 
     public FilterModel getFilters() {
         String json = SettingProperties.getGdbFilterModel();
@@ -47,9 +46,8 @@ public class FilterPresenter {
     public FilterModel createFilters() {
         String[] keys = new String[] {
                 GdbConstants.FILTER_KEY_SCORE,
-                GdbConstants.FILTER_KEY_SCORE_CUM, GdbConstants.FILTER_KEY_SCORE_FK,
+                GdbConstants.FILTER_KEY_SCORE_CUM, GdbConstants.FILTER_KEY_SCORE_PASSION,
                 GdbConstants.FILTER_KEY_SCORE_STAR,
-                GdbConstants.FILTER_KEY_SCORE_STARC,
                 GdbConstants.FILTER_KEY_SCORE_BJOB, GdbConstants.FILTER_KEY_SCORE_BAREBACK,
                 GdbConstants.FILTER_KEY_SCORE_STORY, GdbConstants.FILTER_KEY_SCORE_RHYTHM,
                 GdbConstants.FILTER_KEY_SCORE_SCECE, GdbConstants.FILTER_KEY_SCORE_RIM,
@@ -60,7 +58,6 @@ public class FilterPresenter {
                 ISortRecord.COLUMN_SCORE,
                 ISortRecord.COLUMN_CUM, ISortRecord.COLUMN_FK,
                 ISortRecord.COLUMN_STAR,
-                ISortRecord.COLUMN_STARC,
                 ISortRecord.COLUMN_BJOB, ISortRecord.COLUMN_BAREBACK,
                 ISortRecord.COLUMN_STORY, ISortRecord.COLUMN_RHYTHM,
                 ISortRecord.COLUMN_SCENE, ISortRecord.COLUMN_RIM,

@@ -28,7 +28,7 @@ public abstract class RecyclerListAdapter<T, VH extends RecyclerListAdapter.View
     }
 
     /**
-     * Creates a view holder for the given view type.
+     * Creates a view ItemHolder for the given view type.
      * Should be override only when view type requires to be determined dynamically
      * (requires {@link #getItemViewType(int)} to be overwritten).
      */
@@ -43,7 +43,7 @@ public abstract class RecyclerListAdapter<T, VH extends RecyclerListAdapter.View
     }
 
     /**
-     * Creates a view holder.
+     * Creates a view ItemHolder.
      * Overwrite the method when used as an adapter for single view type.
      */
     public VH onCreateViewHolder(ViewGroup parent) {

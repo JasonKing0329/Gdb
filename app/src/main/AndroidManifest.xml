@@ -32,8 +32,7 @@
             android:name="com.sec.android.support.multiwindow"
             android:value="true" />
 
-        <activity android:name=".view.login.LoginActivity"
-            android:screenOrientation="portrait">
+        <activity android:name=".view.login.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -44,6 +43,9 @@
         </activity>
         <activity android:name=".view.home.GHomeActivity"
             android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name=".view.home.pad.HomePadActivity"
+            android:screenOrientation="landscape"
             android:theme="@style/AppTheme.NoActionBar"/>
         <activity android:name=".view.settings.SettingsActivity"
             android:screenOrientation="portrait"/>

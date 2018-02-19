@@ -38,28 +38,34 @@
         android:id="@+id/recommend_list"
         android:layout_width="match_parent"
         android:layout_height="@dimen/gdb_recommend_height"/>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:text="View pager animation"/>
-    <RadioGroup
+    <LinearLayout
+        android:id="@+id/group_viewpager"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
         android:orientation="vertical">
-        <RadioButton
-            android:id="@+id/rb_random"
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:checked="true"
-            android:text="Random"/>
-        <RadioButton
-            android:id="@+id/rb_fixed"
-            android:layout_width="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="View pager animation"/>
+        <RadioGroup
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Fixed"/>
-    </RadioGroup>
+            android:layout_marginTop="5dp"
+            android:orientation="vertical">
+            <RadioButton
+                android:id="@+id/rb_random"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="Random"/>
+            <RadioButton
+                android:id="@+id/rb_fixed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Fixed"/>
+        </RadioGroup>
+    </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

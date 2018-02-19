@@ -24,6 +24,7 @@ import com.jing.app.jjgallery.gdb.model.login.LoginParams;
 import com.jing.app.jjgallery.gdb.presenter.LoginPresenter;
 import com.jing.app.jjgallery.gdb.util.DBExportor;
 import com.jing.app.jjgallery.gdb.util.DebugLog;
+import com.jing.app.jjgallery.gdb.util.DisplayHelper;
 import com.jing.app.jjgallery.gdb.util.PermissionUtil;
 import com.jing.app.jjgallery.gdb.view.pub.ProgressButton;
 import com.jing.app.jjgallery.gdb.view.pub.dialog.DefaultDialogManager;
@@ -328,7 +329,12 @@ public class LoginActivity extends GBaseActivity implements ILoginView {
 //        showProgress("compressing");
 //        compressFiles();
 //        new HomeSelecter(this).startDefaultHome(this, null);
-        ActivityManager.startHomeActivity(this);
+        if (DisplayHelper.isTabModel(this)) {
+            ActivityManager.startHomePadActivity(this);
+        }
+        else {
+            ActivityManager.startHomeActivity(this);
+        }
         finish();
     }
 
