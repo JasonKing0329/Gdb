@@ -6,4 +6,6 @@ package com.jing.app.jjgallery.gdb.view.update;
 public interface GdbUpdateListener {
     void onUpdateFinish();
     void onUpdateCancel();
+
+    boolean consumeYes();
 }

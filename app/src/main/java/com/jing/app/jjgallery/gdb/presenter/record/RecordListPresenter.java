@@ -29,7 +29,7 @@ import io.reactivex.schedulers.Schedulers;
  */
 public class RecordListPresenter extends BasePresenter<IRecordListView> {
 
-    private final int DEFAULT_LOAD_MORE = 20;
+    private int DEFAULT_LOAD_MORE = 20;
 
     private RecordCursor moreCursor;
 
@@ -43,6 +43,10 @@ public class RecordListPresenter extends BasePresenter<IRecordListView> {
     public void newRecordCursor() {
         moreCursor = new RecordCursor();
         moreCursor.number = DEFAULT_LOAD_MORE;
+    }
+
+    public void updateDefaultLoad(int number) {
+        DEFAULT_LOAD_MORE = number;
     }
 
     /**

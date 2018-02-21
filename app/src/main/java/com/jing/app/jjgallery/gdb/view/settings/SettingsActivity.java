@@ -22,6 +22,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.jing.app.jjgallery.gdb.BaseView;
+import com.jing.app.jjgallery.gdb.GdbApplication;
 import com.jing.app.jjgallery.gdb.R;
 import com.jing.app.jjgallery.gdb.http.BaseUrl;
 import com.jing.app.jjgallery.gdb.model.conf.PreferenceKey;
@@ -30,10 +31,15 @@ import com.jing.app.jjgallery.gdb.model.login.FingerPrintController;
 import com.jing.app.jjgallery.gdb.presenter.GdbUpdatePresenter;
 import com.jing.app.jjgallery.gdb.presenter.UpdatePresenter;
 import com.jing.app.jjgallery.gdb.presenter.UploadPresenter;
+import com.jing.app.jjgallery.gdb.view.update.GdbUpdateListener;
 import com.jing.app.jjgallery.gdb.view.update.GdbUpdateManager;
 import com.jing.app.jjgallery.gdb.view.update.UpdateManager;
+import com.king.app.gdb.data.entity.Star;
+import com.king.app.gdb.data.entity.StarDao;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * A {@link PreferenceActivity} that presents a set of application settings. On
@@ -228,9 +234,42 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
 
         private Context mContext;
         private FragmentManager fragmentManager;
+
+        /**
+         * save favor in memory, insert into database after downloaded new one
+         */
+        private Map<String, Integer> favorMap = new HashMap<>();
+
         public PrefClickListener(Context context, FragmentManager fragmentManager) {
             mContext = context;
             this.fragmentManager = fragmentManager;
+        }
+
+        /**
+         * save favor in memory
+         */
+        private void saveFavorMap() {
+            StarDao dao = GdbApplication.getInstance().getDaoSession().getStarDao();
+            List<Star> list = dao.queryBuilder().build().list();
+            for (Star star:list) {
+                favorMap.put(star.getName(), star.getFavor());
+            }
+        }
+
+        /**
+         * update favor to database
+         */
+        private void updateFavor() {
+            GdbApplication.getInstance().reCreateGreenDao();
+            StarDao dao = GdbApplication.getInstance().getDaoSession().getStarDao();
+            List<Star> list = dao.queryBuilder().build().list();
+            for (Star star:list) {
+                Integer favor = favorMap.get(star.getName());
+                if (favor != null && favor > 0) {
+                    star.setFavor(favor);
+                    dao.update(star);
+                }
+            }
         }
 
         @Override
@@ -242,7 +281,29 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                 manager.startCheck();
             }
             else if (preference.getKey().equals(PreferenceKey.PREF_CHECK_UPDATE_GDB)) {
-                GdbUpdateManager manager = new GdbUpdateManager(mContext, null);
+
+                // save favor in memory
+                favorMap.clear();
+                saveFavorMap();
+
+                GdbUpdateManager manager = new GdbUpdateManager(mContext, new GdbUpdateListener() {
+                    @Override
+                    public void onUpdateFinish() {
+                        // update favor to database
+                        updateFavor();
+                    }
+
+                    @Override
+                    public void onUpdateCancel() {
+
+                    }
+
+                    @Override
+                    public boolean consumeYes() {
+                        // 不消费yes，直接开始下载
+                        return false;
+                    }
+                });
                 manager.setFragmentManager(fragmentManager);
                 manager.showMessageWarning();
                 manager.startCheck();

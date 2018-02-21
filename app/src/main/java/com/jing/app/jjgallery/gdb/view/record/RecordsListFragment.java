@@ -69,6 +69,8 @@ public class RecordsListFragment extends MvpFragmentV4<RecordListPresenter> impl
             GridLayoutManager manager = new GridLayoutManager(getActivity(), 3);
             rvRecords.setLayoutManager(manager);
             rvRecords.setEnableLoadMore(true);
+            //3列的倍数
+            presenter.updateDefaultLoad(21);
         }
         else {
             rvRecords.setLayoutManager(new LinearLayoutManager(getActivity()));

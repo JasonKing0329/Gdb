@@ -184,12 +184,20 @@ public class GHomeActivity extends GBaseActivity implements NavigationView.OnNav
         GdbUpdateManager manager = new GdbUpdateManager(this, new GdbUpdateListener() {
             @Override
             public void onUpdateFinish() {
-                ActivityManager.reload(GHomeActivity.this);
+
             }
 
             @Override
             public void onUpdateCancel() {
 
+            }
+
+            @Override
+            public boolean consumeYes() {
+                // 涉及到额外数据保存与存储，直接跳转至setting界面执行
+                ActivityManager.startSettingActivity(GHomeActivity.this);
+                finish();
+                return true;
             }
         });
         manager.setFragmentManagerV4(getSupportFragmentManager());

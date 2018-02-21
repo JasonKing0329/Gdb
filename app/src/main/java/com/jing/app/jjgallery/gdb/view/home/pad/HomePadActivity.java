@@ -18,6 +18,9 @@ import com.jing.app.jjgallery.gdb.R;
 import com.jing.app.jjgallery.gdb.model.GdbImageProvider;
 import com.jing.app.jjgallery.gdb.model.SettingProperties;
 import com.jing.app.jjgallery.gdb.util.GlideUtil;
+import com.jing.app.jjgallery.gdb.view.home.GHomeActivity;
+import com.jing.app.jjgallery.gdb.view.update.GdbUpdateListener;
+import com.jing.app.jjgallery.gdb.view.update.GdbUpdateManager;
 
 import butterknife.BindView;
 
@@ -58,7 +61,7 @@ public class HomePadActivity extends GBaseActivity implements NavigationView.OnN
 
     @Override
     protected void initBackgroundWork() {
-
+        checkUpdate();
     }
 
     private void initContent() {
@@ -94,6 +97,33 @@ public class HomePadActivity extends GBaseActivity implements NavigationView.OnN
         else {
             focusOnFolder();
         }
+    }
+
+    /**
+     * check gdb database update
+     */
+    private void checkUpdate() {
+        GdbUpdateManager manager = new GdbUpdateManager(this, new GdbUpdateListener() {
+            @Override
+            public void onUpdateFinish() {
+
+            }
+
+            @Override
+            public void onUpdateCancel() {
+
+            }
+
+            @Override
+            public boolean consumeYes() {
+                // 涉及到额外数据保存与存储，直接跳转至setting界面执行
+                ActivityManager.startSettingActivity(HomePadActivity.this);
+                finish();
+                return true;
+            }
+        });
+        manager.setFragmentManagerV4(getSupportFragmentManager());
+        manager.startCheck();
     }
 
     private void selectImage() {
