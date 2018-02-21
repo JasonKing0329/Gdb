@@ -8,4 +8,5 @@ import com.jing.app.jjgallery.gdb.model.bean.StarProxy;
 
 public interface OnStarClickListener {
     void onStarClick(StarProxy star);
+    void onStarLongClick(StarProxy star);
 }

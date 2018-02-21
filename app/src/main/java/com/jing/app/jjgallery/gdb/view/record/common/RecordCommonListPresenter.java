@@ -10,9 +10,11 @@ import com.king.app.gdb.data.entity.RecordStar;
 import com.king.app.gdb.data.entity.RecordStarDao;
 import com.king.app.gdb.data.entity.Star;
 import com.king.app.gdb.data.entity.StarDao;
+import com.king.app.gdb.data.param.DataConstants;
 
 import org.greenrobot.greendao.query.QueryBuilder;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -107,4 +109,31 @@ public class RecordCommonListPresenter extends BasePresenter<RecordCommonListVie
         });
     }
 
+    public void filterStarTopRecords() {
+        List<Record> list = new ArrayList<>();
+        for (Record record:mStar.getRecordList()) {
+            for (RecordStar rs:record.getRelationList()) {
+                if ((rs.getType() == DataConstants.VALUE_RELATION_TOP || rs.getType() == DataConstants.VALUE_RELATION_MIX)
+                        && mStar.getId() == rs.getStarId()) {
+                    list.add(record);
+                    break;
+                }
+            }
+        }
+        view.showRecords(list);
+    }
+
+    public void filterStarBottomRecords() {
+        List<Record> list = new ArrayList<>();
+        for (Record record:mStar.getRecordList()) {
+            for (RecordStar rs:record.getRelationList()) {
+                if ((rs.getType() == DataConstants.VALUE_RELATION_BOTTOM || rs.getType() == DataConstants.VALUE_RELATION_MIX)
+                        && mStar.getId() == rs.getStarId()) {
+                    list.add(record);
+                    break;
+                }
+            }
+        }
+        view.showRecords(list);
+    }
 }

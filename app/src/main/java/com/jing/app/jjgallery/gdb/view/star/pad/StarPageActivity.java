@@ -30,6 +30,12 @@ public class StarPageActivity extends MvpActivity<StarPagePresenter> implements 
 
     @BindView(R.id.tv_name)
     TextView tvName;
+    @BindView(R.id.tv_tag_video)
+    TextView tvTagVideo;
+    @BindView(R.id.tv_tag_top)
+    TextView tvTagTop;
+    @BindView(R.id.tv_tag_bottom)
+    TextView tvTagBottom;
     @BindView(R.id.iv_icon_mode)
     ImageView ivIconMode;
     @BindView(R.id.rv_star)
@@ -89,16 +95,17 @@ public class StarPageActivity extends MvpActivity<StarPagePresenter> implements 
     @Override
     public void showStar(Star star) {
 
-        StringBuffer buffer = new StringBuffer(star.getName());
-        buffer.append("(").append(star.getRecords()).append(" videos");
+        tvName.setText(star.getName());
+        tvTagVideo.setText("Videos  " + star.getRecords());
         if (star.getBetop() > 0) {
-            buffer.append(" top:").append(star.getBetop());
+            tvTagTop.setText("Top  " + star.getBetop());
+            tvTagTop.setVisibility(View.VISIBLE);
         }
         if (star.getBebottom() > 0) {
-            buffer.append(" bottom:").append(star.getBebottom());
+            tvTagBottom.setText("Bottom  " + star.getBebottom());
+            tvTagBottom.setVisibility(View.VISIBLE);
         }
-        buffer.append(")");
-        tvName.setText(buffer.toString());
+        tvTagVideo.setSelected(true);
 
         StarPageStarAdapter adapter = new StarPageStarAdapter();
         adapter.setPathList(presenter.getStarImages());
@@ -126,6 +133,40 @@ public class StarPageActivity extends MvpActivity<StarPagePresenter> implements 
                     ivIconMode.setImageResource(R.drawable.ic_panorama_horizontal_3f51b5_36dp);
                 }
                 ftRecord.refresh();
+                // restore select videos
+                tvTagBottom.setSelected(false);
+                tvTagTop.setSelected(false);
+                tvTagVideo.setSelected(true);
+                break;
+        }
+    }
+
+    @OnClick({R.id.tv_tag_video, R.id.tv_tag_top, R.id.tv_tag_bottom})
+    public void onClickStarTag(View view) {
+        switch (view.getId()) {
+            case R.id.tv_tag_video:
+                if (!tvTagVideo.isSelected()) {
+                    tvTagVideo.setSelected(true);
+                    tvTagTop.setSelected(false);
+                    tvTagBottom.setSelected(false);
+                    ftRecord.showStarAllRecords();
+                }
+                break;
+            case R.id.tv_tag_top:
+                if (!tvTagTop.isSelected()) {
+                    tvTagTop.setSelected(true);
+                    tvTagVideo.setSelected(false);
+                    tvTagBottom.setSelected(false);
+                    ftRecord.showStarTopRecords();
+                }
+                break;
+            case R.id.tv_tag_bottom:
+                if (!tvTagBottom.isSelected()) {
+                    tvTagBottom.setSelected(true);
+                    tvTagTop.setSelected(false);
+                    tvTagVideo.setSelected(false);
+                    ftRecord.showStarBottomRecords();
+                }
                 break;
         }
     }

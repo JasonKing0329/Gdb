@@ -114,11 +114,11 @@
                 android:paddingTop="10dp"
                 android:paddingBottom="10dp"
                 android:gravity="center">
-                <com.jing.app.jjgallery.gdb.view.pub.CircleImageView
-                    android:id="@+id/iv_icon_record"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:src="@drawable/ic_def_person"/>
+                <TextView
+                    android:id="@+id/tv_icon_record"
+                    style="@style/TvHomePadIconOval"
+                    android:text="R"
+                    android:background="@drawable/shape_oval_index" />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -138,11 +138,11 @@
                 android:paddingTop="10dp"
                 android:paddingBottom="10dp"
                 android:gravity="center">
-                <com.jing.app.jjgallery.gdb.view.pub.CircleImageView
-                    android:id="@+id/iv_icon_star"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:src="@drawable/ic_def_person"/>
+                <TextView
+                    android:id="@+id/tv_icon_star"
+                    style="@style/TvHomePadIconOval"
+                    android:text="S"
+                    android:background="@drawable/shape_oval_index" />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -162,11 +162,11 @@
                 android:paddingTop="10dp"
                 android:paddingBottom="10dp"
                 android:gravity="center">
-                <com.jing.app.jjgallery.gdb.view.pub.CircleImageView
-                    android:id="@+id/iv_icon_surf"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:src="@drawable/ic_def_person"/>
+                <TextView
+                    android:id="@+id/tv_icon_surf"
+                    style="@style/TvHomePadIconOval"
+                    android:text="S"
+                    android:background="@drawable/shape_oval_index" />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

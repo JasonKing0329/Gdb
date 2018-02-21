@@ -1,6 +1,7 @@
 package com.jing.app.jjgallery.gdb.view.home.pad;
 
 import android.animation.Animator;
+import android.graphics.drawable.GradientDrawable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
@@ -9,6 +10,7 @@ import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -19,11 +21,11 @@ import com.jing.app.jjgallery.gdb.R;
 import com.jing.app.jjgallery.gdb.model.GdbImageProvider;
 import com.jing.app.jjgallery.gdb.model.bean.StarProxy;
 import com.jing.app.jjgallery.gdb.model.bean.recommend.FilterModel;
+import com.jing.app.jjgallery.gdb.util.ColorUtils;
 import com.jing.app.jjgallery.gdb.util.GlideUtil;
 import com.jing.app.jjgallery.gdb.view.home.GHomeHeader;
 import com.jing.app.jjgallery.gdb.view.home.HomeStarAdapter;
 import com.jing.app.jjgallery.gdb.view.pub.AutoLoadMoreRecyclerView;
-import com.jing.app.jjgallery.gdb.view.pub.CircleImageView;
 import com.jing.app.jjgallery.gdb.view.pub.cardslider.CardSnapHelper;
 import com.jing.app.jjgallery.gdb.view.recommend.RecordFilterDialogFragment;
 import com.king.app.gdb.data.entity.Record;
@@ -51,12 +53,12 @@ public class HomePadFragment extends MvpFragmentV4<HomePadPresenter> implements 
     SwipeRefreshLayout srRefresh;
     @BindView(R.id.rv_stars)
     RecyclerView rvStars;
-    @BindView(R.id.iv_icon_record)
-    CircleImageView ivIconRecord;
-    @BindView(R.id.iv_icon_star)
-    CircleImageView ivIconStar;
-    @BindView(R.id.iv_icon_surf)
-    CircleImageView ivIconSurf;
+    @BindView(R.id.tv_icon_record)
+    TextView tvIconRecord;
+    @BindView(R.id.tv_icon_star)
+    TextView tvIconStar;
+    @BindView(R.id.tv_icon_surf)
+    TextView tvIconSurf;
     @BindView(R.id.rv_records)
     AutoLoadMoreRecyclerView rvRecords;
 
@@ -97,6 +99,15 @@ public class HomePadFragment extends MvpFragmentV4<HomePadPresenter> implements 
             }
         });
 
+        updateIconBg(tvIconRecord);
+        updateIconBg(tvIconStar);
+        updateIconBg(tvIconSurf);
+    }
+
+    private void updateIconBg(TextView view) {
+        GradientDrawable drawable = (GradientDrawable) view.getBackground();
+        drawable.setColor(ColorUtils.randomWhiteTextBgColor());
+        view.setBackground(drawable);
     }
 
     @Override

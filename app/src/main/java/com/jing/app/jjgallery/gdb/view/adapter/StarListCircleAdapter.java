@@ -30,7 +30,8 @@ import butterknife.ButterKnife;
  * Created by Administrator on 2017/10/28 0028.
  */
 
-public class StarListCircleAdapter extends RecyclerView.Adapter<StarListCircleAdapter.ItemHolder> implements View.OnClickListener {
+public class StarListCircleAdapter extends RecyclerView.Adapter<StarListCircleAdapter.ItemHolder> implements View.OnClickListener
+    , View.OnLongClickListener{
 
     private OnStarClickListener onStarClickListener;
     private StarListPresenter mPresenter;
@@ -83,6 +84,7 @@ public class StarListCircleAdapter extends RecyclerView.Adapter<StarListCircleAd
 
         holder.groupItem.setTag(item);
         holder.groupItem.setOnClickListener(this);
+        holder.groupItem.setOnLongClickListener(this);
 
         holder.ivFavor.setTag(position);
         holder.ivFavor.setOnClickListener(this);
@@ -123,6 +125,17 @@ public class StarListCircleAdapter extends RecyclerView.Adapter<StarListCircleAd
             }
         }
         return -1;
+    }
+
+    @Override
+    public boolean onLongClick(View v) {
+        if (v instanceof ViewGroup) {
+            if (onStarClickListener != null) {
+                StarProxy star = (StarProxy) v.getTag();
+                onStarClickListener.onStarLongClick(star);
+            }
+        }
+        return true;
     }
 
     @Override

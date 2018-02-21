@@ -243,6 +243,11 @@ public class StarListFragment extends MvpFragmentV4<StarListPresenter> implement
     }
 
     @Override
+    public void onStarLongClick(StarProxy star) {
+        ActivityManager.startStarPageActivity(getActivity(), star.getStar().getId());
+    }
+
+    @Override
     public void onStarClick(StarProxy star) {
         if (holder != null && holder.dispatchClickStar(star.getStar())) {
             return;

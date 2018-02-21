@@ -146,6 +146,18 @@ public class RecordCommonListFragment extends MvpFragmentV4<RecordCommonListPres
         presenter.loadRecords(star, currentSortMode, currentSortDesc);
     }
 
+    public void showStarAllRecords() {
+        showRecords(presenter.getStar().getRecordList());
+    }
+
+    public void showStarTopRecords() {
+        presenter.filterStarTopRecords();
+    }
+
+    public void showStarBottomRecords() {
+        presenter.filterStarBottomRecords();
+    }
+
     public void onClickSort() {
         SortDialogFragment dialog = new SortDialogFragment();
         dialog.setDesc(currentSortDesc);
