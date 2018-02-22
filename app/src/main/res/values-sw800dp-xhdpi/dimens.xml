@@ -160,4 +160,7 @@
     <dimen name="home_pop_menu_bottom">128dp</dimen>
     <dimen name="home_pop_menu_left">10dp</dimen>
     <dimen name="boom_menu_btn_margin_ver">10dp</dimen>
+
+    <dimen name="record_pad_detail_img_width">200dp</dimen>
+    <dimen name="record_pad_detail_img_height">115dp</dimen>
 </resources>

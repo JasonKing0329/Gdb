@@ -11,9 +11,11 @@ import com.jing.app.jjgallery.gdb.IFragmentHolder;
 import com.jing.app.jjgallery.gdb.MvpFragmentV4;
 import com.jing.app.jjgallery.gdb.R;
 import com.jing.app.jjgallery.gdb.model.SettingProperties;
+import com.jing.app.jjgallery.gdb.util.DisplayHelper;
 import com.jing.app.jjgallery.gdb.util.ScreenUtils;
 import com.jing.app.jjgallery.gdb.view.adapter.OnRecordItemClickListener;
 import com.jing.app.jjgallery.gdb.view.adapter.RecordCardAdapter;
+import com.jing.app.jjgallery.gdb.view.adapter.RecordPadDetailAdapter;
 import com.jing.app.jjgallery.gdb.view.adapter.RecordsListAdapter;
 import com.jing.app.jjgallery.gdb.view.record.SortDialogFragment;
 import com.king.app.gdb.data.entity.Record;
@@ -33,6 +35,8 @@ public class RecordCommonListFragment extends MvpFragmentV4<RecordCommonListPres
 
     @BindView(R.id.rv_records)
     RecyclerView rvRecords;
+
+    private RecordPadDetailAdapter mPadAdapter;
 
     private RecordsListAdapter mListAdapter;
 
@@ -90,6 +94,40 @@ public class RecordCommonListFragment extends MvpFragmentV4<RecordCommonListPres
 
     @Override
     public void showRecords(List<Record> list) {
+        if (DisplayHelper.isTabModel()) {
+            GridLayoutManager manager = new GridLayoutManager(getActivity(), 2);
+            rvRecords.setLayoutManager(manager);
+            if (mPadAdapter == null) {
+                mPadAdapter = new RecordPadDetailAdapter();
+                mPadAdapter.setCurrentStar(presenter.getStar());
+                mPadAdapter.setSortMode(currentSortMode);
+                mPadAdapter.setRecordList(list);
+                mPadAdapter.setOnDetailListener(new RecordPadDetailAdapter.OnDetailActionListener() {
+                    @Override
+                    public void onClickCardItem(View v, Record record) {
+                        ActivityManager.startRecordPadActivity(getActivity(), record);
+                    }
+
+                    @Override
+                    public void onClickStar(View v, Star star) {
+                        ActivityManager.startStarPageActivity(getActivity(), star.getId());
+                    }
+
+                    @Override
+                    public void onClickScene(View v, String scene) {
+                        ActivityManager.startRecordListPadActivity(getActivity(), scene);
+                    }
+                });
+                rvRecords.setAdapter(mPadAdapter);
+            }
+            else {
+                mPadAdapter.setCurrentStar(presenter.getStar());
+                mPadAdapter.setSortMode(currentSortMode);
+                mPadAdapter.setRecordList(list);
+                rvRecords.setAdapter(mPadAdapter);
+            }
+            return;
+        }
         if (SettingProperties.isStarPadRecordsCardMode()) {
             GridLayoutManager manager = new GridLayoutManager(getActivity(), 2);
             rvRecords.setLayoutManager(manager);

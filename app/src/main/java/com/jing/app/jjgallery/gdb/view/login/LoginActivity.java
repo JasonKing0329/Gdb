@@ -67,11 +67,6 @@ public class LoginActivity extends GBaseActivity implements ILoginView {
     private UpdateManager updateManager;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
     protected int getContentView() {
         return R.layout.activity_login;
     }
@@ -150,6 +145,9 @@ public class LoginActivity extends GBaseActivity implements ILoginView {
                     @Override
                     public void accept(Boolean hasPref) throws Exception {
 
+                        //DEBUG
+                        ActivityManager.startHomePadActivity(LoginActivity.this);
+
                         if (hasPref) {
                             new DefaultDialogManager().showWarningActionDialog(LoginActivity.this
                                     , getResources().getString(R.string.login_extend_pref_exist)
@@ -220,12 +218,7 @@ public class LoginActivity extends GBaseActivity implements ILoginView {
             startSetting();
         }
         else {
-            if (SettingProperties.isAppInited()) {
-                showPage();
-            }
-            else {
-                startSetting();
-            }
+            showPage();
         }
     }
 

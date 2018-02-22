@@ -52,6 +52,8 @@ public class StarPadActivity extends MvpActivity<StarPadPresenter> implements St
     @BindView(R.id.viewpager)
     ViewPager viewpager;
 
+    @BindView(R.id.tv_name)
+    TextView tvName;
     @BindView(R.id.tv_index)
     TextView tvIndex;
     @BindView(R.id.iv_icon_sort)
@@ -317,6 +319,7 @@ public class StarPadActivity extends MvpActivity<StarPadPresenter> implements St
 
     @Override
     public boolean dispatchClickStar(Star star) {
+        tvName.setText(star.getName());
         ftRecord.showStarRecords(star);
         return true;
     }
