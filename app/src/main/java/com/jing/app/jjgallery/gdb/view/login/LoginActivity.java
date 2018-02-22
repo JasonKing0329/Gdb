@@ -3,7 +3,6 @@ package com.jing.app.jjgallery.gdb.view.login;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
@@ -144,9 +143,6 @@ public class LoginActivity extends GBaseActivity implements ILoginView {
                 .subscribe(new Consumer<Boolean>() {
                     @Override
                     public void accept(Boolean hasPref) throws Exception {
-
-                        //DEBUG
-                        ActivityManager.startHomePadActivity(LoginActivity.this);
 
                         if (hasPref) {
                             new DefaultDialogManager().showWarningActionDialog(LoginActivity.this
