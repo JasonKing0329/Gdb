@@ -1,7 +1,7 @@
 apply plugin: 'com.android.application'
 
-ext.appVersionName = "3.4.2"
-ext.appVersionCode = 45
+ext.appVersionName = "3.4.3"
+ext.appVersionCode = 46
 ext.appReleaseDir = "E:/temp/release/gdb"
 
 android {
@@ -87,12 +87,13 @@ dependencies {
 
     // apply in viewsystem/main/gdb/StarListAdapter
     implementation 'cc.solart:turbo-recyclerview-helper:1.0.3-beta'
-
     implementation 'org.greenrobot:greendao:3.2.2'
+
     /*compressor*/
     implementation 'id.zelory:compressor:2.1.0'
     implementation project(':libresmanager')
     implementation project(':shapimageview')
     implementation project(':jindicator')
     implementation project(':data')
+    implementation project(':boommenu')
 }

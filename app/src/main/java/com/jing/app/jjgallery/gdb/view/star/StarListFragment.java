@@ -306,4 +306,8 @@ public class StarListFragment extends MvpFragmentV4<StarListPresenter> implement
     public boolean isNotScrolling() {
         return rvStar.getScrollState() == RecyclerView.SCROLL_STATE_IDLE;
     }
+
+    public void goTop() {
+        rvStar.scrollToPosition(0);
+    }
 }

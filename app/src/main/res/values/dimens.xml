@@ -182,4 +182,7 @@
     <dimen name="starlist_grid_favor_size">40dp</dimen>
     <dimen name="home_star_gap">12dp</dimen>
     <dimen name="loading_cicular_size">35dp</dimen>
+    <dimen name="home_pop_menu_bottom">10dp</dimen>
+    <dimen name="home_pop_menu_left">10dp</dimen>
+    <dimen name="boom_menu_btn_margin_ver">10dp</dimen>
 </resources>

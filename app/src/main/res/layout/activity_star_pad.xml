@@ -52,14 +52,6 @@
                 android:layout_height="@dimen/actionbar_height"
                 android:background="@color/actionbar_bk_light"
                 android:orientation="horizontal">
-                <ImageView
-                    android:id="@+id/iv_icon_index"
-                    style="@style/IvPadActionIcon"
-                    android:src="@drawable/ic_sort_by_alpha_purple_200_36dp"/>
-                <ImageView
-                    android:id="@+id/iv_icon_num"
-                    style="@style/IvPadActionIcon"
-                    android:src="@drawable/ic_looks_one_3f51b5_36dp" />
                 <View
                     android:layout_width="0dp"
                     android:layout_weight="1"
@@ -97,4 +89,16 @@
             android:layout_height="match_parent">
         </RelativeLayout>
     </LinearLayout>
+
+    <com.nightonke.boommenu.BoomMenuButton
+        android:id="@+id/bmb_menu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="2dp"
+        app:bmb_normalColor="@color/colorPrimary"
+        app:bmb_piecePlaceEnum="piecePlace_dot_4_1"
+        app:bmb_buttonPlaceEnum="buttonPlace_vertical"
+        app:bmb_buttonEnum="simpleCircle"/>
+
 </RelativeLayout>

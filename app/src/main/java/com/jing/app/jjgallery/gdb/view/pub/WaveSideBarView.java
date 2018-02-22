@@ -145,7 +145,9 @@ public class WaveSideBarView extends View {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
 
-                if (x < mWidth - 2 * mRadius) {
+                // 原版的触控区域太大，改成字母栏的左边边界（drawLetters方法里rectF.left = mPosX - mTextSize）
+                if (x < mPosX - mTextSize) {
+//                if (x < mWidth - 2 * mRadius) {
                     return false;
                 }
                 startAnimator(mRatio, 1.0f);

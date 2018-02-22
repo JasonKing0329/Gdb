@@ -17,6 +17,13 @@ import com.jing.app.jjgallery.gdb.view.star.StarListFragment;
 import com.jing.app.jjgallery.gdb.view.star.StarListPagerAdapter;
 import com.king.app.gdb.data.entity.Star;
 import com.king.app.gdb.data.param.DataConstants;
+import com.nightonke.boommenu.BoomButtons.ButtonPlaceAlignmentEnum;
+import com.nightonke.boommenu.BoomButtons.ButtonPlaceEnum;
+import com.nightonke.boommenu.BoomButtons.OnBMClickListener;
+import com.nightonke.boommenu.BoomButtons.SimpleCircleButton;
+import com.nightonke.boommenu.BoomMenuButton;
+import com.nightonke.boommenu.ButtonEnum;
+import com.nightonke.boommenu.Piece.PiecePlaceEnum;
 
 import java.util.concurrent.TimeUnit;
 
@@ -51,12 +58,10 @@ public class StarPadActivity extends MvpActivity<StarPadPresenter> implements St
     ImageView ivIconSort;
     @BindView(R.id.iv_icon_mode)
     ImageView ivIconMode;
-    @BindView(R.id.iv_icon_num)
-    ImageView ivIconNum;
-    @BindView(R.id.iv_icon_index)
-    ImageView ivIconIndex;
     @BindView(R.id.side_bar)
     WaveSideBarView sideBar;
+    @BindView(R.id.bmb_menu)
+    BoomMenuButton bmbMenu;
 
     private int curSortMode;
 
@@ -129,6 +134,8 @@ public class StarPadActivity extends MvpActivity<StarPadPresenter> implements St
         else {
             ivIconMode.setImageResource(R.drawable.ic_panorama_vertical_3f51b5_36dp);
         }
+
+        initBoomButton();
     }
 
     private void initRecordFragment() {
@@ -136,6 +143,38 @@ public class StarPadActivity extends MvpActivity<StarPadPresenter> implements St
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.group_ft_record, ftRecord, "RecordCommonListFragment")
                 .commit();
+    }
+
+    private void initBoomButton() {
+        // 修改了源码，image自适应为button的一半中间，不需要再设置imagePadding了
+//        int padding = bmbMenu.getContext().getResources().getDimensionPixelSize(R.dimen.boom_menu_icon_padding);
+        int radius = bmbMenu.getContext().getResources().getDimensionPixelSize(R.dimen.boom_menu_btn_radius);
+        bmbMenu.setButtonEnum(ButtonEnum.SimpleCircle);
+        bmbMenu.setButtonRadius(radius);
+        bmbMenu.setPiecePlaceEnum(PiecePlaceEnum.DOT_4_1);
+        bmbMenu.setButtonPlaceEnum(ButtonPlaceEnum.Vertical);
+        bmbMenu.setButtonPlaceAlignmentEnum(ButtonPlaceAlignmentEnum.BL);
+        bmbMenu.setButtonLeftMargin(getResources().getDimensionPixelSize(R.dimen.home_pop_menu_left));
+        bmbMenu.setButtonBottomMargin(getResources().getDimensionPixelSize(R.dimen.home_pop_menu_bottom));
+        bmbMenu.setButtonVerticalMargin(getResources().getDimensionPixelSize(R.dimen.boom_menu_btn_margin_ver));
+        bmbMenu.addBuilder(new SimpleCircleButton.Builder()
+                .normalImageRes(R.drawable.ic_sort_by_alpha_white_36dp)
+                .buttonRadius(radius)
+//                .imagePadding(new Rect(padding, padding, padding, padding))
+                .listener(bmClickListener));
+        bmbMenu.addBuilder(new SimpleCircleButton.Builder()
+                .normalImageRes(R.drawable.ic_looks_one_white_36dp)
+                .buttonRadius(radius)
+//                .imagePadding(new Rect(padding, padding, padding, padding))
+                .listener(bmClickListener));
+        bmbMenu.addBuilder(new SimpleCircleButton.Builder()
+                .normalImageRes(R.drawable.ic_favorite_white_36dp)
+                .buttonRadius(radius)
+                .listener(bmClickListener));
+        bmbMenu.addBuilder(new SimpleCircleButton.Builder()
+                .normalImageRes(R.drawable.ic_arrow_upward_white_36dp)
+                .buttonRadius(radius)
+                .listener(bmClickListener));
     }
 
     @Override
@@ -149,8 +188,8 @@ public class StarPadActivity extends MvpActivity<StarPadPresenter> implements St
         presenter.loadTitles(curSortMode);
     }
 
-    public void changeSideBarVisible() {
-        sideBar.setVisibility(sideBar.getVisibility() == View.GONE ? View.VISIBLE : View.GONE);
+    public void showSideBar() {
+        sideBar.setVisibility(View.VISIBLE);
         invalidateSideBar();
     }
 
@@ -168,6 +207,43 @@ public class StarPadActivity extends MvpActivity<StarPadPresenter> implements St
             });
         }
     }
+
+    OnBMClickListener bmClickListener = new OnBMClickListener() {
+        @Override
+        public void onBoomButtonClick(int index) {
+
+            switch (index) {
+                case 0:// name
+                    curSortMode = GdbConstants.STAR_SORT_NAME;
+                    showSideBar();
+                    pagerAdapter.getItem(viewpager.getCurrentItem()).reloadStarList(curSortMode);
+                    // 更新tabLayout的数据，回调在onStarCountLoaded
+                    presenter.loadTitles(curSortMode);
+                    break;
+                case 1:// number
+                    curSortMode = GdbConstants.STAR_SORT_RECORDS;
+                    if (sideBar.getVisibility() == View.VISIBLE) {
+                        sideBar.setVisibility(View.GONE);
+                    }
+                    pagerAdapter.getItem(viewpager.getCurrentItem()).reloadStarList(curSortMode);
+                    // 更新tabLayout的数据，回调在onStarCountLoaded
+                    presenter.loadTitles(curSortMode);
+                    break;
+                case 2:// favor
+                    curSortMode = GdbConstants.STAR_SORT_FAVOR;
+                    if (sideBar.getVisibility() == View.VISIBLE) {
+                        sideBar.setVisibility(View.GONE);
+                    }
+                    pagerAdapter.getItem(viewpager.getCurrentItem()).reloadStarList(curSortMode);
+                    // 更新tabLayout的数据，回调在onStarCountLoaded
+                    presenter.loadTitles(curSortMode);
+                    break;
+                case 3:// go top
+                    pagerAdapter.getItem(viewpager.getCurrentItem()).goTop();
+                    break;
+            }
+        }
+    };
 
     @Override
     public void showTitles(int all, int top, int bottom, int half) {
@@ -253,7 +329,7 @@ public class StarPadActivity extends MvpActivity<StarPadPresenter> implements St
         super.onDestroy();
     }
 
-    @OnClick({R.id.iv_icon_sort, R.id.iv_icon_mode, R.id.iv_icon_num, R.id.iv_icon_index})
+    @OnClick({R.id.iv_icon_sort, R.id.iv_icon_mode})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.iv_icon_sort:
@@ -269,27 +345,6 @@ public class StarPadActivity extends MvpActivity<StarPadPresenter> implements St
                     ivIconMode.setImageResource(R.drawable.ic_panorama_horizontal_3f51b5_36dp);
                 }
                 ftRecord.refresh();
-                break;
-            case R.id.iv_icon_index:
-                changeSideBarVisible();
-                break;
-            case R.id.iv_icon_num:
-                if (view.isSelected()) {
-                    view.setSelected(false);
-                    ivIconIndex.setVisibility(View.VISIBLE);
-                    curSortMode = GdbConstants.STAR_SORT_NAME;
-                    changeSideBarVisible();
-                } else {
-                    view.setSelected(true);
-                    ivIconIndex.setVisibility(View.GONE);
-                    curSortMode = GdbConstants.STAR_SORT_RECORDS;
-                    if (sideBar.getVisibility() == View.VISIBLE) {
-                        sideBar.setVisibility(View.GONE);
-                    }
-                }
-                pagerAdapter.getItem(viewpager.getCurrentItem()).reloadStarList(curSortMode);
-                // 更新tabLayout的数据，回调在onStarCountLoaded
-                presenter.loadTitles(curSortMode);
                 break;
         }
     }

@@ -5,9 +5,18 @@ import android.content.Context;
 import android.graphics.Point;
 import android.view.WindowManager;
 
+import com.jing.app.jjgallery.gdb.GdbApplication;
+
 public class DisplayHelper {
 
 	private static boolean fullscreen = false;
+
+	public static boolean isTabModel() {
+		if (GdbApplication.getInstance().getResources().getConfiguration().smallestScreenWidthDp >= 600) {
+			return true;
+		}
+		return false;
+	}
 	public static boolean isTabModel(Context context) {
 		if (context.getResources().getConfiguration().smallestScreenWidthDp >= 600) {
 			return true;

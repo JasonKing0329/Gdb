@@ -7,6 +7,7 @@ import com.jing.app.jjgallery.gdb.model.GdbImageProvider;
 import com.jing.app.jjgallery.gdb.model.SettingProperties;
 import com.jing.app.jjgallery.gdb.model.bean.StarProxy;
 import com.jing.app.jjgallery.gdb.model.conf.PreferenceValue;
+import com.jing.app.jjgallery.gdb.util.DisplayHelper;
 import com.jing.app.jjgallery.gdb.view.star.StarListView;
 import com.king.app.gdb.data.entity.Star;
 import com.king.app.gdb.data.entity.StarDao;
@@ -36,7 +37,9 @@ public class StarListPresenter extends BasePresenter<StarListView> {
 
     @Override
     public void onCreate() {
-
+        if (DisplayHelper.isTabModel()) {
+            SettingProperties.setStarListViewMode(PreferenceValue.STAR_LIST_VIEW_CIRCLE);
+        }
     }
 
     public void saveFavor(Star star) {
@@ -91,6 +94,10 @@ public class StarListPresenter extends BasePresenter<StarListView> {
                 if (sortMode == GdbConstants.STAR_SORT_RECORDS) {// order by records number
                     resultList.addAll(proxyList);
                     Collections.sort(resultList, new StarRecordsNumberComparator());
+                }
+                else if (sortMode == GdbConstants.STAR_SORT_FAVOR) {// order by records number
+                    resultList.addAll(proxyList);
+                    Collections.sort(resultList, new StarFavorComparator());
                 }
                 else {
                     // order by name
@@ -160,6 +167,27 @@ public class StarListPresenter extends BasePresenter<StarListView> {
 
             // order by record number desc
             int result = r.getStar().getRecords() - l.getStar().getRecords();
+            // if same, then compare name and order by name asc
+            if (result == 0) {
+                result = l.getStar().getName().toLowerCase().compareTo(r.getStar().getName().toLowerCase());
+            }
+            return result;
+        }
+    }
+
+    /**
+     * order by favor
+     */
+    public class StarFavorComparator implements Comparator<StarProxy> {
+
+        @Override
+        public int compare(StarProxy l, StarProxy r) {
+            if (l == null || r == null) {
+                return 0;
+            }
+
+            // order by record number desc
+            int result = r.getStar().getFavor() - l.getStar().getFavor();
             // if same, then compare name and order by name asc
             if (result == 0) {
                 result = l.getStar().getName().toLowerCase().compareTo(r.getStar().getName().toLowerCase());

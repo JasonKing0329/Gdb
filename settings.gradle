@@ -1,1 +1,1 @@
-include ':app', ':libresmanager', ':shapimageview', ':jindicator', ':data'
+include ':app', ':libresmanager', ':shapimageview', ':jindicator', ':data', ':boommenu'

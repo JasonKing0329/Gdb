@@ -106,7 +106,7 @@ public class RecordsListFragment extends MvpFragmentV4<RecordListPresenter> impl
      * actionbar 输入字符
      */
     public void filterRecord(String text) {
-        if (mAdapter != null) {
+        if (mAdapter != null || mGridAdapter != null) {
             this.keywords = text;
             loadNewRecords();
         }
