@@ -96,4 +96,8 @@ public class StarPagePresenter extends BasePresenter<StarPageView> {
         Collections.shuffle(list);
         return list;
     }
+
+    public void deleteFile(String filePath) {
+        new File(filePath).delete();
+    }
 }

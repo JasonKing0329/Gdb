@@ -2,9 +2,11 @@ package com.jing.app.jjgallery.gdb.view.star.pad;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -22,11 +24,13 @@ import butterknife.ButterKnife;
  * @time 2018/2/14 0014 10:41
  */
 
-public class StarPageStarAdapter extends RecyclerView.Adapter<StarPageStarAdapter.RecordHolder> {
+public class StarPageStarAdapter extends RecyclerView.Adapter<StarPageStarAdapter.RecordHolder> implements View.OnClickListener {
 
     private List<String> pathList;
 
     private RequestOptions recordOptions;
+
+    private OnItemClickListener onItemClickListener;
 
     public StarPageStarAdapter(){
         recordOptions = GlideUtil.getRecordOptions();
@@ -51,6 +55,9 @@ public class StarPageStarAdapter extends RecyclerView.Adapter<StarPageStarAdapte
                     .apply(recordOptions)
                     .into(holder.ivRecord);
         }
+
+        holder.groupCard.setTag(pathList.get(position));
+        holder.groupCard.setOnClickListener(this);
     }
 
     @Override
@@ -62,7 +69,41 @@ public class StarPageStarAdapter extends RecyclerView.Adapter<StarPageStarAdapte
         this.pathList = pathList;
     }
 
+    @Override
+    public void onClick(View view) {
+        final String filePath = (String) view.getTag();
+        PopupMenu menu = new PopupMenu(view.getContext(), view);
+        menu.getMenuInflater().inflate(R.menu.popup_image, menu.getMenu());
+        menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                switch (menuItem.getItemId()) {
+                    case R.id.menu_delete:
+                        onItemClickListener.onDeleteItem(filePath);
+                        break;
+                }
+                return true;
+            }
+        });
+        menu.show();
+    }
+
+    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
+        this.onItemClickListener = onItemClickListener;
+    }
+
+    public void removeItem(String filePath) {
+        int position = pathList.indexOf(filePath);
+        if (position >= 0) {
+            pathList.remove(position);
+            notifyItemRemoved(position);
+        }
+    }
+
     public static class RecordHolder extends RecyclerView.ViewHolder {
+
+        @BindView(R.id.group_card)
+        ViewGroup groupCard;
 
         @BindView(R.id.iv_record)
         ImageView ivRecord;
@@ -71,5 +112,9 @@ public class StarPageStarAdapter extends RecyclerView.Adapter<StarPageStarAdapte
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
+    }
+
+    public interface OnItemClickListener {
+        void onDeleteItem(String filePath);
     }
 }

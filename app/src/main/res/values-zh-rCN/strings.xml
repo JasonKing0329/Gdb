@@ -21,6 +21,7 @@
     <string name="unselect_all">取消全选</string>
     <string name="success">成功</string>
     <string name="failed">失败</string>
+    <string name="delete">删除</string>
 
     <!-- login -->
     <string name="username">用户名</string>

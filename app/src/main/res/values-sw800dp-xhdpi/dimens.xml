@@ -157,7 +157,7 @@
 
     <dimen name="nav_width">600dp</dimen>
     <dimen name="nav_header_height">340dp</dimen>
-    <dimen name="home_pop_menu_bottom">128dp</dimen>
+    <dimen name="home_pop_menu_bottom">88dp</dimen>
     <dimen name="home_pop_menu_left">10dp</dimen>
     <dimen name="boom_menu_btn_margin_ver">10dp</dimen>
 

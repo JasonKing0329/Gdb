@@ -138,4 +138,8 @@ public class RecordPresenter extends BasePresenter<IRecordView> {
         }
         return list;
     }
+
+    public void deleteFile(String filePath) {
+        new File(filePath).delete();
+    }
 }

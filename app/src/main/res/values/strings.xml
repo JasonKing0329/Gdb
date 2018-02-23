@@ -6,6 +6,7 @@
     <string name="save">Save</string>
     <string name="no_content">No content</string>
     <string name="save_success">Save success</string>
+    <string name="delete">Delete</string>
     <!-- login -->
     <string name="username">User name</string>
     <string name="password">Password</string>

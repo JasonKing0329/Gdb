@@ -1,5 +1,6 @@
 package com.jing.app.jjgallery.gdb.view.record.pad;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.support.v7.widget.LinearLayoutManager;
@@ -17,6 +18,7 @@ import com.jing.app.jjgallery.gdb.model.VideoModel;
 import com.jing.app.jjgallery.gdb.presenter.record.RecordPresenter;
 import com.jing.app.jjgallery.gdb.util.ScreenUtils;
 import com.jing.app.jjgallery.gdb.view.pub.PointDescLayout;
+import com.jing.app.jjgallery.gdb.view.pub.dialog.AlertDialogFragmentV4;
 import com.jing.app.jjgallery.gdb.view.record.phone.IRecordView;
 import com.king.app.gdb.data.entity.Record;
 import com.king.app.gdb.data.entity.RecordStar;
@@ -148,6 +150,23 @@ public class RecordPadActivity extends MvpActivity<RecordPresenter> implements I
     private void showImages(Record record) {
         recordPadAdapter = new RecordPadAdapter();
         recordPadAdapter.setPathList(presenter.getRecordImages());
+        recordPadAdapter.setOnItemClickListener(new RecordPadAdapter.OnItemClickListener() {
+            @Override
+            public void onDeleteItem(final String filePath) {
+                AlertDialogFragmentV4 dialog = new AlertDialogFragmentV4();
+                dialog.setMessage("Are you sure to delete " + filePath);
+                dialog.setPositiveText(getString(R.string.ok));
+                dialog.setPositiveListener(new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        presenter.deleteFile(filePath);
+                        recordPadAdapter.removeItem(filePath);
+                    }
+                });
+                dialog.setNegativeText(getString(R.string.cancel));
+                dialog.show(getSupportFragmentManager(), "AlertDialogFragmentV4");
+            }
+        });
         rvImages.setAdapter(recordPadAdapter);
     }
 

@@ -1,5 +1,6 @@
 package com.jing.app.jjgallery.gdb.view.star.pad;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,6 +13,7 @@ import com.jing.app.jjgallery.gdb.MvpActivity;
 import com.jing.app.jjgallery.gdb.R;
 import com.jing.app.jjgallery.gdb.model.SettingProperties;
 import com.jing.app.jjgallery.gdb.util.ScreenUtils;
+import com.jing.app.jjgallery.gdb.view.pub.dialog.AlertDialogFragmentV4;
 import com.jing.app.jjgallery.gdb.view.record.common.RecordCommonListFragment;
 import com.king.app.gdb.data.entity.Star;
 
@@ -42,6 +44,8 @@ public class StarPageActivity extends MvpActivity<StarPagePresenter> implements 
     RecyclerView rvStar;
 
     private RecordCommonListFragment ftRecord;
+
+    private StarPageStarAdapter starAdapter;
 
     @Override
     protected int getContentView() {
@@ -107,9 +111,26 @@ public class StarPageActivity extends MvpActivity<StarPagePresenter> implements 
         }
         tvTagVideo.setSelected(true);
 
-        StarPageStarAdapter adapter = new StarPageStarAdapter();
-        adapter.setPathList(presenter.getStarImages());
-        rvStar.setAdapter(adapter);
+        starAdapter = new StarPageStarAdapter();
+        starAdapter.setPathList(presenter.getStarImages());
+        starAdapter.setOnItemClickListener(new StarPageStarAdapter.OnItemClickListener() {
+            @Override
+            public void onDeleteItem(final String filePath) {
+                AlertDialogFragmentV4 dialog = new AlertDialogFragmentV4();
+                dialog.setMessage("Are you sure to delete " + filePath);
+                dialog.setPositiveText(getString(R.string.ok));
+                dialog.setPositiveListener(new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        presenter.deleteFile(filePath);
+                        starAdapter.removeItem(filePath);
+                    }
+                });
+                dialog.setNegativeText(getString(R.string.cancel));
+                dialog.show(getSupportFragmentManager(), "AlertDialogFragmentV4");
+            }
+        });
+        rvStar.setAdapter(starAdapter);
 
         ftRecord.showStarRecords(star);
     }
