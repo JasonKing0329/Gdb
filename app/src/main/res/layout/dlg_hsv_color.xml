@@ -32,42 +32,62 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="H(色彩，0~360)"
+                android:paddingLeft="15dp"/>
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:layout_marginTop="10dp"
                 android:gravity="center_vertical">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="start"
-                    android:paddingLeft="15dp"/>
                 <EditText
                     android:id="@+id/et_start"
-                    android:layout_width="100dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="15dp"
                     android:inputType="number"
-                    android:paddingLeft="15dp"/>
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginTop="10dp"
-                android:gravity="center_vertical">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="angle"
+                    android:hint="起始角度"
                     android:paddingLeft="15dp"/>
                 <EditText
                     android:id="@+id/et_angle"
-                    android:layout_width="100dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="15dp"
                     android:inputType="number"
+                    android:hint="扫过的角度"
+                    android:paddingLeft="15dp"/>
+            </LinearLayout>
+            <CheckBox
+                android:id="@+id/cb_stable"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="固定S(深浅，0~1)与V(明暗，0~1)"
+                android:layout_marginTop="10dp"/>
+            <LinearLayout
+                android:id="@+id/group_sv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="10dp"
+                android:gravity="center_vertical">
+                <EditText
+                    android:id="@+id/et_s"
+                    android:layout_width="50dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:inputType="numberDecimal"
+                    android:hint="S"
+                    android:paddingLeft="15dp"/>
+                <EditText
+                    android:id="@+id/et_v"
+                    android:layout_width="50dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:inputType="numberDecimal"
+                    android:hint="V"
                     android:paddingLeft="15dp"/>
             </LinearLayout>
         </LinearLayout>

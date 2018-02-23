@@ -10,6 +10,7 @@ import com.jing.app.jjgallery.gdb.IFragmentHolder;
 import com.jing.app.jjgallery.gdb.MvpFragmentV4;
 import com.jing.app.jjgallery.gdb.R;
 import com.jing.app.jjgallery.gdb.model.SettingProperties;
+import com.jing.app.jjgallery.gdb.model.bean.HsvColorBean;
 import com.jing.app.jjgallery.gdb.model.db.SceneBean;
 import com.jing.app.jjgallery.gdb.presenter.record.RecordScenePresenter;
 import com.jing.app.jjgallery.gdb.view.adapter.RecordSceneNameAdapter;
@@ -128,25 +129,23 @@ public class RecordSceneFragment extends MvpFragmentV4<RecordScenePresenter> imp
     public void editColor() {
         if (colorDialog == null) {
             colorDialog = new HsvColorDialogFragment();
-            colorDialog.setColorStart(SettingProperties.getGdbSceneHsvStart());
-            colorDialog.setColorAngle(SettingProperties.getGdbSceneHsvAngle());
+            colorDialog.setHsvColorBean(SettingProperties.getGdbSceneColor());
             colorDialog.setOnHsvColorListener(new HsvColorDialogFragment.OnHsvColorListener() {
                 @Override
-                public void onPreviewHsvColor(int start, int angle) {
-                    sceneAdapter.updateBgColors(start, angle);
+                public void onPreviewHsvColor(HsvColorBean hsvColorBean) {
+                    sceneAdapter.updateBgColors(hsvColorBean);
                 }
 
                 @Override
-                public void onSaveColor(int start, int angle) {
-                    SettingProperties.setGdbSceneHsvStart(start);
-                    SettingProperties.setGdbSceneHsvAngle(angle);
+                public void onSaveColor(HsvColorBean hsvColorBean) {
+                    SettingProperties.setGdbSceneHsvColor(hsvColorBean);
                 }
             });
         }
         colorDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialog) {
-                sceneAdapter.updateBgColors(SettingProperties.getGdbSceneHsvStart(), SettingProperties.getGdbSceneHsvAngle());
+                sceneAdapter.updateBgColors(SettingProperties.getGdbSceneColor());
             }
         });
         colorDialog.show(getFragmentManager(), "HsvColorDialogFragment");
@@ -158,6 +157,9 @@ public class RecordSceneFragment extends MvpFragmentV4<RecordScenePresenter> imp
 
     public void focusToScene(String scene) {
         this.focusScene = scene;
-        rvScenes.scrollToPosition(presenter.getFocusScenePosition(scene));
+        int position = presenter.getFocusScenePosition(scene);
+        sceneAdapter.setSelection(position);
+        sceneAdapter.notifyDataSetChanged();
+        rvScenes.scrollToPosition(position);
     }
 }

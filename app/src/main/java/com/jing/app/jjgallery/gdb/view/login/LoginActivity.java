@@ -144,6 +144,9 @@ public class LoginActivity extends GBaseActivity implements ILoginView {
                     @Override
                     public void accept(Boolean hasPref) throws Exception {
 
+                        //DEBUG
+                        ActivityManager.startHomePadActivity(LoginActivity.this);
+
                         if (hasPref) {
                             new DefaultDialogManager().showWarningActionDialog(LoginActivity.this
                                     , getResources().getString(R.string.login_extend_pref_exist)

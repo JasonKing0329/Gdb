@@ -69,9 +69,7 @@ public class PreferenceKey {
     // animation time
     public static final String PREF_GDB_REC_ANIM_TIME = "pref_gdb_rec_anim_time";
     // scene hsv star
-    public static final String PREF_GDB_SCENE_HSV_START = "pref_gdb_scene_hsv_start";
-    // scene hsv angle
-    public static final String PREF_GDB_SCENE_HSV_ANGLE = "pref_gdb_scene_hsv_angle";
+    public static final String PREF_GDB_SCENE_HSV_COLOR = "pref_gdb_scene_hsv_color";
     // head path of gdb home nav header
     public static final String PREF_GDB_NAV_HEAD_RANDOM = "pref_gdb_nav_head_random";
     // random animation of recommend item

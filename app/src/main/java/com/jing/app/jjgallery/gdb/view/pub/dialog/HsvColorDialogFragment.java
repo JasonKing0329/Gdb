@@ -5,10 +5,13 @@ import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 
 import com.jing.app.jjgallery.gdb.IFragmentHolder;
 import com.jing.app.jjgallery.gdb.R;
+import com.jing.app.jjgallery.gdb.model.bean.HsvColorBean;
 import com.jing.app.jjgallery.gdb.util.ScreenUtils;
 
 import butterknife.BindView;
@@ -26,9 +29,8 @@ public class HsvColorDialogFragment extends DraggableDialogFragmentV4 {
 
     private OnHsvColorListener onHsvColorListener;
 
-    private int colorStart;
+    private HsvColorBean hsvColorBean;
 
-    private int colorAngle;
     private DialogInterface.OnDismissListener onDismissListener;
 
     @Override
@@ -43,8 +45,7 @@ public class HsvColorDialogFragment extends DraggableDialogFragmentV4 {
     protected Fragment getContentViewFragment() {
         ftColor = new ColorFragment();
         ftColor.setOnHsvColorListener(onHsvColorListener);
-        ftColor.setColorStart(colorStart);
-        ftColor.setColorAngle(colorAngle);
+        ftColor.setHsvColorBean(hsvColorBean);
         getDialog().setOnDismissListener(onDismissListener);
         return ftColor;
     }
@@ -54,16 +55,13 @@ public class HsvColorDialogFragment extends DraggableDialogFragmentV4 {
         return ScreenUtils.getScreenWidth(getActivity()) * 1 / 2;
     }
 
+    @Override
+    protected int getMaxHeight() {
+        return ScreenUtils.getScreenHeight(getActivity()) * 2 / 3;
+    }
+
     public void setOnHsvColorListener(OnHsvColorListener onHsvColorListener) {
         this.onHsvColorListener = onHsvColorListener;
-    }
-
-    public void setColorStart(int colorStart) {
-        this.colorStart = colorStart;
-    }
-
-    public void setColorAngle(int colorAngle) {
-        this.colorAngle = colorAngle;
     }
 
     @Override
@@ -78,16 +76,26 @@ public class HsvColorDialogFragment extends DraggableDialogFragmentV4 {
         this.onDismissListener = onDismissListener;
     }
 
+    public void setHsvColorBean(HsvColorBean hsvColorBean) {
+        this.hsvColorBean = hsvColorBean;
+    }
+
     public static class ColorFragment extends ContentFragmentV4 {
 
         @BindView(R.id.et_start)
         EditText etStart;
         @BindView(R.id.et_angle)
         EditText etAngle;
+        @BindView(R.id.et_s)
+        EditText etS;
+        @BindView(R.id.et_v)
+        EditText etV;
+        @BindView(R.id.cb_stable)
+        CheckBox cbSv;
+        @BindView(R.id.group_sv)
+        ViewGroup groupSv;
 
-        private int colorStart;
-
-        private int colorAngle;
+        private HsvColorBean hsvColorBean;
 
         private OnHsvColorListener onHsvColorListener;
 
@@ -99,8 +107,26 @@ public class HsvColorDialogFragment extends DraggableDialogFragmentV4 {
         @Override
         protected void initView(View view) {
             ButterKnife.bind(this, view);
-            etStart.setText(String.valueOf(colorStart));
-            etAngle.setText(String.valueOf(colorAngle));
+            if (hsvColorBean == null) {
+                hsvColorBean = new HsvColorBean();
+            }
+            etStart.setText(String.valueOf(hsvColorBean.gethStart()));
+            etAngle.setText(String.valueOf(hsvColorBean.gethArg()));
+            etS.setText(String.valueOf(hsvColorBean.getS()));
+            etV.setText(String.valueOf(hsvColorBean.getV()));
+            if (hsvColorBean.getS() >=0 || hsvColorBean.getV() >= 0) {
+                groupSv.setVisibility(View.VISIBLE);
+                cbSv.setChecked(true);
+            }
+            else {
+                groupSv.setVisibility(View.INVISIBLE);
+            }
+            cbSv.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton compoundButton, boolean check) {
+                    groupSv.setVisibility(check ? View.VISIBLE:View.INVISIBLE);
+                }
+            });
         }
 
         @Override
@@ -112,27 +138,39 @@ public class HsvColorDialogFragment extends DraggableDialogFragmentV4 {
         public void onViewClicked() {
             if (onHsvColorListener != null) {
                 String start = etStart.getText().toString().trim();
+                if (TextUtils.isEmpty(start)) {
+                    return;
+                }
                 String angle = etAngle.getText().toString().trim();
-                if (!TextUtils.isEmpty(start) && !TextUtils.isEmpty(angle)) {
-                    try {
-                        onHsvColorListener.onPreviewHsvColor(Integer.parseInt(start), Integer.parseInt(angle));
-                    } catch (NumberFormatException e) {
-                        e.printStackTrace();
+                if (TextUtils.isEmpty(angle)) {
+                    return;
+                }
+                hsvColorBean.sethStart(Integer.parseInt(start));
+                hsvColorBean.sethArg(Integer.parseInt(angle));
+
+                if (groupSv.getVisibility() == View.VISIBLE) {
+                    String s = etS.getText().toString().trim();
+                    if (TextUtils.isEmpty(s)) {
+                        return;
                     }
+                    String v = etV.getText().toString().trim();
+                    if (TextUtils.isEmpty(v)) {
+                        return;
+                    }
+                    hsvColorBean.setS(Float.parseFloat(s));
+                    hsvColorBean.setV(Float.parseFloat(v));
+                }
+
+                try {
+                    onHsvColorListener.onPreviewHsvColor(hsvColorBean);
+                } catch (NumberFormatException e) {
+                    e.printStackTrace();
                 }
             }
         }
 
         public void setOnHsvColorListener(OnHsvColorListener onHsvColorListener) {
             this.onHsvColorListener = onHsvColorListener;
-        }
-
-        public void setColorStart(int colorStart) {
-            this.colorStart = colorStart;
-        }
-
-        public void setColorAngle(int colorAngle) {
-            this.colorAngle = colorAngle;
         }
 
         public void onClickSave() {
@@ -144,18 +182,37 @@ public class HsvColorDialogFragment extends DraggableDialogFragmentV4 {
             if (TextUtils.isEmpty(angle)) {
                 return;
             }
+            hsvColorBean.sethStart(Integer.parseInt(start));
+            hsvColorBean.sethArg(Integer.parseInt(angle));
+
+            if (groupSv.getVisibility() == View.VISIBLE) {
+                String s = etS.getText().toString().trim();
+                if (TextUtils.isEmpty(s)) {
+                    return;
+                }
+                String v = etV.getText().toString().trim();
+                if (TextUtils.isEmpty(v)) {
+                    return;
+                }
+                hsvColorBean.setS(Float.parseFloat(s));
+                hsvColorBean.setV(Float.parseFloat(v));
+            }
             try {
                 if (onHsvColorListener != null) {
-                    onHsvColorListener.onSaveColor(Integer.parseInt(start), Integer.parseInt(angle));
+                    onHsvColorListener.onSaveColor(hsvColorBean);
                 }
             } catch (NumberFormatException e) {
                 e.printStackTrace();
             }
         }
+
+        public void setHsvColorBean(HsvColorBean hsvColorBean) {
+            this.hsvColorBean = hsvColorBean;
+        }
     }
 
     public interface OnHsvColorListener {
-        void onPreviewHsvColor(int start, int angle);
-        void onSaveColor(int start, int angle);
+        void onPreviewHsvColor(HsvColorBean hsvColorBean);
+        void onSaveColor(HsvColorBean hsvColorBean);
     }
 }

@@ -4,7 +4,9 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+import com.google.gson.Gson;
 import com.jing.app.jjgallery.gdb.GdbApplication;
+import com.jing.app.jjgallery.gdb.model.bean.HsvColorBean;
 import com.jing.app.jjgallery.gdb.model.conf.ConfManager;
 import com.jing.app.jjgallery.gdb.model.conf.PreferenceKey;
 import com.jing.app.jjgallery.gdb.model.conf.PreferenceValue;
@@ -323,41 +325,31 @@ public class SettingProperties {
     }
 
     /**
-     * scene hsv start
+     * scene hsv color
      */
-    public static void setGdbSceneHsvStart(int time) {
+    public static HsvColorBean getGdbSceneColor() {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(GdbApplication.getInstance());
+        String json = preferences.getString(PreferenceKey.PREF_GDB_SCENE_HSV_COLOR, null);
+        Gson gson = new Gson();
+        try {
+            HsvColorBean bean = gson.fromJson(json, HsvColorBean.class);
+            if (bean == null) {
+                return new HsvColorBean();
+            }
+            return bean;
+        } catch (Exception e) {
+            return new HsvColorBean();
+        }
+    }
+
+    /**
+     * scene hsv color
+     */
+    public static void setGdbSceneHsvColor(HsvColorBean color) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(GdbApplication.getInstance());
         SharedPreferences.Editor editor = preferences.edit();
-        editor.putInt(PreferenceKey.PREF_GDB_SCENE_HSV_START, time);
+        editor.putString(PreferenceKey.PREF_GDB_SCENE_HSV_COLOR, new Gson().toJson(color));
         editor.commit();
-    }
-
-    /**
-     * scene hsv start
-     */
-    public static int getGdbSceneHsvStart() {
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(GdbApplication.getInstance());
-        int mode = preferences.getInt(PreferenceKey.PREF_GDB_SCENE_HSV_START, 0);
-        return mode;
-    }
-
-    /**
-     * scene hsv start
-     */
-    public static void setGdbSceneHsvAngle(int time) {
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(GdbApplication.getInstance());
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putInt(PreferenceKey.PREF_GDB_SCENE_HSV_ANGLE, time);
-        editor.commit();
-    }
-
-    /**
-     * scene hsv start
-     */
-    public static int getGdbSceneHsvAngle() {
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(GdbApplication.getInstance());
-        int mode = preferences.getInt(PreferenceKey.PREF_GDB_SCENE_HSV_ANGLE, 360);
-        return mode;
     }
 
     /**

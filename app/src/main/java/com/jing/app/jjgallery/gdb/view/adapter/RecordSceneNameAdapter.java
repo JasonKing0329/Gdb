@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.jing.app.jjgallery.gdb.R;
 import com.jing.app.jjgallery.gdb.model.SettingProperties;
+import com.jing.app.jjgallery.gdb.model.bean.HsvColorBean;
 import com.jing.app.jjgallery.gdb.model.db.SceneBean;
 import com.jing.app.jjgallery.gdb.util.ColorUtils;
 import com.jing.app.jjgallery.gdb.util.FormatUtil;
@@ -32,8 +33,9 @@ public class RecordSceneNameAdapter extends RecyclerView.Adapter<RecordSceneName
     private List<Integer> colorList;
     private OnSceneItemClickListener onSceneItemClickListener;
 
-    private int hsvStart;
-    private int hsvAngle;
+    private int selection;
+
+    private HsvColorBean hsvColorBean;
 
     public RecordSceneNameAdapter(List<SceneBean> list) {
         this.list = list;
@@ -44,8 +46,7 @@ public class RecordSceneNameAdapter extends RecyclerView.Adapter<RecordSceneName
             }
         }
 
-        hsvStart = SettingProperties.getGdbSceneHsvStart();
-        hsvAngle = SettingProperties.getGdbSceneHsvAngle();
+        hsvColorBean = SettingProperties.getGdbSceneColor();
     }
 
     public void setList(List<SceneBean> list) {
@@ -58,9 +59,12 @@ public class RecordSceneNameAdapter extends RecyclerView.Adapter<RecordSceneName
         }
     }
 
-    public void updateBgColors(int start, int angle) {
-        hsvStart = start;
-        hsvAngle = angle;
+    public void setSelection(int selection) {
+        this.selection = selection;
+    }
+
+    public void updateBgColors(HsvColorBean hsvColorBean) {
+        this.hsvColorBean = hsvColorBean;
         colorList = new ArrayList<>();
         for (int i = 0; i < list.size(); i ++) {
             colorList.add(0);
@@ -77,13 +81,22 @@ public class RecordSceneNameAdapter extends RecyclerView.Adapter<RecordSceneName
     public void onBindViewHolder(NameHolder holder, int position) {
         SceneBean bean = list.get(position);
         holder.tvName.setText(bean.getScene());
-        // 避免每次产生新颜色
-        if (colorList.get(position) == 0) {
-            colorList.set(position, ColorUtils.randomBgColor(hsvStart, hsvAngle));
-        }
-        holder.groupContainer.setBackground(getBackground(holder.groupContainer, colorList.get(position)));
 
-        holder.groupContainer.setTag(bean.getScene());
+        int color;
+        if (selection == position) {
+            color = holder.groupContainer.getResources().getColor(R.color.colorAccent);
+        }
+        else {
+            color = colorList.get(position);
+            // 避免每次产生新颜色
+            if (color == 0) {
+                color = ColorUtils.randomColorBy(hsvColorBean);
+                colorList.set(position, color);
+            }
+        }
+        holder.groupContainer.setBackground(getBackground(color));
+
+        holder.groupContainer.setTag(position);
         holder.groupContainer.setOnClickListener(this);
 
         holder.tvNumber.setText(String.valueOf(bean.getNumber()));
@@ -91,7 +104,7 @@ public class RecordSceneNameAdapter extends RecyclerView.Adapter<RecordSceneName
         holder.tvMax.setText("Max(" + bean.getMax() + ")");
     }
 
-    private Drawable getBackground(View view, int color) {
+    private Drawable getBackground(int color) {
         GradientDrawable normal = new GradientDrawable();
         normal.setColor(color);
         normal.setCornerRadius(ScreenUtils.dp2px(10));
@@ -116,7 +129,12 @@ public class RecordSceneNameAdapter extends RecyclerView.Adapter<RecordSceneName
     @Override
     public void onClick(View v) {
         if (onSceneItemClickListener != null) {
-            onSceneItemClickListener.onSceneItemClick((String) v.getTag());
+            int position = (int) v.getTag();
+            if (selection != position) {
+                selection = position;
+                notifyDataSetChanged();
+                onSceneItemClickListener.onSceneItemClick(list.get(position).getScene());
+            }
         }
     }
 
