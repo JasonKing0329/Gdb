@@ -69,10 +69,6 @@
                     android:id="@+id/iv_icon_sort"
                     style="@style/IvPadActionIcon"
                     android:src="@drawable/ic_sort_purple_3f3a71_36dp" />
-                <ImageView
-                    android:id="@+id/iv_icon_mode"
-                    style="@style/IvPadActionIcon"
-                    android:src="@drawable/ic_panorama_horizontal_3f51b5_36dp"/>
             </LinearLayout>
             <FrameLayout
                 android:id="@+id/group_ft_record"

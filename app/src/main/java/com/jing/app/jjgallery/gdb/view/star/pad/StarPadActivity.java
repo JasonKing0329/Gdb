@@ -9,7 +9,6 @@ import android.widget.TextView;
 import com.jing.app.jjgallery.gdb.GdbConstants;
 import com.jing.app.jjgallery.gdb.MvpActivity;
 import com.jing.app.jjgallery.gdb.R;
-import com.jing.app.jjgallery.gdb.model.SettingProperties;
 import com.jing.app.jjgallery.gdb.view.pub.WaveSideBarView;
 import com.jing.app.jjgallery.gdb.view.record.common.RecordCommonListFragment;
 import com.jing.app.jjgallery.gdb.view.star.IStarListHolder;
@@ -58,8 +57,6 @@ public class StarPadActivity extends MvpActivity<StarPadPresenter> implements St
     TextView tvIndex;
     @BindView(R.id.iv_icon_sort)
     ImageView ivIconSort;
-    @BindView(R.id.iv_icon_mode)
-    ImageView ivIconMode;
     @BindView(R.id.side_bar)
     WaveSideBarView sideBar;
     @BindView(R.id.bmb_menu)
@@ -129,13 +126,6 @@ public class StarPadActivity extends MvpActivity<StarPadPresenter> implements St
         });
 
         initRecordFragment();
-
-        if (SettingProperties.isStarPadRecordsCardMode()) {
-            ivIconMode.setImageResource(R.drawable.ic_panorama_horizontal_3f51b5_36dp);
-        }
-        else {
-            ivIconMode.setImageResource(R.drawable.ic_panorama_vertical_3f51b5_36dp);
-        }
 
         initBoomButton();
     }
@@ -332,22 +322,11 @@ public class StarPadActivity extends MvpActivity<StarPadPresenter> implements St
         super.onDestroy();
     }
 
-    @OnClick({R.id.iv_icon_sort, R.id.iv_icon_mode})
+    @OnClick({R.id.iv_icon_sort})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.iv_icon_sort:
                 ftRecord.onClickSort();
-                break;
-            case R.id.iv_icon_mode:
-                if (SettingProperties.isStarPadRecordsCardMode()) {
-                    SettingProperties.setStarPadRecordsCardMode(false);
-                    ivIconMode.setImageResource(R.drawable.ic_panorama_vertical_3f51b5_36dp);
-                }
-                else {
-                    SettingProperties.setStarPadRecordsCardMode(true);
-                    ivIconMode.setImageResource(R.drawable.ic_panorama_horizontal_3f51b5_36dp);
-                }
-                ftRecord.refresh();
                 break;
         }
     }

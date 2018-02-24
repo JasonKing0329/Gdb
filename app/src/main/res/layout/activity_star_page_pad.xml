@@ -45,10 +45,6 @@
             android:id="@+id/iv_icon_sort"
             style="@style/IvPadActionIcon"
             android:src="@drawable/ic_sort_purple_3f3a71_36dp" />
-        <ImageView
-            android:id="@+id/iv_icon_mode"
-            style="@style/IvPadActionIcon"
-            android:src="@drawable/ic_panorama_horizontal_3f51b5_36dp"/>
     </LinearLayout>
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv_star"

@@ -6,12 +6,10 @@ import android.graphics.Rect;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.jing.app.jjgallery.gdb.MvpActivity;
 import com.jing.app.jjgallery.gdb.R;
-import com.jing.app.jjgallery.gdb.model.SettingProperties;
 import com.jing.app.jjgallery.gdb.util.ScreenUtils;
 import com.jing.app.jjgallery.gdb.view.pub.dialog.AlertDialogFragmentV4;
 import com.jing.app.jjgallery.gdb.view.record.common.RecordCommonListFragment;
@@ -38,8 +36,6 @@ public class StarPageActivity extends MvpActivity<StarPagePresenter> implements 
     TextView tvTagTop;
     @BindView(R.id.tv_tag_bottom)
     TextView tvTagBottom;
-    @BindView(R.id.iv_icon_mode)
-    ImageView ivIconMode;
     @BindView(R.id.rv_star)
     RecyclerView rvStar;
 
@@ -70,13 +66,6 @@ public class StarPageActivity extends MvpActivity<StarPagePresenter> implements 
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.group_records, ftRecord, "RecordCommonListFragment")
                 .commit();
-
-        if (SettingProperties.isStarPadRecordsCardMode()) {
-            ivIconMode.setImageResource(R.drawable.ic_panorama_horizontal_3f51b5_36dp);
-        }
-        else {
-            ivIconMode.setImageResource(R.drawable.ic_panorama_vertical_3f51b5_36dp);
-        }
     }
 
     @Override
@@ -93,6 +82,9 @@ public class StarPageActivity extends MvpActivity<StarPagePresenter> implements 
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         setIntent(intent);
+        tvTagTop.setSelected(false);
+        tvTagBottom.setSelected(false);
+        tvTagVideo.setSelected(true);
         initData();
     }
 
@@ -105,9 +97,15 @@ public class StarPageActivity extends MvpActivity<StarPagePresenter> implements 
             tvTagTop.setText("Top  " + star.getBetop());
             tvTagTop.setVisibility(View.VISIBLE);
         }
+        else {
+            tvTagTop.setVisibility(View.GONE);
+        }
         if (star.getBebottom() > 0) {
             tvTagBottom.setText("Bottom  " + star.getBebottom());
             tvTagBottom.setVisibility(View.VISIBLE);
+        }
+        else {
+            tvTagBottom.setVisibility(View.GONE);
         }
         tvTagVideo.setSelected(true);
 
@@ -135,7 +133,7 @@ public class StarPageActivity extends MvpActivity<StarPagePresenter> implements 
         ftRecord.showStarRecords(star);
     }
 
-    @OnClick({R.id.iv_icon_back, R.id.iv_icon_sort, R.id.iv_icon_mode})
+    @OnClick({R.id.iv_icon_back, R.id.iv_icon_sort})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.iv_icon_back:
@@ -143,21 +141,6 @@ public class StarPageActivity extends MvpActivity<StarPagePresenter> implements 
                 break;
             case R.id.iv_icon_sort:
                 ftRecord.onClickSort();
-                break;
-            case R.id.iv_icon_mode:
-                if (SettingProperties.isStarPadRecordsCardMode()) {
-                    SettingProperties.setStarPadRecordsCardMode(false);
-                    ivIconMode.setImageResource(R.drawable.ic_panorama_vertical_3f51b5_36dp);
-                }
-                else {
-                    SettingProperties.setStarPadRecordsCardMode(true);
-                    ivIconMode.setImageResource(R.drawable.ic_panorama_horizontal_3f51b5_36dp);
-                }
-                ftRecord.refresh();
-                // restore select videos
-                tvTagBottom.setSelected(false);
-                tvTagTop.setSelected(false);
-                tvTagVideo.setSelected(true);
                 break;
         }
     }
