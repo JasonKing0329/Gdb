@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.jing.app.jjgallery.gdb.GdbConstants;
 import com.jing.app.jjgallery.gdb.MvpActivity;
 import com.jing.app.jjgallery.gdb.R;
+import com.jing.app.jjgallery.gdb.model.bean.FilterBean;
 import com.jing.app.jjgallery.gdb.view.record.IRecordListHolder;
 import com.jing.app.jjgallery.gdb.view.record.IRecordSceneHolder;
 import com.jing.app.jjgallery.gdb.view.record.RecordSceneFragment;
@@ -43,6 +44,8 @@ public class RecordListPadActivity extends MvpActivity<RecordListPadPresenter> i
 
     private RecordSceneFragment ftScene;
     private RecordsListFragment ftRecords;
+
+    private String mTitle;
 
     @Override
     protected void onNewIntent(Intent intent) {
@@ -75,6 +78,8 @@ public class RecordListPadActivity extends MvpActivity<RecordListPadPresenter> i
         else {
             tvScene.setText(GdbConstants.KEY_SCENE_ALL);
         }
+        mTitle = tvScene.getText().toString();
+
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.group_scenes, ftScene, "RecordSceneFragment")
                 .commit();
@@ -115,7 +120,8 @@ public class RecordListPadActivity extends MvpActivity<RecordListPadPresenter> i
 
     }
 
-    @OnClick({R.id.iv_icon_back, R.id.iv_icon_close, R.id.iv_icon_search, R.id.iv_icon_sort, R.id.iv_icon_sort_scene, R.id.iv_icon_color})
+    @OnClick({R.id.iv_icon_back, R.id.iv_icon_close, R.id.iv_icon_search, R.id.iv_icon_sort
+            , R.id.iv_icon_sort_scene, R.id.iv_icon_color, R.id.iv_icon_filter})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.iv_icon_back:
@@ -138,6 +144,36 @@ public class RecordListPadActivity extends MvpActivity<RecordListPadPresenter> i
             case R.id.iv_icon_color:
                 ftScene.editColor();
                 break;
+            case R.id.iv_icon_filter:
+                ftRecords.changeFilter();
+                break;
+        }
+    }
+
+    @Override
+    public void updateFilter(FilterBean bean) {
+        if (bean != null) {
+            StringBuffer buffer = new StringBuffer();
+            if (bean.isBareback()) {
+                buffer.append(", ").append("Bareback");
+            }
+            if (bean.isInnerCum()) {
+                buffer.append(", ").append("Inner cum");
+            }
+            if (bean.isNotDeprecated()) {
+                buffer.append(", ").append("Not deprecated");
+            }
+            String title = buffer.toString();
+            if (title.length() > 2) {
+                title = title.substring(2);
+                tvScene.setText(mTitle + " (" + title + ")");
+            }
+            else {
+                tvScene.setText(mTitle);
+            }
+        }
+        else {
+            tvScene.setText(mTitle);
         }
     }
 
@@ -190,6 +226,7 @@ public class RecordListPadActivity extends MvpActivity<RecordListPadPresenter> i
 
     @Override
     public void onSelectScene(String scene) {
+        mTitle = scene;
         tvScene.setText(scene);
         ftRecords.setScene(scene);
         ftRecords.loadNewRecords();

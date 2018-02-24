@@ -9,6 +9,7 @@ import android.widget.PopupMenu;
 
 import com.jing.app.jjgallery.gdb.GBaseActivity;
 import com.jing.app.jjgallery.gdb.R;
+import com.jing.app.jjgallery.gdb.model.bean.FilterBean;
 import com.jing.app.jjgallery.gdb.view.pub.ActionBar;
 import com.jing.app.jjgallery.gdb.view.record.IRecordListHolder;
 import com.jing.app.jjgallery.gdb.view.record.IRecordSceneHolder;
@@ -190,4 +191,9 @@ public class RecordSceneActivity extends GBaseActivity implements IRecordSceneHo
             return true;
         }
     };
+
+    @Override
+    public void updateFilter(FilterBean bean) {
+
+    }
 }

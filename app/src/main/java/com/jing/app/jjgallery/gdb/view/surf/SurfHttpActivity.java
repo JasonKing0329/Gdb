@@ -76,7 +76,7 @@ public class SurfHttpActivity extends SurfActivity<SurfHttpFragment> implements 
         sortDialog.setDesc(currentSortDesc);
         sortDialog.setOnSortListener(new SortDialogFragment.OnSortListener() {
             @Override
-            public void onSort(boolean desc, int sortMode, boolean isIncludeDeprecated) {
+            public void onSort(boolean desc, int sortMode) {
                 currentSortDesc = desc;
                 currentSortMode = sortMode;
                 presenter.sortFileList(ftTree.fragment.getSurfFileList(), currentSortMode, currentSortDesc);

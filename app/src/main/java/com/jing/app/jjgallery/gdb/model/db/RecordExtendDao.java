@@ -4,6 +4,7 @@ import android.database.Cursor;
 import android.text.TextUtils;
 
 import com.jing.app.jjgallery.gdb.GdbApplication;
+import com.jing.app.jjgallery.gdb.model.bean.FilterBean;
 import com.jing.app.jjgallery.gdb.model.conf.PreferenceValue;
 import com.king.app.gdb.data.RecordCursor;
 import com.king.app.gdb.data.entity.Record;
@@ -30,7 +31,7 @@ public class RecordExtendDao {
                 .build().list();
     }
 
-    public List<Record> getRecords(int sortMode, boolean desc, boolean includeDeprecated, RecordCursor cursor, String like, String scene) {
+    public List<Record> getRecords(int sortMode, boolean desc, RecordCursor cursor, String like, String scene, FilterBean filter) {
         RecordDao dao = GdbApplication.getInstance().getDaoSession().getRecordDao();
         QueryBuilder<Record> builder = dao.queryBuilder();
         if (!TextUtils.isEmpty(like)) {
@@ -39,8 +40,16 @@ public class RecordExtendDao {
         if (!TextUtils.isEmpty(scene)) {
             builder.where(RecordDao.Properties.Scene.eq(scene));
         }
-        if (!includeDeprecated) {
-            builder.where(RecordDao.Properties.Deprecated.eq(0));
+        if (filter != null) {
+            if (filter.isNotDeprecated()) {
+                builder.where(RecordDao.Properties.Deprecated.eq(0));
+            }
+            if (filter.isBareback()) {
+                builder.where(RecordDao.Properties.ScoreBareback.gt(0));
+            }
+            if (filter.isInnerCum()) {
+                builder.where(RecordDao.Properties.SpecialDesc.like("%inner cum%"));
+            }
         }
         sortByColumn(builder, sortMode, desc);
         builder.offset(cursor.offset);

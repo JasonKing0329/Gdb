@@ -1,6 +1,7 @@
 package com.jing.app.jjgallery.gdb.view.record;
 
 import com.jing.app.jjgallery.gdb.IFragmentHolder;
+import com.jing.app.jjgallery.gdb.model.bean.FilterBean;
 
 /**
  * 描述:
@@ -9,4 +10,5 @@ import com.jing.app.jjgallery.gdb.IFragmentHolder;
  */
 public interface IRecordListHolder extends IFragmentHolder {
 
+    void updateFilter(FilterBean bean);
 }

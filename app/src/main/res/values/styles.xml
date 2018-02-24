@@ -200,4 +200,16 @@
         <item name="android:background">@drawable/selector_star_tag_bg</item>
     </style>
 
+    <style name="TvFilterTag">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@drawable/selector_filter_tag</item>
+        <item name="android:textColor">@drawable/selector_filter_tag_text</item>
+        <item name="android:textSize">16dp</item>
+        <item name="android:paddingLeft">15dp</item>
+        <item name="android:paddingRight">15dp</item>
+        <item name="android:paddingTop">10dp</item>
+        <item name="android:paddingBottom">10dp</item>
+    </style>
+
 </resources>

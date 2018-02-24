@@ -9,6 +9,7 @@ import android.view.View;
 
 import com.jing.app.jjgallery.gdb.GBaseActivity;
 import com.jing.app.jjgallery.gdb.R;
+import com.jing.app.jjgallery.gdb.model.bean.FilterBean;
 import com.jing.app.jjgallery.gdb.view.pub.ActionBar;
 import com.jing.app.jjgallery.gdb.view.record.IRecordListHolder;
 import com.jing.app.jjgallery.gdb.view.record.RecordsListFragment;
@@ -133,4 +134,9 @@ public class RecordListActivity extends GBaseActivity implements IRecordListHold
             recordFragment.filterRecord(text);
         }
     };
+
+    @Override
+    public void updateFilter(FilterBean bean) {
+
+    }
 }

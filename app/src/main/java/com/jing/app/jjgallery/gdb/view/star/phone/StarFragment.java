@@ -132,7 +132,7 @@ public class StarFragment extends BaseFragmentV4 implements IStarView, StarRecor
             dialog.setSortMode(currentSortMode);
             dialog.setOnSortListener(new SortDialogFragment.OnSortListener() {
                 @Override
-                public void onSort(boolean desc, int sortMode, boolean isIncludeDeprecated) {
+                public void onSort(boolean desc, int sortMode) {
                     if (currentSortMode != sortMode || currentSortDesc != desc) {
                         currentSortMode = sortMode;
                         currentSortDesc = desc;

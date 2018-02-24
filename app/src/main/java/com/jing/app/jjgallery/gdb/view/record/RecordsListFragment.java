@@ -10,6 +10,7 @@ import com.jing.app.jjgallery.gdb.IFragmentHolder;
 import com.jing.app.jjgallery.gdb.MvpFragmentV4;
 import com.jing.app.jjgallery.gdb.R;
 import com.jing.app.jjgallery.gdb.model.SettingProperties;
+import com.jing.app.jjgallery.gdb.model.bean.FilterBean;
 import com.jing.app.jjgallery.gdb.presenter.record.RecordListPresenter;
 import com.jing.app.jjgallery.gdb.util.DebugLog;
 import com.jing.app.jjgallery.gdb.util.DisplayHelper;
@@ -39,7 +40,6 @@ public class RecordsListFragment extends MvpFragmentV4<RecordListPresenter> impl
 
     private int currentSortMode = -1;
     private boolean currentSortDesc = true;
-    private boolean showDeprecated = true;
     private boolean showCanBePlayed;
 
     private List<Record> recordList;
@@ -51,6 +51,8 @@ public class RecordsListFragment extends MvpFragmentV4<RecordListPresenter> impl
      * scene keywords
      */
     private String keyScene;
+
+    private FilterBean mFilter;
 
     @Override
     protected void bindFragmentHolder(IFragmentHolder holder) {
@@ -117,8 +119,8 @@ public class RecordsListFragment extends MvpFragmentV4<RecordListPresenter> impl
      */
     public void loadNewRecords() {
         // 重新加载records
-        presenter.loadRecordList(currentSortMode, currentSortDesc, showDeprecated, showCanBePlayed
-                , keywords, keyScene);
+        presenter.loadRecordList(currentSortMode, currentSortDesc, showCanBePlayed
+                , keywords, keyScene, mFilter);
     }
 
     /**
@@ -169,8 +171,8 @@ public class RecordsListFragment extends MvpFragmentV4<RecordListPresenter> impl
      */
     private void loadMoreRecords() {
         // 加到当前size后
-        presenter.loadMoreRecords(currentSortMode, currentSortDesc, showDeprecated, showCanBePlayed
-                , keywords, keyScene);
+        presenter.loadMoreRecords(currentSortMode, currentSortDesc, showCanBePlayed
+                , keywords, keyScene, mFilter);
     }
 
     /**
@@ -198,17 +200,30 @@ public class RecordsListFragment extends MvpFragmentV4<RecordListPresenter> impl
         dialog.setSortMode(currentSortMode);
         dialog.setOnSortListener(new SortDialogFragment.OnSortListener() {
             @Override
-            public void onSort(boolean desc, int sortMode, boolean isIncludeDeprecated) {
-                if (currentSortMode != sortMode || currentSortDesc != desc || showDeprecated != isIncludeDeprecated) {
+            public void onSort(boolean desc, int sortMode) {
+                if (currentSortMode != sortMode || currentSortDesc != desc) {
                     currentSortMode = sortMode;
                     currentSortDesc = desc;
-                    showDeprecated = isIncludeDeprecated;
                     SettingProperties.setGdbRecordOrderMode(getActivity(), currentSortMode);
                     loadNewRecords();
                 }
             }
         });
-        dialog.show(getFragmentManager(), "SortDialogFragment");
+        dialog.show(getChildFragmentManager(), "SortDialogFragment");
+    }
+
+    public void changeFilter() {
+        FilterDialogFragment dialog = new FilterDialogFragment();
+        dialog.setFilterBean(mFilter);
+        dialog.setOnFilterListener(new FilterDialogFragment.OnFilterListener() {
+            @Override
+            public void onFilter(FilterBean bean) {
+                mFilter = bean;
+                holder.updateFilter(bean);
+                loadNewRecords();
+            }
+        });
+        dialog.show(getChildFragmentManager(), "FilterDialogFragment");
     }
 
     public void refreshList() {
@@ -244,5 +259,4 @@ public class RecordsListFragment extends MvpFragmentV4<RecordListPresenter> impl
     public void setScene(String scene) {
         this.keyScene = scene;
     }
-
 }

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="wrap_content"
+    android:minHeight="200dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal">
+        <TextView
+            android:id="@+id/tv_tag_bareback"
+            style="@style/TvFilterTag"
+            android:text="Bareback"/>
+        <TextView
+            android:id="@+id/tv_tag_inner"
+            style="@style/TvFilterTag"
+            android:layout_marginLeft="15dp"
+            android:text="Inner cum"/>
+        <TextView
+            android:id="@+id/tv_tag_nd"
+            style="@style/TvFilterTag"
+            android:layout_marginLeft="15dp"
+            android:text="Not deprecated"/>
+    </LinearLayout>
+
+</RelativeLayout>

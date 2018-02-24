@@ -88,8 +88,6 @@ public class SortDialogFragment extends DraggableDialogFragmentV4 implements ISo
 
         @BindView(R.id.gdb_sort_grid)
         GridView gridView;
-        @BindView(R.id.cb_deprecated)
-        CheckBox cbDeprecated;
         @BindView(R.id.gdb_sort_asc)
         RadioButton gdbSortAsc;
         @BindView(R.id.gdb_sort_desc)
@@ -158,7 +156,7 @@ public class SortDialogFragment extends DraggableDialogFragmentV4 implements ISo
         public void onSave() {
 
             if (holder.getOnSortListener() != null) {
-                holder.getOnSortListener().onSort(descButton.isChecked(), items[itemAdapter.getSelectedIndex()].value, cbDeprecated.isChecked());
+                holder.getOnSortListener().onSort(descButton.isChecked(), items[itemAdapter.getSelectedIndex()].value);
             }
         }
 
@@ -216,6 +214,6 @@ public class SortDialogFragment extends DraggableDialogFragmentV4 implements ISo
     }
 
     public interface OnSortListener {
-        void onSort(boolean desc, int sortMode, boolean isIncludeDeprecated);
+        void onSort(boolean desc, int sortMode);
     }
 }

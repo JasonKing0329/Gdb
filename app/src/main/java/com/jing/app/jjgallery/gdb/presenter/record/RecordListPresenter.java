@@ -4,6 +4,7 @@ import com.jing.app.jjgallery.gdb.BasePresenter;
 import com.jing.app.jjgallery.gdb.GdbConstants;
 import com.jing.app.jjgallery.gdb.model.RecordComparator;
 import com.jing.app.jjgallery.gdb.model.VideoModel;
+import com.jing.app.jjgallery.gdb.model.bean.FilterBean;
 import com.jing.app.jjgallery.gdb.model.conf.PreferenceValue;
 import com.jing.app.jjgallery.gdb.model.db.RecordExtendDao;
 import com.jing.app.jjgallery.gdb.view.record.IRecordListView;
@@ -53,15 +54,15 @@ public class RecordListPresenter extends BasePresenter<IRecordListView> {
      *
      * @param sortMode see PreferenceValue.GDB_SR_ORDERBY_XXX
      * @param desc
-     * @param showDeprecated deprecated attribute in Record
      * @param showCanBePlayed there is video in specific disk path
      * @param like name like %like%
      * @param whereScene scene=whereScene
+     * @param filterBean
      */
-    public void loadRecordList(int sortMode, boolean desc, boolean showDeprecated, boolean showCanBePlayed, String like, String whereScene) {
+    public void loadRecordList(int sortMode, boolean desc, boolean showCanBePlayed, String like, String whereScene, FilterBean filterBean) {
         // 偏移量从0开始
         newRecordCursor();
-        queryRecords(sortMode, desc, showDeprecated, showCanBePlayed, like, whereScene)
+        queryRecords(sortMode, desc, showCanBePlayed, like, whereScene, filterBean)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Observer<List<Record>>() {
@@ -77,6 +78,7 @@ public class RecordListPresenter extends BasePresenter<IRecordListView> {
 
                     @Override
                     public void onError(Throwable e) {
+                        e.printStackTrace();
                         view.showToastLong("Load records error: " + e.getMessage());
                     }
 
@@ -90,13 +92,13 @@ public class RecordListPresenter extends BasePresenter<IRecordListView> {
      *
      * @param sortMode see PreferenceValue.GDB_SR_ORDERBY_XXX
      * @param desc
-     * @param showDeprecated deprecated attribute in Record
      * @param showCanBePlayed there is video in specific disk path
      * @param like name like %like%
      * @param whereScene scene=whereScene
+     * @param filter
      */
-    public void loadMoreRecords(int sortMode, boolean desc, boolean showDeprecated, boolean showCanBePlayed, String like, String whereScene) {
-        queryRecords(sortMode, desc, showDeprecated, showCanBePlayed, like, whereScene)
+    public void loadMoreRecords(int sortMode, boolean desc, boolean showCanBePlayed, String like, String whereScene, FilterBean filter) {
+        queryRecords(sortMode, desc, showCanBePlayed, like, whereScene, filter)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Observer<List<Record>>() {
@@ -112,6 +114,7 @@ public class RecordListPresenter extends BasePresenter<IRecordListView> {
 
                     @Override
                     public void onError(Throwable e) {
+                        e.printStackTrace();
                         view.showToastLong("Load records error: " + e.getMessage());
                     }
 
@@ -122,8 +125,8 @@ public class RecordListPresenter extends BasePresenter<IRecordListView> {
                 });
     }
 
-    private Observable<List<Record>> queryRecords(final int sortMode, final boolean desc, final boolean showDeprecated
-            , final boolean showCanBePlayed, final String like, final String whereScene) {
+    private Observable<List<Record>> queryRecords(final int sortMode, final boolean desc
+            , final boolean showCanBePlayed, final String like, final String whereScene, final FilterBean filterBean) {
         return Observable.create(new ObservableOnSubscribe<List<Record>>() {
             @Override
             public void subscribe(ObservableEmitter<List<Record>> e) throws Exception {
@@ -137,7 +140,7 @@ public class RecordListPresenter extends BasePresenter<IRecordListView> {
                 if (GdbConstants.KEY_SCENE_ALL.equals(whereScene)) {
                     scene = null;
                 }
-                List<Record> list = recordExtendDao.getRecords(sortMode, desc, showDeprecated, moreCursor, like, scene);
+                List<Record> list = recordExtendDao.getRecords(sortMode, desc, moreCursor, like, scene, filterBean);
                 moreCursor.offset += list.size();
 
                 // 加载可播放的需要从全部记录里通过对比video目录文件信息来挑选
