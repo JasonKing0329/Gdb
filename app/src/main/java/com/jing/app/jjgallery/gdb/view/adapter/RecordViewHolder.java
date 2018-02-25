@@ -230,7 +230,8 @@ public class RecordViewHolder {
                 fkSubView.setText("" + text.substring(0, text.length() - 3));
             }
         }
-        else if (item.getType() == DataConstants.VALUE_RECORD_TYPE_3W) {
+        else if (item.getType() == DataConstants.VALUE_RECORD_TYPE_3W
+                || item.getType() == DataConstants.VALUE_RECORD_TYPE_MULTI) {
             RecordType3w recordType3w = item.getRecordType3w();
             sceneView.setText("" + item.getScene() + "(" + recordType3w.getScoreScene() + ")");
             bjobView.setText("" + "bjob(" + recordType3w.getScoreBjob() + ")");
@@ -287,7 +288,8 @@ public class RecordViewHolder {
                 if (item.getType() == DataConstants.VALUE_RECORD_TYPE_1V1) {
                     sortScoreView.setText("" + item.getRecordType1v1().getScoreBjob());
                 }
-                else if (item.getType() == DataConstants.VALUE_RECORD_TYPE_3W) {
+                else if (item.getType() == DataConstants.VALUE_RECORD_TYPE_3W
+                        || item.getType() == DataConstants.VALUE_RECORD_TYPE_MULTI) {
                     sortScoreView.setText("" + item.getRecordType3w().getScoreBjob());
                 }
                 break;
@@ -296,7 +298,8 @@ public class RecordViewHolder {
                 if (item.getType() == DataConstants.VALUE_RECORD_TYPE_1V1) {
                     sortScoreView.setText("" + item.getRecordType1v1().getScoreCshow());
                 }
-                else if (item.getType() == DataConstants.VALUE_RECORD_TYPE_3W) {
+                else if (item.getType() == DataConstants.VALUE_RECORD_TYPE_3W
+                        || item.getType() == DataConstants.VALUE_RECORD_TYPE_MULTI) {
                     sortScoreView.setText("" + item.getRecordType3w().getScoreCshow());
                 }
                 break;
@@ -349,7 +352,8 @@ public class RecordViewHolder {
                 if (item.getType() == DataConstants.VALUE_RECORD_TYPE_1V1) {
                     sortScoreView.setText("" + item.getRecordType1v1().getScoreForePlay());
                 }
-                else if (item.getType() == DataConstants.VALUE_RECORD_TYPE_3W) {
+                else if (item.getType() == DataConstants.VALUE_RECORD_TYPE_3W
+                        || item.getType() == DataConstants.VALUE_RECORD_TYPE_MULTI) {
                     sortScoreView.setText("" + item.getRecordType3w().getScoreForePlay());
                 }
                 break;
@@ -362,7 +366,8 @@ public class RecordViewHolder {
                 if (item.getType() == DataConstants.VALUE_RECORD_TYPE_1V1) {
                     sortScoreView.setText("" + item.getRecordType1v1().getScoreRhythm());
                 }
-                else if (item.getType() == DataConstants.VALUE_RECORD_TYPE_3W) {
+                else if (item.getType() == DataConstants.VALUE_RECORD_TYPE_3W
+                        || item.getType() == DataConstants.VALUE_RECORD_TYPE_MULTI) {
                     sortScoreView.setText("" + item.getRecordType3w().getScoreRhythm());
                 }
                 break;
@@ -371,7 +376,8 @@ public class RecordViewHolder {
                 if (item.getType() == DataConstants.VALUE_RECORD_TYPE_1V1) {
                     sortScoreView.setText("" + item.getRecordType1v1().getScoreRim());
                 }
-                else if (item.getType() == DataConstants.VALUE_RECORD_TYPE_3W) {
+                else if (item.getType() == DataConstants.VALUE_RECORD_TYPE_3W
+                        || item.getType() == DataConstants.VALUE_RECORD_TYPE_MULTI) {
                     sortScoreView.setText("" + item.getRecordType3w().getScoreRim());
                 }
                 break;
@@ -380,7 +386,8 @@ public class RecordViewHolder {
                 if (item.getType() == DataConstants.VALUE_RECORD_TYPE_1V1) {
                     sortScoreView.setText("" + item.getRecordType1v1().getScoreScene());
                 }
-                else if (item.getType() == DataConstants.VALUE_RECORD_TYPE_3W) {
+                else if (item.getType() == DataConstants.VALUE_RECORD_TYPE_3W
+                        || item.getType() == DataConstants.VALUE_RECORD_TYPE_MULTI) {
                     sortScoreView.setText("" + item.getRecordType3w().getScoreScene());
                 }
                 break;
@@ -405,7 +412,8 @@ public class RecordViewHolder {
                 if (item.getType() == DataConstants.VALUE_RECORD_TYPE_1V1) {
                     sortScoreView.setText("" + item.getRecordType1v1().getScoreStory());
                 }
-                else if (item.getType() == DataConstants.VALUE_RECORD_TYPE_3W) {
+                else if (item.getType() == DataConstants.VALUE_RECORD_TYPE_3W
+                        || item.getType() == DataConstants.VALUE_RECORD_TYPE_MULTI) {
                     sortScoreView.setText("" + item.getRecordType3w().getScoreStory());
                 }
                 break;

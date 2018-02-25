@@ -186,7 +186,8 @@ public class RecordPadActivity extends MvpActivity<RecordPresenter> implements I
         // RecordOneVOne和RecordThree都是继承于RecordSingleScene
         if (record.getType() == DataConstants.VALUE_RECORD_TYPE_1V1) {
             initRecordOneVOne(record.getRecordType1v1());
-        } else if (record.getType() == DataConstants.VALUE_RECORD_TYPE_3W) {
+        } else if (record.getType() == DataConstants.VALUE_RECORD_TYPE_3W
+                || record.getType() == DataConstants.VALUE_RECORD_TYPE_MULTI) {
             initRecordThree(record.getRecordType3w(), record.getRelationList());
         }
 

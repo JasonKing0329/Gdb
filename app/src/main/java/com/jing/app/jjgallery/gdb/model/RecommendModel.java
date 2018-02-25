@@ -102,12 +102,18 @@ public class RecommendModel {
             else if (record.getType() == DataConstants.VALUE_RECORD_TYPE_3W) {
                 return record.getRecordType3w().getScoreBjob();
             }
+            else if (record.getType() == DataConstants.VALUE_RECORD_TYPE_MULTI) {
+                return record.getRecordType3w().getScoreBjob();
+            }
         }
         else if (keyword.equals(GdbConstants.FILTER_KEY_SCORE_RHYTHM)) {
             if (record.getType() == DataConstants.VALUE_RECORD_TYPE_1V1) {
                 return record.getRecordType1v1().getScoreRhythm();
             }
             else if (record.getType() == DataConstants.VALUE_RECORD_TYPE_3W) {
+                return record.getRecordType3w().getScoreRhythm();
+            }
+            else if (record.getType() == DataConstants.VALUE_RECORD_TYPE_MULTI) {
                 return record.getRecordType3w().getScoreRhythm();
             }
         }
@@ -118,6 +124,9 @@ public class RecommendModel {
             else if (record.getType() == DataConstants.VALUE_RECORD_TYPE_3W) {
                 return record.getRecordType3w().getScoreRim();
             }
+            else if (record.getType() == DataConstants.VALUE_RECORD_TYPE_MULTI) {
+                return record.getRecordType3w().getScoreRim();
+            }
         }
         else if (keyword.equals(GdbConstants.FILTER_KEY_SCORE_SCECE)) {
             if (record.getType() == DataConstants.VALUE_RECORD_TYPE_1V1) {
@@ -126,12 +135,18 @@ public class RecommendModel {
             else if (record.getType() == DataConstants.VALUE_RECORD_TYPE_3W) {
                 return record.getRecordType3w().getScoreScene();
             }
+            else if (record.getType() == DataConstants.VALUE_RECORD_TYPE_MULTI) {
+                return record.getRecordType3w().getScoreScene();
+            }
         }
         else if (keyword.equals(GdbConstants.FILTER_KEY_SCORE_CSHOW)) {
             if (record.getType() == DataConstants.VALUE_RECORD_TYPE_1V1) {
                 return record.getRecordType1v1().getScoreCshow();
             }
             else if (record.getType() == DataConstants.VALUE_RECORD_TYPE_3W) {
+                return record.getRecordType3w().getScoreCshow();
+            }
+            else if (record.getType() == DataConstants.VALUE_RECORD_TYPE_MULTI) {
                 return record.getRecordType3w().getScoreCshow();
             }
         }
@@ -143,6 +158,9 @@ public class RecommendModel {
                 return record.getRecordType1v1().getScoreForePlay();
             }
             else if (record.getType() == DataConstants.VALUE_RECORD_TYPE_3W) {
+                return record.getRecordType3w().getScoreForePlay();
+            }
+            else if (record.getType() == DataConstants.VALUE_RECORD_TYPE_MULTI) {
                 return record.getRecordType3w().getScoreForePlay();
             }
         }

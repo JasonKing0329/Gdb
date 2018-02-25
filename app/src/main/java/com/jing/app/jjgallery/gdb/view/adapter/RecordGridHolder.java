@@ -122,7 +122,8 @@ public class RecordGridHolder extends RecyclerListAdapter.ViewHolder<Record> {
                 if (item.getType() == DataConstants.VALUE_RECORD_TYPE_1V1) {
                     tvSort.setText("" + item.getRecordType1v1().getScoreBjob());
                 }
-                else if (item.getType() == DataConstants.VALUE_RECORD_TYPE_3W) {
+                else if (item.getType() == DataConstants.VALUE_RECORD_TYPE_3W
+                        || item.getType() == DataConstants.VALUE_RECORD_TYPE_MULTI) {
                     tvSort.setText("" + item.getRecordType3w().getScoreBjob());
                 }
                 break;
@@ -131,7 +132,8 @@ public class RecordGridHolder extends RecyclerListAdapter.ViewHolder<Record> {
                 if (item.getType() == DataConstants.VALUE_RECORD_TYPE_1V1) {
                     tvSort.setText("" + item.getRecordType1v1().getScoreCshow());
                 }
-                else if (item.getType() == DataConstants.VALUE_RECORD_TYPE_3W) {
+                else if (item.getType() == DataConstants.VALUE_RECORD_TYPE_3W
+                        || item.getType() == DataConstants.VALUE_RECORD_TYPE_MULTI) {
                     tvSort.setText("" + item.getRecordType3w().getScoreCshow());
                 }
                 break;
@@ -184,7 +186,8 @@ public class RecordGridHolder extends RecyclerListAdapter.ViewHolder<Record> {
                 if (item.getType() == DataConstants.VALUE_RECORD_TYPE_1V1) {
                     tvSort.setText("" + item.getRecordType1v1().getScoreForePlay());
                 }
-                else if (item.getType() == DataConstants.VALUE_RECORD_TYPE_3W) {
+                else if (item.getType() == DataConstants.VALUE_RECORD_TYPE_3W
+                        || item.getType() == DataConstants.VALUE_RECORD_TYPE_MULTI) {
                     tvSort.setText("" + item.getRecordType3w().getScoreForePlay());
                 }
                 break;
@@ -197,7 +200,8 @@ public class RecordGridHolder extends RecyclerListAdapter.ViewHolder<Record> {
                 if (item.getType() == DataConstants.VALUE_RECORD_TYPE_1V1) {
                     tvSort.setText("" + item.getRecordType1v1().getScoreRhythm());
                 }
-                else if (item.getType() == DataConstants.VALUE_RECORD_TYPE_3W) {
+                else if (item.getType() == DataConstants.VALUE_RECORD_TYPE_3W
+                        || item.getType() == DataConstants.VALUE_RECORD_TYPE_MULTI) {
                     tvSort.setText("" + item.getRecordType3w().getScoreRhythm());
                 }
                 break;
@@ -206,7 +210,8 @@ public class RecordGridHolder extends RecyclerListAdapter.ViewHolder<Record> {
                 if (item.getType() == DataConstants.VALUE_RECORD_TYPE_1V1) {
                     tvSort.setText("" + item.getRecordType1v1().getScoreRim());
                 }
-                else if (item.getType() == DataConstants.VALUE_RECORD_TYPE_3W) {
+                else if (item.getType() == DataConstants.VALUE_RECORD_TYPE_3W
+                        || item.getType() == DataConstants.VALUE_RECORD_TYPE_MULTI) {
                     tvSort.setText("" + item.getRecordType3w().getScoreRim());
                 }
                 break;
@@ -215,7 +220,8 @@ public class RecordGridHolder extends RecyclerListAdapter.ViewHolder<Record> {
                 if (item.getType() == DataConstants.VALUE_RECORD_TYPE_1V1) {
                     tvSort.setText("" + item.getRecordType1v1().getScoreScene());
                 }
-                else if (item.getType() == DataConstants.VALUE_RECORD_TYPE_3W) {
+                else if (item.getType() == DataConstants.VALUE_RECORD_TYPE_3W
+                        || item.getType() == DataConstants.VALUE_RECORD_TYPE_MULTI) {
                     tvSort.setText("" + item.getRecordType3w().getScoreScene());
                 }
                 break;
@@ -240,7 +246,8 @@ public class RecordGridHolder extends RecyclerListAdapter.ViewHolder<Record> {
                 if (item.getType() == DataConstants.VALUE_RECORD_TYPE_1V1) {
                     tvSort.setText("" + item.getRecordType1v1().getScoreStory());
                 }
-                else if (item.getType() == DataConstants.VALUE_RECORD_TYPE_3W) {
+                else if (item.getType() == DataConstants.VALUE_RECORD_TYPE_3W
+                        || item.getType() == DataConstants.VALUE_RECORD_TYPE_MULTI) {
                     tvSort.setText("" + item.getRecordType3w().getScoreStory());
                 }
                 break;
