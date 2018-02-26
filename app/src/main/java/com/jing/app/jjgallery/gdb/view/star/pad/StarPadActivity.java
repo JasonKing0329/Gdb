@@ -2,8 +2,14 @@ package com.jing.app.jjgallery.gdb.view.star.pad;
 
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.jing.app.jjgallery.gdb.GdbConstants;
@@ -27,6 +33,7 @@ import com.nightonke.boommenu.Piece.PiecePlaceEnum;
 import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -61,6 +68,10 @@ public class StarPadActivity extends MvpActivity<StarPadPresenter> implements St
     WaveSideBarView sideBar;
     @BindView(R.id.bmb_menu)
     BoomMenuButton bmbMenu;
+    @BindView(R.id.et_search)
+    EditText etSearch;
+    @BindView(R.id.group_search)
+    RelativeLayout groupSearch;
 
     private int curSortMode;
 
@@ -128,6 +139,24 @@ public class StarPadActivity extends MvpActivity<StarPadPresenter> implements St
         initRecordFragment();
 
         initBoomButton();
+
+        groupSearch.setVisibility(View.GONE);
+        etSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence text, int i, int i1, int i2) {
+                pagerAdapter.getItem(viewpager.getCurrentItem()).filterStar(text.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
     }
 
     private void initRecordFragment() {
@@ -322,12 +351,63 @@ public class StarPadActivity extends MvpActivity<StarPadPresenter> implements St
         super.onDestroy();
     }
 
-    @OnClick({R.id.iv_icon_sort})
+    @OnClick({R.id.iv_icon_sort, R.id.iv_icon_search, R.id.iv_icon_close})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.iv_icon_sort:
                 ftRecord.onClickSort();
                 break;
+            case R.id.iv_icon_search:
+                if (groupSearch.getVisibility() != View.VISIBLE) {
+                    if (curSortMode == GdbConstants.STAR_SORT_NAME) {
+                        sideBar.setVisibility(View.GONE);
+                    }
+                    showSearchLayout();
+                    tabLayout.setVisibility(View.GONE);
+                }
+                break;
+            case R.id.iv_icon_close:
+                if (curSortMode == GdbConstants.STAR_SORT_NAME) {
+                    sideBar.setVisibility(View.VISIBLE);
+                }
+                etSearch.setText("");
+                closeSearch();
+                break;
         }
     }
+
+    /**
+     * hide search layout
+     */
+    public void closeSearch() {
+        Animation animation = AnimationUtils.loadAnimation(this, R.anim.disappear);
+        animation.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                groupSearch.setVisibility(View.INVISIBLE);
+                tabLayout.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+        groupSearch.startAnimation(animation);
+    }
+
+    /**
+     * show search layout
+     */
+    private void showSearchLayout() {
+        Animation animation = AnimationUtils.loadAnimation(this, R.anim.appear);
+        groupSearch.startAnimation(animation);
+        groupSearch.setVisibility(View.VISIBLE);
+    }
+
 }

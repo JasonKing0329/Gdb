@@ -3,79 +3,116 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent" android:layout_height="match_parent">
     <LinearLayout
+        android:id="@+id/group_actionbar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="@dimen/actionbar_height"
+        android:background="@color/actionbar_bk_light"
         android:orientation="horizontal">
-        <LinearLayout
+
+        <RelativeLayout
             android:layout_width="0dp"
-            android:layout_weight="1.2"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_weight="1.4"
+            android:layout_height="match_parent">
+            <ImageView
+                android:id="@+id/iv_icon_search"
+                style="@style/IvPadActionIcon"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/ic_search_purple_36dp" />
             <android.support.design.widget.TabLayout
                 android:id="@+id/tabLayout"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/actionbar_height"
-                android:background="@color/actionbar_bk_light"
+                android:layout_height="match_parent"
+                android:layout_toLeftOf="@id/iv_icon_search"
                 app:tabGravity="fill"
                 app:tabMode="fixed"
                 app:tabSelectedTextColor="@color/colorAccent"
                 app:tabTextColor="@color/colorPrimary"
                 app:tabIndicatorColor="@color/colorAccent"/>
             <RelativeLayout
+                android:id="@+id/group_search"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
-                <android.support.v4.view.ViewPager
-                    android:id="@+id/viewpager"
+                android:layout_marginLeft="10dp"
+                android:layout_height="match_parent"
+                android:layout_toLeftOf="@id/iv_icon_search"
+                android:gravity="center_vertical">
+                <EditText
+                    android:id="@+id/et_search"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
-                <TextView
-                    android:id="@+id/tv_index"
-                    android:layout_width="70dp"
-                    android:layout_height="70dp"
-                    android:layout_centerHorizontal="true"
-                    android:textColor="@color/white"
-                    android:textSize="30dp"
-                    android:gravity="center"
-                    android:visibility="gone"
-                    android:background="@drawable/shape_oval_index"
-                    app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginBottom="15dp"
+                    android:paddingLeft="15dp"
+                    android:background="@drawable/shape_actionbar_search_frame"/>
+                <ImageView
+                    style="@style/ActionbarCloseIcon"
+                    android:id="@+id/iv_icon_close"
+                    android:layout_width="@dimen/actionbar_icon_width"
+                    android:padding="@dimen/actionbar_icon_padding"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentRight="true"
+                    android:src="@drawable/ic_close_pink_ff4081_36dp"/>
             </RelativeLayout>
-        </LinearLayout>
+        </RelativeLayout>
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_weight="3"
             android:layout_height="match_parent"
-            android:orientation="vertical">
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/actionbar_height"
-                android:background="@color/actionbar_bk_light"
-                android:orientation="horizontal">
-                <TextView
-                    android:id="@+id/tv_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="15dp"
-                    android:textSize="20dp"
-                    android:textStyle="bold"
-                    android:textColor="@color/colorPrimary"
-                    android:layout_gravity="center_vertical"/>
-                <View
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"/>
-                <ImageView
-                    android:id="@+id/iv_icon_sort"
-                    style="@style/IvPadActionIcon"
-                    android:src="@drawable/ic_sort_purple_3f3a71_36dp" />
-            </LinearLayout>
-            <FrameLayout
-                android:id="@+id/group_ft_record"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="15dp"/>
+            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/tv_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:textSize="20dp"
+                android:textStyle="bold"
+                android:textColor="@color/colorPrimary"
+                android:layout_gravity="center_vertical"/>
+            <View
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"/>
+            <ImageView
+                android:id="@+id/iv_icon_sort"
+                style="@style/IvPadActionIcon"
+                android:src="@drawable/ic_sort_purple_3f3a71_36dp" />
         </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/group_actionbar"
+        android:orientation="horizontal">
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_weight="1.2"
+            android:layout_height="match_parent">
+            <android.support.v4.view.ViewPager
+                android:id="@+id/viewpager"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+            <TextView
+                android:id="@+id/tv_index"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_centerHorizontal="true"
+                android:textColor="@color/white"
+                android:textSize="30dp"
+                android:gravity="center"
+                android:visibility="gone"
+                android:background="@drawable/shape_oval_index"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+        </RelativeLayout>
+
+        <FrameLayout
+            android:id="@+id/group_ft_record"
+            android:layout_width="0dp"
+            android:layout_weight="3"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="15dp"/>
     </LinearLayout>
 
     <LinearLayout
