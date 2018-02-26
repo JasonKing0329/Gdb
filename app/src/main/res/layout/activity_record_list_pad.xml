@@ -28,7 +28,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal"
-            android:gravity="right">
+            android:gravity="right|center_vertical">
             <TextView
                 android:id="@+id/tv_scene"
                 android:layout_width="wrap_content"
@@ -38,11 +38,42 @@
                 android:textStyle="bold"
                 android:textColor="@color/colorPrimary"
                 android:layout_gravity="center_vertical"/>
+            <RadioGroup
+                android:id="@+id/rg_tag"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginLeft="10dp">
+                <RadioButton
+                    android:id="@+id/rb_tag_all"
+                    style="@style/TvStarTag"
+                    android:text="All"
+                    android:button="@null"
+                    android:checked="true"/>
+                <RadioButton
+                    android:id="@+id/rb_tag_1v1"
+                    style="@style/TvStarTag"
+                    android:layout_marginLeft="10dp"
+                    android:text="1v1"
+                    android:button="@null" />
+                <RadioButton
+                    android:id="@+id/rb_tag_3w"
+                    style="@style/TvStarTag"
+                    android:layout_marginLeft="10dp"
+                    android:text="3w"
+                    android:button="@null" />
+                <RadioButton
+                    android:id="@+id/rb_tag_multi"
+                    style="@style/TvStarTag"
+                    android:layout_marginLeft="10dp"
+                    android:text="Multi"
+                    android:button="@null" />
+            </RadioGroup>
             <RelativeLayout
                 android:id="@+id/group_search"
                 android:layout_width="0dp"
                 android:layout_weight="1"
-                android:layout_marginLeft="20dp"
+                android:layout_marginLeft="10dp"
                 android:layout_height="match_parent"
                 android:gravity="center_vertical">
                 <EditText

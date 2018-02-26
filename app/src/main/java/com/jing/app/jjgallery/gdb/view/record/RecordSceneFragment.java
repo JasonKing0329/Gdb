@@ -66,25 +66,31 @@ public class RecordSceneFragment extends MvpFragmentV4<RecordScenePresenter> imp
     @Override
     protected void initData() {
         curSortType = GdbConstants.SCENE_SORT_NAME;
-        presenter.loadRecordScenes();
+        presenter.loadRecordScenes(0);
     }
 
     @Override
     public void showScenes(List<SceneBean> data) {
         sceneList = data;
-        sceneAdapter = new RecordSceneNameAdapter(data);
-        sceneAdapter.setOnSceneItemClickListener(new RecordSceneNameAdapter.OnSceneItemClickListener() {
-            @Override
-            public void onSceneItemClick(String scene) {
-                holder.onSelectScene(scene);
-            }
-        });
-        rvScenes.setAdapter(sceneAdapter);
+        if (sceneAdapter == null) {
+            sceneAdapter = new RecordSceneNameAdapter(data);
+            sceneAdapter.setOnSceneItemClickListener(new RecordSceneNameAdapter.OnSceneItemClickListener() {
+                @Override
+                public void onSceneItemClick(String scene) {
+                    focusScene = scene;
+                    holder.onSelectScene(scene);
+                }
+            });
+            rvScenes.setAdapter(sceneAdapter);
+        }
+        else {
+            sceneAdapter.setSelection(0);
+            sceneAdapter.setList(data);
+            sceneAdapter.notifyDataSetChanged();
+        }
 
-        // 初始化仅一次
         if (focusScene != null) {
             focusToScene(focusScene);
-            focusScene = null;
         }
     }
 
@@ -124,6 +130,10 @@ public class RecordSceneFragment extends MvpFragmentV4<RecordScenePresenter> imp
     public void sortFinished(List<SceneBean> list) {
         sceneAdapter.setList(list);
         sceneAdapter.notifyDataSetChanged();
+    }
+
+    public void loadByType(int type) {
+        presenter.loadRecordScenes(type);
     }
 
     public void editColor() {

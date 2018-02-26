@@ -9,6 +9,7 @@ import com.jing.app.jjgallery.gdb.model.conf.PreferenceValue;
 import com.king.app.gdb.data.RecordCursor;
 import com.king.app.gdb.data.entity.Record;
 import com.king.app.gdb.data.entity.RecordDao;
+import com.king.app.gdb.data.param.DataConstants;
 
 import org.greenrobot.greendao.query.QueryBuilder;
 
@@ -31,7 +32,7 @@ public class RecordExtendDao {
                 .build().list();
     }
 
-    public List<Record> getRecords(int sortMode, boolean desc, RecordCursor cursor, String like, String scene, FilterBean filter) {
+    public List<Record> getRecords(int sortMode, boolean desc, RecordCursor cursor, String like, String scene, FilterBean filter, int mRecordType) {
         RecordDao dao = GdbApplication.getInstance().getDaoSession().getRecordDao();
         QueryBuilder<Record> builder = dao.queryBuilder();
         if (!TextUtils.isEmpty(like)) {
@@ -50,6 +51,9 @@ public class RecordExtendDao {
             if (filter.isInnerCum()) {
                 builder.where(RecordDao.Properties.SpecialDesc.like("%inner cum%"));
             }
+        }
+        if (mRecordType != 0) {
+            builder.where(RecordDao.Properties.Type.eq(mRecordType));
         }
         sortByColumn(builder, sortMode, desc);
         builder.offset(cursor.offset);
@@ -85,10 +89,14 @@ public class RecordExtendDao {
         }
     }
 
-    public List<SceneBean> getSceneList() {
+    public List<SceneBean> getSceneList(int type) {
         List<SceneBean> list = new ArrayList<>();
         String sql = "SELECT scene, COUNT(scene) AS count, AVG(score) AS average, MAX(score) AS max FROM "
-                + RecordDao.TABLENAME + " GROUP BY scene ORDER BY scene";
+                + RecordDao.TABLENAME;
+        if (type != 0) {
+            sql = sql + " WHERE type=" + type;
+        }
+        sql = sql + " GROUP BY scene ORDER BY scene";
         Cursor cursor = GdbApplication.getInstance().getDaoSession().getDatabase()
                 .rawQuery(sql, new String[]{});
         while (cursor.moveToNext()) {

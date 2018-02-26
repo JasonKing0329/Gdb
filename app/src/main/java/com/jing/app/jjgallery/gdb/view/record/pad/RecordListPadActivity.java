@@ -10,6 +10,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 import android.widget.PopupMenu;
+import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -21,6 +22,7 @@ import com.jing.app.jjgallery.gdb.view.record.IRecordListHolder;
 import com.jing.app.jjgallery.gdb.view.record.IRecordSceneHolder;
 import com.jing.app.jjgallery.gdb.view.record.RecordSceneFragment;
 import com.jing.app.jjgallery.gdb.view.record.RecordsListFragment;
+import com.king.app.gdb.data.param.DataConstants;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -41,6 +43,8 @@ public class RecordListPadActivity extends MvpActivity<RecordListPadPresenter> i
     TextView tvScene;
     @BindView(R.id.group_search)
     RelativeLayout groupSearch;
+    @BindView(R.id.rg_tag)
+    RadioGroup rgTag;
 
     private RecordSceneFragment ftScene;
     private RecordsListFragment ftRecords;
@@ -74,8 +78,7 @@ public class RecordListPadActivity extends MvpActivity<RecordListPadPresenter> i
         if (!TextUtils.isEmpty(scene)) {
             tvScene.setText(scene);
             ftScene.setFocusScene(scene);
-        }
-        else {
+        } else {
             tvScene.setText(GdbConstants.KEY_SCENE_ALL);
         }
         mTitle = tvScene.getText().toString();
@@ -106,6 +109,31 @@ public class RecordListPadActivity extends MvpActivity<RecordListPadPresenter> i
             @Override
             public void afterTextChanged(Editable editable) {
 
+            }
+        });
+
+        rgTag.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup radioGroup, int id) {
+                switch (id) {
+                    case R.id.rb_tag_all:
+                        ftScene.loadByType(0);
+                        ftRecords.setRecordType(0);
+                        break;
+                    case R.id.rb_tag_1v1:
+                        ftScene.loadByType(DataConstants.VALUE_RECORD_TYPE_1V1);
+                        ftRecords.setRecordType(DataConstants.VALUE_RECORD_TYPE_1V1);
+                        break;
+                    case R.id.rb_tag_3w:
+                        ftScene.loadByType(DataConstants.VALUE_RECORD_TYPE_3W);
+                        ftRecords.setRecordType(DataConstants.VALUE_RECORD_TYPE_3W);
+                        break;
+                    case R.id.rb_tag_multi:
+                        ftScene.loadByType(DataConstants.VALUE_RECORD_TYPE_MULTI);
+                        ftRecords.setRecordType(DataConstants.VALUE_RECORD_TYPE_MULTI);
+                        break;
+                }
+                ftRecords.loadNewRecords();
             }
         });
     }
@@ -167,12 +195,10 @@ public class RecordListPadActivity extends MvpActivity<RecordListPadPresenter> i
             if (title.length() > 2) {
                 title = title.substring(2);
                 tvScene.setText(mTitle + " (" + title + ")");
-            }
-            else {
+            } else {
                 tvScene.setText(mTitle);
             }
-        }
-        else {
+        } else {
             tvScene.setText(mTitle);
         }
     }
@@ -231,4 +257,5 @@ public class RecordListPadActivity extends MvpActivity<RecordListPadPresenter> i
         ftRecords.setScene(scene);
         ftRecords.loadNewRecords();
     }
+
 }

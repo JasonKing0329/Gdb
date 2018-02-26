@@ -54,6 +54,8 @@ public class RecordsListFragment extends MvpFragmentV4<RecordListPresenter> impl
 
     private FilterBean mFilter;
 
+    private int mRecordType;
+
     @Override
     protected void bindFragmentHolder(IFragmentHolder holder) {
         this.holder = (IRecordListHolder) holder;
@@ -114,13 +116,17 @@ public class RecordsListFragment extends MvpFragmentV4<RecordListPresenter> impl
         }
     }
 
+    public void setRecordType(int type) {
+        mRecordType = type;
+    }
+
     /**
      * 修改排序类型、关键词变化，重新加载list
      */
     public void loadNewRecords() {
         // 重新加载records
         presenter.loadRecordList(currentSortMode, currentSortDesc, showCanBePlayed
-                , keywords, keyScene, mFilter);
+                , keywords, keyScene, mFilter, mRecordType);
     }
 
     /**
@@ -172,7 +178,7 @@ public class RecordsListFragment extends MvpFragmentV4<RecordListPresenter> impl
     private void loadMoreRecords() {
         // 加到当前size后
         presenter.loadMoreRecords(currentSortMode, currentSortDesc, showCanBePlayed
-                , keywords, keyScene, mFilter);
+                , keywords, keyScene, mFilter, mRecordType);
     }
 
     /**

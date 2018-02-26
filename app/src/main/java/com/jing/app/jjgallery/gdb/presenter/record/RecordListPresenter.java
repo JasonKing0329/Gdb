@@ -51,18 +51,18 @@ public class RecordListPresenter extends BasePresenter<IRecordListView> {
     }
 
     /**
-     *
-     * @param sortMode see PreferenceValue.GDB_SR_ORDERBY_XXX
+     *  @param sortMode see PreferenceValue.GDB_SR_ORDERBY_XXX
      * @param desc
      * @param showCanBePlayed there is video in specific disk path
      * @param like name like %like%
      * @param whereScene scene=whereScene
      * @param filterBean
+     * @param mRecordType
      */
-    public void loadRecordList(int sortMode, boolean desc, boolean showCanBePlayed, String like, String whereScene, FilterBean filterBean) {
+    public void loadRecordList(int sortMode, boolean desc, boolean showCanBePlayed, String like, String whereScene, FilterBean filterBean, int mRecordType) {
         // 偏移量从0开始
         newRecordCursor();
-        queryRecords(sortMode, desc, showCanBePlayed, like, whereScene, filterBean)
+        queryRecords(sortMode, desc, showCanBePlayed, like, whereScene, filterBean, mRecordType)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Observer<List<Record>>() {
@@ -89,16 +89,16 @@ public class RecordListPresenter extends BasePresenter<IRecordListView> {
                 });
     }
     /**
-     *
-     * @param sortMode see PreferenceValue.GDB_SR_ORDERBY_XXX
+     *  @param sortMode see PreferenceValue.GDB_SR_ORDERBY_XXX
      * @param desc
      * @param showCanBePlayed there is video in specific disk path
      * @param like name like %like%
      * @param whereScene scene=whereScene
      * @param filter
+     * @param mRecordType
      */
-    public void loadMoreRecords(int sortMode, boolean desc, boolean showCanBePlayed, String like, String whereScene, FilterBean filter) {
-        queryRecords(sortMode, desc, showCanBePlayed, like, whereScene, filter)
+    public void loadMoreRecords(int sortMode, boolean desc, boolean showCanBePlayed, String like, String whereScene, FilterBean filter, int mRecordType) {
+        queryRecords(sortMode, desc, showCanBePlayed, like, whereScene, filter, mRecordType)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Observer<List<Record>>() {
@@ -126,7 +126,7 @@ public class RecordListPresenter extends BasePresenter<IRecordListView> {
     }
 
     private Observable<List<Record>> queryRecords(final int sortMode, final boolean desc
-            , final boolean showCanBePlayed, final String like, final String whereScene, final FilterBean filterBean) {
+            , final boolean showCanBePlayed, final String like, final String whereScene, final FilterBean filterBean, final int mRecordType) {
         return Observable.create(new ObservableOnSubscribe<List<Record>>() {
             @Override
             public void subscribe(ObservableEmitter<List<Record>> e) throws Exception {
@@ -140,7 +140,7 @@ public class RecordListPresenter extends BasePresenter<IRecordListView> {
                 if (GdbConstants.KEY_SCENE_ALL.equals(whereScene)) {
                     scene = null;
                 }
-                List<Record> list = recordExtendDao.getRecords(sortMode, desc, moreCursor, like, scene, filterBean);
+                List<Record> list = recordExtendDao.getRecords(sortMode, desc, moreCursor, like, scene, filterBean, mRecordType);
                 moreCursor.offset += list.size();
 
                 // 加载可播放的需要从全部记录里通过对比video目录文件信息来挑选

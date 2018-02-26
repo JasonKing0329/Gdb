@@ -40,12 +40,13 @@ public class RecordScenePresenter extends BasePresenter<IRecordSceneView> {
 
     /**
      * load scenes
+     * @param type
      */
-    public void loadRecordScenes() {
+    public void loadRecordScenes(final int type) {
         Observable.create(new ObservableOnSubscribe<List<SceneBean>>() {
             @Override
             public void subscribe(@NonNull ObservableEmitter<List<SceneBean>> e) throws Exception {
-                List<SceneBean> scenes = recordExtendDao.getSceneList();
+                List<SceneBean> scenes = recordExtendDao.getSceneList(type);
                 SceneBean bean = new SceneBean();
                 bean.setScene(GdbConstants.KEY_SCENE_ALL);
                 bean.setNumber((int) GdbApplication.getInstance().getDaoSession().getRecordDao().queryBuilder().buildCount().count());
