@@ -69,6 +69,13 @@ public class RecordPadDetailHolder extends RecyclerView.ViewHolder implements Vi
 
     public void bindView(Record record, int position, RecordPadDetailAdapter.OnDetailActionListener cardListener) {
 
+        if (record.getDeprecated() == DataConstants.DEPRECATED) {
+            groupRecord.setBackgroundColor(groupRecord.getResources().getColor(R.color.record_deprecated_bg));
+        }
+        else {
+            groupRecord.setBackgroundColor(groupRecord.getResources().getColor(R.color.white));
+        }
+
         onDetailActionListener = cardListener;
         groupRecord.setTag(record);
         groupRecord.setOnClickListener(this);

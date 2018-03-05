@@ -35,6 +35,8 @@ public class DataConstants {
     public static final String STAR_3W_FLAG_BOTTOM = "bottom";
     public static final String STAR_3W_FLAG_MIX = "mix";
 
+    public static final int DEPRECATED = 1;
+
     public static String getTextForType(int type) {
         switch (type) {
             case VALUE_RELATION_TOP:

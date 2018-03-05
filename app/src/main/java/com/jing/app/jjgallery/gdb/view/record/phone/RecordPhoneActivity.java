@@ -3,11 +3,12 @@ package com.jing.app.jjgallery.gdb.view.record.phone;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.ActionBar;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -15,7 +16,6 @@ import com.allure.lbanners.LMBanners;
 import com.allure.lbanners.adapter.LBaseAdapter;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.github.siyamed.shapeimageview.CircularImageView;
 import com.jing.app.jjgallery.gdb.ActivityManager;
 import com.jing.app.jjgallery.gdb.GdbApplication;
 import com.jing.app.jjgallery.gdb.MvpActivity;
@@ -59,18 +59,6 @@ public class RecordPhoneActivity extends MvpActivity<RecordPresenter> implements
     ImageView ivPlay;
     @BindView(R.id.iv_setting)
     ImageView ivSetting;
-    @BindView(R.id.iv_star1)
-    CircularImageView ivStar1;
-    @BindView(R.id.tv_star1)
-    TextView tvStar1;
-    @BindView(R.id.group_star1)
-    LinearLayout groupStar1;
-    @BindView(R.id.iv_star2)
-    CircularImageView ivStar2;
-    @BindView(R.id.tv_star2)
-    TextView tvStar2;
-    @BindView(R.id.group_star2)
-    LinearLayout groupStar2;
     @BindView(R.id.tv_scene)
     TextView tvScene;
     @BindView(R.id.tv_scene_score)
@@ -126,34 +114,8 @@ public class RecordPhoneActivity extends MvpActivity<RecordPresenter> implements
     @BindView(R.id.iv_cum)
     ImageView ivCum;
 
-    @BindView(R.id.group_star_1v1)
-    LinearLayout groupStar1v1;
-    @BindView(R.id.iv_3w_star1)
-    CircularImageView iv3wStar1;
-    @BindView(R.id.tv_3w_star1)
-    TextView tv3wStar1;
-    @BindView(R.id.group_3w_star1)
-    LinearLayout group3wStar1;
-    @BindView(R.id.iv_3w_star2)
-    CircularImageView iv3wStar2;
-    @BindView(R.id.tv_3w_star2)
-    TextView tv3wStar2;
-    @BindView(R.id.group_3w_star2)
-    LinearLayout group3wStar2;
-    @BindView(R.id.iv_3w_star3)
-    CircularImageView iv3wStar3;
-    @BindView(R.id.tv_3w_star3)
-    TextView tv3wStar3;
-    @BindView(R.id.group_3w_star3)
-    LinearLayout group3wStar3;
-    @BindView(R.id.group_star_3w)
-    LinearLayout groupStar3w;
-    @BindView(R.id.tv_3w_flag1)
-    TextView tv3wFlag1;
-    @BindView(R.id.tv_3w_flag2)
-    TextView tv3wFlag2;
-    @BindView(R.id.tv_3w_flag3)
-    TextView tv3wFlag3;
+    @BindView(R.id.rv_stars)
+    RecyclerView rvStars;
 
     private String videoPath;
 
@@ -162,6 +124,8 @@ public class RecordPhoneActivity extends MvpActivity<RecordPresenter> implements
 
     private RequestOptions recordOptions;
     private RequestOptions starOptions;
+
+    private RecordStarAdapter starAdapter;
 
     @Override
     public int getContentView() {
@@ -175,6 +139,10 @@ public class RecordPhoneActivity extends MvpActivity<RecordPresenter> implements
         mActionBar.setHomeButtonEnabled(true);
         mActionBar.setDisplayHomeAsUpEnabled(true);
         mActionBar.setTitle("Record");
+
+        LinearLayoutManager manager = new LinearLayoutManager(this);
+        manager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        rvStars.setLayoutManager(manager);
     }
 
     @Override
@@ -207,16 +175,13 @@ public class RecordPhoneActivity extends MvpActivity<RecordPresenter> implements
     public void showRecord(Record record) {
         initHeadPart(record);
 
+        showStars(record);
+
         // RecordOneVOne和RecordThree都是继承于RecordSingleScene
         if (record.getType() == DataConstants.VALUE_RECORD_TYPE_1V1) {
-
-            groupStar3w.setVisibility(View.GONE);
-            groupStar1v1.setVisibility(View.VISIBLE);
             initRecordOneVOne(record.getRecordType1v1());
         }
         else if (record.getType() == DataConstants.VALUE_RECORD_TYPE_3W) {
-            groupStar3w.setVisibility(View.VISIBLE);
-            groupStar1v1.setVisibility(View.GONE);
             initRecordThree(record.getRecordType3w(), record.getRelationList());
         }
 
@@ -262,6 +227,18 @@ public class RecordPhoneActivity extends MvpActivity<RecordPresenter> implements
         }
     }
 
+    private void showStars(Record record) {
+        starAdapter = new RecordStarAdapter();
+        starAdapter.setList(record.getRelationList());
+        starAdapter.setOnStarItemListener(new RecordStarAdapter.OnStarItemListener() {
+            @Override
+            public void onClickStar(RecordStar relation) {
+                ActivityManager.startStarPageActivity(RecordPhoneActivity.this, relation.getStar().getId());
+            }
+        });
+        rvStars.setAdapter(starAdapter);
+    }
+
     private void initRecordOneVOne(RecordType1v1 record) {
         tvStory.setText("" + record.getScoreStory());
         tvSceneScore.setText("" + record.getScoreScene());
@@ -270,27 +247,6 @@ public class RecordPhoneActivity extends MvpActivity<RecordPresenter> implements
         tvForeplay.setText("" + record.getScoreForePlay());
         tvRim.setText("" + record.getScoreRim());
         tvCshow.setText("" + record.getScoreCshow());
-
-        RecordStar top = presenter.getRelationTop();
-        if (top == null) {
-            tvStar1.setText(DataConstants.STAR_UNKNOWN);
-        } else {
-            tvStar1.setText(top.getStar().getName() + "(" + top.getScore() + "/" + top.getScoreC() + ")");
-            Glide.with(this)
-                    .load(GdbImageProvider.getStarRandomPath(top.getStar().getName(), null))
-                    .apply(starOptions)
-                    .into(ivStar1);
-        }
-        RecordStar bottom = presenter.getRelationBottom();
-        if (bottom == null) {
-            tvStar2.setText(DataConstants.STAR_UNKNOWN);
-        } else {
-            tvStar2.setText(bottom.getStar().getName() + "(" + bottom.getScore() + "/" + bottom.getScoreC() + ")");
-            Glide.with(this)
-                    .load(GdbImageProvider.getStarRandomPath(bottom.getStar().getName(), null))
-                    .apply(starOptions)
-                    .into(ivStar2);
-        }
 
         initFkDetails(record);
     }
@@ -306,43 +262,6 @@ public class RecordPhoneActivity extends MvpActivity<RecordPresenter> implements
         tvRim.setText("" + record.getScoreRim());
         tvCshow.setText("" + record.getScoreCshow());
 
-        // load star
-        if (starList.size() > 0) {
-            RecordStar star = starList.get(0);
-            tv3wFlag1.setText(presenter.getRelationFlag(star));
-            tv3wStar1.setText(star.getStar().getName() + "(" + star.getScore() + "/" + star.getScoreC() + ")");
-            Glide.with(this)
-                    .load(GdbImageProvider.getStarRandomPath(star.getStar().getName(), null))
-                    .apply(starOptions)
-                    .into(iv3wStar1);
-        } else {
-            tv3wFlag1.setText(DataConstants.STAR_UNKNOWN);
-            tv3wStar1.setText(DataConstants.STAR_UNKNOWN);
-        }
-        if (starList.size() > 1) {
-            RecordStar star = starList.get(1);
-            tv3wFlag2.setText(presenter.getRelationFlag(star));
-            tv3wStar2.setText(star.getStar().getName() + "(" + star.getScore() + "/" + star.getScoreC() + ")");
-            Glide.with(this)
-                    .load(GdbImageProvider.getStarRandomPath(star.getStar().getName(), null))
-                    .apply(starOptions)
-                    .into(iv3wStar2);
-        } else {
-            tv3wFlag2.setText(DataConstants.STAR_UNKNOWN);
-            tv3wStar2.setText(DataConstants.STAR_UNKNOWN);
-        }
-        if (starList.size() > 2) {
-            RecordStar star = starList.get(2);
-            tv3wFlag3.setText(presenter.getRelationFlag(star));
-            tv3wStar3.setText(star.getStar().getName() + "(" + star.getScore() + "/" + star.getScoreC() + ")");
-            Glide.with(this)
-                    .load(GdbImageProvider.getStarRandomPath(star.getStar().getName(), null))
-                    .apply(starOptions)
-                    .into(iv3wStar3);
-        } else {
-            tv3wFlag3.setText(DataConstants.STAR_UNKNOWN);
-            tv3wStar3.setText(DataConstants.STAR_UNKNOWN);
-        }
         initFkDetails(record);
     }
 
@@ -466,35 +385,10 @@ public class RecordPhoneActivity extends MvpActivity<RecordPresenter> implements
         groupFk.addPoint(keyList, contentList);
     }
 
-    @OnClick({R.id.group_star1, R.id.group_star2, R.id.group_scene
-        , R.id.group_3w_star1, R.id.group_3w_star2, R.id.group_3w_star3})
+    @OnClick({R.id.group_scene})
     public void onViewClicked(View view) {
         switch (view.getId()) {
-            case R.id.group_star1:
-                ActivityManager.startStarActivity(RecordPhoneActivity.this, presenter.getRelationTop().getStarId());
-                break;
-            case R.id.group_star2:
-                ActivityManager.startStarActivity(RecordPhoneActivity.this, presenter.getRelationBottom().getStarId());
-                break;
             case R.id.group_scene:
-                break;
-            case R.id.group_3w_star1:
-                RecordStar relation = presenter.getRelation(1);
-                if (relation != null) {
-                    ActivityManager.startStarActivity(RecordPhoneActivity.this, relation.getStarId());
-                }
-                break;
-            case R.id.group_3w_star2:
-                relation = presenter.getRelation(2);
-                if (relation != null) {
-                    ActivityManager.startStarActivity(RecordPhoneActivity.this, relation.getStarId());
-                }
-                break;
-            case R.id.group_3w_star3:
-                relation = presenter.getRelation(3);
-                if (relation != null) {
-                    ActivityManager.startStarActivity(RecordPhoneActivity.this, relation.getStarId());
-                }
                 break;
         }
     }
@@ -596,6 +490,6 @@ public class RecordPhoneActivity extends MvpActivity<RecordPresenter> implements
 
     @OnClick(R.id.group_scene)
     public void onClick() {
-        ActivityManager.startRecordListPadActivity(this, presenter.getRecord().getScene());
+
     }
 }
