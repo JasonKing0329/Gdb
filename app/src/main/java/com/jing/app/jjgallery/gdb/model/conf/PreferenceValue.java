@@ -59,4 +59,10 @@ public class PreferenceValue {
     public static final String SORT_COLUMN_KEY_FEEL = "ScoreFeel";
     public static final String SORT_COLUMN_KEY_SPECIAL = "Special";
     public static final String SORT_COLUMN_KEY_STAR = "Star";
+
+    /**
+     * pad
+     */
+    public static final int PAD_STAR_RECORDS_GRID1 = 0;
+    public static final int PAD_STAR_RECORDS_GRID2 = 1;
 }

@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- only for pad landscape -->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <android.support.v7.widget.CardView
+        android:layout_width="@dimen/pad_star_records_item_grid_width"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="7dp"
+        android:layout_marginBottom="7dp"
+        android:layout_marginRight="7dp"
+        app:cardElevation="5dp"
+        app:cardCornerRadius="10dp">
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/group_record"
+            android:background="?attr/selectableItemBackground">
+            <ImageView
+                android:id="@+id/iv_image"
+                android:layout_width="@dimen/pad_star_records_item_grid_width"
+                android:layout_height="238dp"
+                android:src="@drawable/default_cover"
+                android:scaleType="centerCrop"/>
+
+            <ImageView
+                android:id="@+id/iv_play"
+                android:layout_width="@dimen/gdb_list_icon_play_size"
+                android:layout_height="@dimen/gdb_list_icon_play_size"
+                android:layout_alignRight="@id/iv_image"
+                android:layout_alignBottom="@id/iv_image"
+                android:layout_marginBottom="5dp"
+                android:layout_marginRight="10dp"
+                android:padding="@dimen/gdb_list_icon_play_padding"
+                android:src="@drawable/ic_play_arrow_white_36dp"
+                android:background="@drawable/shape_oval_transgrey"
+                android:scaleType="fitCenter"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_alignBottom="@id/iv_image"
+                android:layout_toLeftOf="@id/iv_play"
+                android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/tv_scene"
+                    android:layout_width="wrap_content"
+                    android:layout_height="24dp"
+                    android:paddingLeft="12dp"
+                    android:paddingRight="12dp"
+                    android:gravity="center"
+                    android:textColor="@color/white"
+                    android:background="@drawable/shape_tag_12"
+                    android:textSize="12dp"/>
+
+                <TextView
+                    android:id="@+id/tv_star"
+                    android:layout_width="wrap_content"
+                    android:layout_height="24dp"
+                    android:paddingLeft="12dp"
+                    android:paddingRight="12dp"
+                    android:layout_marginLeft="10dp"
+                    android:gravity="center"
+                    android:textColor="@color/white"
+                    android:background="@drawable/shape_tag_12_pink"
+                    android:textSize="12dp"/>
+
+                <TextView
+                    android:id="@+id/tv_star1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="24dp"
+                    android:paddingLeft="12dp"
+                    android:paddingRight="12dp"
+                    android:layout_marginLeft="10dp"
+                    android:gravity="center"
+                    android:textColor="@color/white"
+                    android:background="@drawable/shape_tag_12_pink"
+                    android:textSize="12dp"/>
+
+                <TextView
+                    android:id="@+id/tv_star_more"
+                    android:layout_width="wrap_content"
+                    android:layout_height="24dp"
+                    android:paddingLeft="6dp"
+                    android:paddingRight="6dp"
+                    android:layout_marginLeft="10dp"
+                    android:text="●●●"
+                    android:gravity="center"
+                    android:textColor="@color/white"
+                    android:background="@drawable/shape_tag_12_pink"
+                    android:textSize="10dp"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/iv_image"
+                android:layout_alignRight="@id/iv_image"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:id="@+id/tv_path"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:singleLine="true"
+                        android:ellipsize="marquee"
+                        android:textSize="12dp"/>
+
+                    <TextView
+                        android:id="@+id/tv_special"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:maxLines="1"
+                        android:ellipsize="end"
+                        android:textSize="12dp"/>
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tv_sort"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="15dp"
+                    android:text="473"
+                    android:textSize="16dp"
+                    android:textColor="@color/actionbar_bk_blue"/>
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tv_seq"
+                android:layout_width="@dimen/gdb_record_seq_width"
+                android:layout_height="@dimen/gdb_record_seq_width"
+                android:gravity="center"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/gdb_shape_list_no"
+                android:textColor="@color/white"/>
+
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
+</RelativeLayout>

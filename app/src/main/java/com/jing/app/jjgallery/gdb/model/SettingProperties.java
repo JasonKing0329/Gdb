@@ -598,7 +598,7 @@ public class SettingProperties {
      * star pad record list, card mode
      * @param cardMode
      */
-    public static void setStarPadRecordsCardMode(boolean cardMode) {
+    public static void setStarRecordsCardMode(boolean cardMode) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(GdbApplication.getInstance());
         SharedPreferences.Editor editor = preferences.edit();
         editor.putBoolean(PreferenceKey.PREF_GDB_STAR_PAD_RECORDS_CARD, cardMode);
@@ -608,7 +608,7 @@ public class SettingProperties {
     /**
      * star pad record list, card mode
      */
-    public static boolean isStarPadRecordsCardMode() {
+    public static boolean isStarRecordsCardMode() {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(GdbApplication.getInstance());
         return preferences.getBoolean(PreferenceKey.PREF_GDB_STAR_PAD_RECORDS_CARD, false);
     }

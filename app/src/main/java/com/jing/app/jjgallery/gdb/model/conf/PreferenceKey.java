@@ -104,4 +104,11 @@ public class PreferenceKey {
     public static final String PREF_GDB_STAR_PAD_RECORD_ORDER = "pref_gdb_star_pad_record_order";
     // gdb star pad record排序方式
     public static final String PREF_GDB_STAR_PAD_RECORD_DESC = "pref_gdb_star_pad_record_desc";
+
+    /**
+     * pad
+     */
+    // star records view mode
+    public static final String PAD_STAR_RECORDS_VIEW_MODE = "pad_star_records_view_mode";
+
 }

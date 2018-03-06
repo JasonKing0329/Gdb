@@ -15,6 +15,8 @@ import android.widget.TextView;
 import com.jing.app.jjgallery.gdb.GdbConstants;
 import com.jing.app.jjgallery.gdb.MvpActivity;
 import com.jing.app.jjgallery.gdb.R;
+import com.jing.app.jjgallery.gdb.model.PadProperties;
+import com.jing.app.jjgallery.gdb.model.conf.PreferenceValue;
 import com.jing.app.jjgallery.gdb.view.pub.WaveSideBarView;
 import com.jing.app.jjgallery.gdb.view.record.common.RecordCommonListFragment;
 import com.jing.app.jjgallery.gdb.view.star.IStarListHolder;
@@ -64,6 +66,8 @@ public class StarPadActivity extends MvpActivity<StarPadPresenter> implements St
     TextView tvIndex;
     @BindView(R.id.iv_icon_sort)
     ImageView ivIconSort;
+    @BindView(R.id.iv_icon_mode)
+    ImageView ivIconMode;
     @BindView(R.id.side_bar)
     WaveSideBarView sideBar;
     @BindView(R.id.bmb_menu)
@@ -112,6 +116,9 @@ public class StarPadActivity extends MvpActivity<StarPadPresenter> implements St
 
     @Override
     protected void initView() {
+
+        updateModeIcon();
+
         viewpager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -157,6 +164,15 @@ public class StarPadActivity extends MvpActivity<StarPadPresenter> implements St
 
             }
         });
+    }
+
+    private void updateModeIcon() {
+        if (PadProperties.getStarRecordViewMode() == PreferenceValue.PAD_STAR_RECORDS_GRID2) {
+            ivIconMode.setImageResource(R.drawable.ic_dns_white_36dp);
+        }
+        else {
+            ivIconMode.setImageResource(R.drawable.ic_view_module_white_36dp);
+        }
     }
 
     private void initRecordFragment() {
@@ -351,7 +367,7 @@ public class StarPadActivity extends MvpActivity<StarPadPresenter> implements St
         super.onDestroy();
     }
 
-    @OnClick({R.id.iv_icon_sort, R.id.iv_icon_search, R.id.iv_icon_close})
+    @OnClick({R.id.iv_icon_sort, R.id.iv_icon_search, R.id.iv_icon_close, R.id.iv_icon_mode})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.iv_icon_sort:
@@ -372,6 +388,16 @@ public class StarPadActivity extends MvpActivity<StarPadPresenter> implements St
                 }
                 etSearch.setText("");
                 closeSearch();
+                break;
+            case R.id.iv_icon_mode:
+                if (PadProperties.getStarRecordViewMode() == PreferenceValue.PAD_STAR_RECORDS_GRID2) {
+                    PadProperties.setStarRecordViewMode(PreferenceValue.PAD_STAR_RECORDS_GRID1);
+                }
+                else {
+                    PadProperties.setStarRecordViewMode(PreferenceValue.PAD_STAR_RECORDS_GRID2);
+                }
+                updateModeIcon();
+                ftRecord.refresh();
                 break;
         }
     }

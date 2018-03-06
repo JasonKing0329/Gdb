@@ -185,4 +185,5 @@
     <dimen name="home_pop_menu_bottom">10dp</dimen>
     <dimen name="home_pop_menu_left">10dp</dimen>
     <dimen name="boom_menu_btn_margin_ver">10dp</dimen>
+    <dimen name="pad_star_records_item_grid_width">420dp</dimen>
 </resources>
