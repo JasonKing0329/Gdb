@@ -80,6 +80,10 @@ public class StarPhonePresenter extends BasePresenter<StarPhoneView> {
     private long queryStarCount(String mode, boolean isFavor) {
         StarDao dao = GdbApplication.getInstance().getDaoSession().getStarDao();
         QueryBuilder<Star> builder = dao.queryBuilder();
+
+        // don't show star without records
+        builder.where(StarDao.Properties.Records.gt(0));
+
         if (DataConstants.STAR_MODE_TOP.equals(mode)) {
             builder.where(StarDao.Properties.Betop.gt(0)
                     , StarDao.Properties.Bebottom.eq(0));
@@ -105,8 +109,11 @@ public class StarPhonePresenter extends BasePresenter<StarPhoneView> {
             public void subscribe(@NonNull ObservableEmitter<List<Star>> subscriber) throws Exception {
                 StarDao dao = GdbApplication.getInstance().getDaoSession().getStarDao();
                 favorList = dao.queryBuilder()
-                        .where(StarDao.Properties.Favor.gt(0))
+                        .where(StarDao.Properties.Favor.gt(0)
+                                // don't show star without records
+                            , StarDao.Properties.Records.gt("0"))
                         .build().list();
+
                 subscriber.onNext(favorList);
             }
         }).subscribeOn(Schedulers.io())

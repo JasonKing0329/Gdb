@@ -72,6 +72,10 @@ public class StarPadPresenter extends BasePresenter<StarPadView> {
     private long queryStarCount(String mode, boolean isFavor) {
         StarDao dao = GdbApplication.getInstance().getDaoSession().getStarDao();
         QueryBuilder<Star> builder = dao.queryBuilder();
+
+        // don't show star without records
+        builder.where(StarDao.Properties.Records.gt(0));
+
         if (DataConstants.STAR_MODE_TOP.equals(mode)) {
             builder.where(StarDao.Properties.Betop.gt(0)
                     , StarDao.Properties.Bebottom.eq(0));

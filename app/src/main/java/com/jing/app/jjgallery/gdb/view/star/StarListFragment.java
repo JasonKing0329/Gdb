@@ -257,22 +257,16 @@ public class StarListFragment extends MvpFragmentV4<StarListPresenter> implement
 
     public void filterStar(String text) {
         // 平板
-        if (currentViewMode == PreferenceValue.STAR_LIST_VIEW_CIRCLE) {
-            if (mCircleAdapter != null) {
-                mCircleAdapter.onStarFilter(text);
-            }
+        if (mCircleAdapter != null) {
+            mCircleAdapter.onStarFilter(text);
         }
         // 网格视图
-        else if (currentViewMode == SettingProperties.getStarListViewMode()) {
-            if (mGridAdapter != null) {
-                mGridAdapter.onStarFilter(text);
-            }
+        if (mGridAdapter != null) {
+            mGridAdapter.onStarFilter(text);
         }
         // 列表视图
-        else {
-            if (mNameAdapter != null) {
-                mNameAdapter.onStarFilter(text);
-            }
+        if (mNameAdapter != null) {
+            mNameAdapter.onStarFilter(text);
         }
     }
 
