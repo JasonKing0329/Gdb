@@ -2,7 +2,9 @@ package com.jing.app.jjgallery.gdb;
 
 import android.app.Activity;
 import android.app.Application;
+import android.content.Context;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -12,6 +14,10 @@ import com.jing.app.jjgallery.gdb.service.FileService;
 import com.jing.app.jjgallery.gdb.util.DebugLog;
 import com.king.app.gdb.data.entity.DaoMaster;
 import com.king.app.gdb.data.entity.DaoSession;
+import com.king.app.gdb.data.entity.FavorRecordDao;
+import com.king.app.gdb.data.entity.FavorRecordOrderDao;
+import com.king.app.gdb.data.entity.FavorStarDao;
+import com.king.app.gdb.data.entity.FavorStarOrderDao;
 import com.orhanobut.logger.AndroidLogAdapter;
 import com.orhanobut.logger.Logger;
 
@@ -39,7 +45,7 @@ public class GdbApplication extends Application {
     }
 
     private DaoSession daoSession;
-    private DaoMaster.DevOpenHelper helper;
+    private GdbHelper helper;
 
     @Override
     public void onCreate() {
@@ -175,7 +181,7 @@ public class GdbApplication extends Application {
      * 需要由外部调用，如果在onCreate里直接初始化会创建新的数据库
      */
     public void createGreenDao() {
-        helper = new DaoMaster.DevOpenHelper(new GDataContext(this), Configuration.DB_NAME);
+        helper = new GdbHelper(new GDataContext(this), Configuration.DB_NAME);
         Database db = helper.getWritableDb();
         daoSession = new DaoMaster(db).newSession();
 
@@ -191,5 +197,27 @@ public class GdbApplication extends Application {
 
     public DaoSession getDaoSession() {
         return daoSession;
+    }
+
+    public static class GdbHelper extends DaoMaster.OpenHelper {
+
+        public GdbHelper(Context context, String name) {
+            super(context, name);
+        }
+
+        public GdbHelper(Context context, String name, SQLiteDatabase.CursorFactory factory) {
+            super(context, name, factory);
+        }
+
+        @Override
+        public void onUpgrade(Database db, int oldVersion, int newVersion) {
+            DebugLog.e(" oldVersion=" + oldVersion + ", newVersion=" + newVersion);
+            if (newVersion == 2) {
+                FavorRecordDao.createTable(db, true);
+                FavorRecordOrderDao.createTable(db, true);
+                FavorStarDao.createTable(db, true);
+                FavorStarOrderDao.createTable(db, true);
+            }
+        }
     }
 }

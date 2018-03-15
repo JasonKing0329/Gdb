@@ -13,6 +13,7 @@ import com.jing.app.jjgallery.gdb.model.bean.FilterBean;
 import com.jing.app.jjgallery.gdb.view.pub.ActionBar;
 import com.jing.app.jjgallery.gdb.view.record.IRecordListHolder;
 import com.jing.app.jjgallery.gdb.view.record.RecordsListFragment;
+import com.king.app.gdb.data.entity.Record;
 
 /**
  * 描述:
@@ -137,6 +138,11 @@ public class RecordListActivity extends GBaseActivity implements IRecordListHold
 
     @Override
     public void updateFilter(FilterBean bean) {
+
+    }
+
+    @Override
+    public void showRecordPopup(View v, Record record) {
 
     }
 }

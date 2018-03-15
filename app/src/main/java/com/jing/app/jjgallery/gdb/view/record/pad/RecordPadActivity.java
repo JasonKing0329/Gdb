@@ -12,13 +12,12 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.jing.app.jjgallery.gdb.ActivityManager;
-import com.jing.app.jjgallery.gdb.MvpActivity;
+import com.jing.app.jjgallery.gdb.FavorPopupMvpActivity;
 import com.jing.app.jjgallery.gdb.R;
 import com.jing.app.jjgallery.gdb.model.VideoModel;
 import com.jing.app.jjgallery.gdb.presenter.record.RecordPresenter;
 import com.jing.app.jjgallery.gdb.util.ScreenUtils;
 import com.jing.app.jjgallery.gdb.view.pub.PointDescLayout;
-import com.jing.app.jjgallery.gdb.view.pub.dialog.AlertDialogFragmentV4;
 import com.jing.app.jjgallery.gdb.view.record.phone.IRecordView;
 import com.king.app.gdb.data.entity.Record;
 import com.king.app.gdb.data.entity.RecordStar;
@@ -38,7 +37,7 @@ import butterknife.OnClick;
  * @time 2018/2/14 0014 10:29
  */
 
-public class RecordPadActivity extends MvpActivity<RecordPresenter> implements IRecordView {
+public class RecordPadActivity extends FavorPopupMvpActivity<RecordPresenter> implements IRecordView {
 
     public static final String KEY_RECORD_ID = "key_record_id";
 
@@ -152,22 +151,17 @@ public class RecordPadActivity extends MvpActivity<RecordPresenter> implements I
         recordPadAdapter.setPathList(presenter.getRecordImages());
         recordPadAdapter.setOnItemClickListener(new RecordPadAdapter.OnItemClickListener() {
             @Override
-            public void onDeleteItem(final String filePath) {
-                AlertDialogFragmentV4 dialog = new AlertDialogFragmentV4();
-                dialog.setMessage("Are you sure to delete " + filePath);
-                dialog.setPositiveText(getString(R.string.ok));
-                dialog.setPositiveListener(new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        presenter.deleteFile(filePath);
-                        recordPadAdapter.removeItem(filePath);
-                    }
-                });
-                dialog.setNegativeText(getString(R.string.cancel));
-                dialog.show(getSupportFragmentManager(), "AlertDialogFragmentV4");
+            public void onClickItem(View view, String filePath) {
+                getFavorPopup().popupImage(RecordPadActivity.this, view, filePath);
             }
         });
         rvImages.setAdapter(recordPadAdapter);
+    }
+
+    @Override
+    protected void onDeleteImage(String filePath) {
+        presenter.deleteFile(filePath);
+        recordPadAdapter.removeItem(filePath);
     }
 
     private void showStars(Record record) {

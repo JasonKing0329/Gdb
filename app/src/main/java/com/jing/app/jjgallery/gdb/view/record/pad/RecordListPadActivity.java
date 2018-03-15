@@ -14,6 +14,8 @@ import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.jing.app.jjgallery.gdb.ActivityManager;
+import com.jing.app.jjgallery.gdb.FavorPopupMvpActivity;
 import com.jing.app.jjgallery.gdb.GdbConstants;
 import com.jing.app.jjgallery.gdb.MvpActivity;
 import com.jing.app.jjgallery.gdb.R;
@@ -22,6 +24,7 @@ import com.jing.app.jjgallery.gdb.view.record.IRecordListHolder;
 import com.jing.app.jjgallery.gdb.view.record.IRecordSceneHolder;
 import com.jing.app.jjgallery.gdb.view.record.RecordSceneFragment;
 import com.jing.app.jjgallery.gdb.view.record.RecordsListFragment;
+import com.king.app.gdb.data.entity.Record;
 import com.king.app.gdb.data.param.DataConstants;
 
 import butterknife.BindView;
@@ -33,7 +36,7 @@ import butterknife.OnClick;
  * @time 2018/2/15 0015 08:31
  */
 
-public class RecordListPadActivity extends MvpActivity<RecordListPadPresenter> implements RecordListPadView, IRecordSceneHolder, IRecordListHolder {
+public class RecordListPadActivity extends FavorPopupMvpActivity<RecordListPadPresenter> implements RecordListPadView, IRecordSceneHolder, IRecordListHolder {
 
     public static final String KEY_SCENE_NAME = "key_scene_name";
 
@@ -148,7 +151,7 @@ public class RecordListPadActivity extends MvpActivity<RecordListPadPresenter> i
 
     }
 
-    @OnClick({R.id.iv_icon_back, R.id.iv_icon_close, R.id.iv_icon_search, R.id.iv_icon_sort
+    @OnClick({R.id.iv_icon_back, R.id.iv_icon_close, R.id.iv_icon_search, R.id.iv_icon_sort, R.id.iv_icon_favor
             , R.id.iv_icon_sort_scene, R.id.iv_icon_color, R.id.iv_icon_filter})
     public void onClick(View view) {
         switch (view.getId()) {
@@ -174,6 +177,10 @@ public class RecordListPadActivity extends MvpActivity<RecordListPadPresenter> i
                 break;
             case R.id.iv_icon_filter:
                 ftRecords.changeFilter();
+                break;
+            case R.id.iv_icon_favor:
+                ActivityManager.startRecordOrderActivity(this);
+                finish();
                 break;
         }
     }
@@ -258,4 +265,8 @@ public class RecordListPadActivity extends MvpActivity<RecordListPadPresenter> i
         ftRecords.loadNewRecords();
     }
 
+    @Override
+    public void showRecordPopup(View v, Record record) {
+        getFavorPopup().popupRecord(this, v, record.getId());
+    }
 }

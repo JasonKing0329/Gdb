@@ -15,10 +15,10 @@ import com.jing.app.jjgallery.gdb.ActivityManager;
 import com.jing.app.jjgallery.gdb.GBaseActivity;
 import com.jing.app.jjgallery.gdb.GdbConstants;
 import com.jing.app.jjgallery.gdb.R;
+import com.jing.app.jjgallery.gdb.http.bean.response.AppCheckBean;
 import com.jing.app.jjgallery.gdb.model.GdbImageProvider;
 import com.jing.app.jjgallery.gdb.model.SettingProperties;
 import com.jing.app.jjgallery.gdb.util.GlideUtil;
-import com.jing.app.jjgallery.gdb.view.home.GHomeActivity;
 import com.jing.app.jjgallery.gdb.view.update.GdbUpdateListener;
 import com.jing.app.jjgallery.gdb.view.update.GdbUpdateManager;
 
@@ -115,9 +115,9 @@ public class HomePadActivity extends GBaseActivity implements NavigationView.OnN
             }
 
             @Override
-            public boolean consumeYes() {
+            public boolean consumeYes(AppCheckBean bean) {
                 // 涉及到额外数据保存与存储，直接跳转至setting界面执行
-                ActivityManager.startSettingActivity(HomePadActivity.this);
+                ActivityManager.startManageActivity(HomePadActivity.this);
                 finish();
                 return true;
             }

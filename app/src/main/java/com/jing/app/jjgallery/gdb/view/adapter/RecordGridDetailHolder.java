@@ -83,6 +83,9 @@ public class RecordGridDetailHolder extends RecyclerView.ViewHolder implements V
         groupRecord.setOnClickListener(this);
 
         tvSeq.setText(String.valueOf(position + 1));
+        tvSeq.setTag(record);
+        tvSeq.setOnClickListener(this);
+
         tvPath.setText(record.getDirectory() + "/" + record.getName());
         tvScene.setText(record.getScene());
         tvScene.setTag(record.getScene());
@@ -342,7 +345,12 @@ public class RecordGridDetailHolder extends RecyclerView.ViewHolder implements V
     public void onClick(View view) {
         Object obj = view.getTag();
         if (obj instanceof Record) {
-            onDetailActionListener.onClickCardItem(view, (Record) obj);
+            if (view.getId() == R.id.tv_seq) {
+                onDetailActionListener.onPopupMenu(view, (Record) obj);
+            }
+            else {
+                onDetailActionListener.onClickCardItem(view, (Record) obj);
+            }
         }
         else if (obj instanceof Star) {
             onDetailActionListener.onClickStar(view, (Star) obj);
@@ -351,4 +359,5 @@ public class RecordGridDetailHolder extends RecyclerView.ViewHolder implements V
             onDetailActionListener.onClickScene(view, (String) obj);
         }
     }
+
 }

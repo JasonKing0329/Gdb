@@ -17,6 +17,7 @@ import com.jing.app.jjgallery.gdb.ActivityManager;
 import com.jing.app.jjgallery.gdb.GBaseActivity;
 import com.jing.app.jjgallery.gdb.GdbConstants;
 import com.jing.app.jjgallery.gdb.R;
+import com.jing.app.jjgallery.gdb.http.bean.response.AppCheckBean;
 import com.jing.app.jjgallery.gdb.model.GdbImageProvider;
 import com.jing.app.jjgallery.gdb.model.SettingProperties;
 import com.jing.app.jjgallery.gdb.model.VideoModel;
@@ -193,9 +194,9 @@ public class GHomeActivity extends GBaseActivity implements NavigationView.OnNav
             }
 
             @Override
-            public boolean consumeYes() {
-                // 涉及到额外数据保存与存储，直接跳转至setting界面执行
-                ActivityManager.startSettingActivity(GHomeActivity.this);
+            public boolean consumeYes(AppCheckBean bean) {
+                // 涉及到额外数据保存与存储，直接跳转至manage界面执行
+                ActivityManager.startManageActivity(GHomeActivity.this);
                 finish();
                 return true;
             }

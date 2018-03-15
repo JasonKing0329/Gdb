@@ -12,4 +12,5 @@ import com.king.app.gdb.data.entity.Record;
 
 public interface OnRecordItemClickListener {
     void onClickRecordItem(View v, Record record);
+    void onPopupMenu(View v, Record record);
 }

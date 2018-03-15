@@ -103,7 +103,7 @@ public abstract class BaseFragmentV4 extends Fragment implements BaseView {
 
     @Override
     public boolean dismissLoading() {
-        if (loadingDialog != null && loadingDialog.isVisible()) {
+        if (loadingDialog != null) {
             loadingDialog.dismiss();
             return true;
         }

@@ -1,17 +1,21 @@
 package com.jing.app.jjgallery.gdb.view.settings;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBar;
 import android.view.View;
+import android.widget.TextView;
 
 import com.jing.app.jjgallery.gdb.BaseView;
-import com.jing.app.jjgallery.gdb.GBaseActivity;
+import com.jing.app.jjgallery.gdb.MvpActivity;
 import com.jing.app.jjgallery.gdb.R;
 import com.jing.app.jjgallery.gdb.http.Command;
 import com.jing.app.jjgallery.gdb.http.bean.data.DownloadItem;
 import com.jing.app.jjgallery.gdb.model.bean.CheckDownloadBean;
 import com.jing.app.jjgallery.gdb.model.bean.DownloadDialogBean;
+import com.jing.app.jjgallery.gdb.presenter.GdbUpdatePresenter;
 import com.jing.app.jjgallery.gdb.presenter.ManagePresenter;
 import com.jing.app.jjgallery.gdb.service.FileService;
 import com.jing.app.jjgallery.gdb.view.download.v4.DownloadDialogFragmentV4;
@@ -19,6 +23,7 @@ import com.jing.app.jjgallery.gdb.view.pub.dialog.AlertDialogFragmentV4;
 
 import java.util.List;
 
+import butterknife.BindView;
 import butterknife.OnClick;
 
 /**
@@ -26,18 +31,14 @@ import butterknife.OnClick;
  * <p/>作者：景阳
  * <p/>创建时间: 2017/11/22 15:52
  */
-public class ManageActivity extends GBaseActivity implements IManageView {
+public class ManageActivity extends MvpActivity<ManagePresenter> implements IManageView {
 
-    private ManagePresenter presenter;
+    @BindView(R.id.tv_db_version)
+    TextView tvDbVersion;
 
     @Override
     protected int getContentView() {
         return R.layout.activity_manage;
-    }
-
-    @Override
-    protected void initController() {
-        presenter = new ManagePresenter(this);
     }
 
     @Override
@@ -46,6 +47,18 @@ public class ManageActivity extends GBaseActivity implements IManageView {
         mActionBar.setHomeButtonEnabled(true);
         mActionBar.setDisplayHomeAsUpEnabled(true);
         mActionBar.setTitle("Resource manage");
+
+        tvDbVersion.setText("(Local v" + GdbUpdatePresenter.getDbVersionName() + ")");
+    }
+
+    @Override
+    protected ManagePresenter createPresenter() {
+        return new ManagePresenter();
+    }
+
+    @Override
+    protected void initData() {
+
     }
 
     @Override
@@ -60,7 +73,7 @@ public class ManageActivity extends GBaseActivity implements IManageView {
     }
 
     @OnClick({R.id.group_down_stars, R.id.group_down_records, R.id.group_move_stars
-            , R.id.group_move_records, R.id.group_clear, R.id.group_check_server})
+            , R.id.group_move_records, R.id.group_clear, R.id.group_check_server, R.id.group_check_db})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.group_down_stars:
@@ -101,6 +114,9 @@ public class ManageActivity extends GBaseActivity implements IManageView {
             case R.id.group_check_server:
                 showLoadingV4();
                 presenter.checkServerStatus();
+                break;
+            case R.id.group_check_db:
+                presenter.checkDbUpdate();
                 break;
         }
     }
@@ -163,6 +179,16 @@ public class ManageActivity extends GBaseActivity implements IManageView {
         dismissLoadingV4();
     }
 
+    @Override
+    public Context getContext() {
+        return this;
+    }
+
+    @Override
+    public FragmentManager getFtManager() {
+        return getSupportFragmentManager();
+    }
+
     /**
      *
      * @param message
@@ -180,11 +206,4 @@ public class ManageActivity extends GBaseActivity implements IManageView {
         dialog.show(getSupportFragmentManager(), "AlertDialogFragmentV4");
     }
 
-    @Override
-    protected void onDestroy() {
-        if (presenter != null) {
-            presenter.dispose();
-        }
-        super.onDestroy();
-    }
 }

@@ -1,26 +1,40 @@
 package com.jing.app.jjgallery.gdb.presenter;
 
+import com.jing.app.jjgallery.gdb.BasePresenter;
+import com.jing.app.jjgallery.gdb.GdbApplication;
 import com.jing.app.jjgallery.gdb.http.AppHttpClient;
 import com.jing.app.jjgallery.gdb.http.Command;
 import com.jing.app.jjgallery.gdb.http.bean.data.DownloadItem;
 import com.jing.app.jjgallery.gdb.http.bean.request.GdbCheckNewFileBean;
 import com.jing.app.jjgallery.gdb.http.bean.request.GdbRequestMoveBean;
+import com.jing.app.jjgallery.gdb.http.bean.response.AppCheckBean;
 import com.jing.app.jjgallery.gdb.http.bean.response.GdbMoveResponse;
 import com.jing.app.jjgallery.gdb.http.bean.response.GdbRespBean;
 import com.jing.app.jjgallery.gdb.model.bean.CheckDownloadBean;
 import com.jing.app.jjgallery.gdb.model.conf.Configuration;
+import com.jing.app.jjgallery.gdb.util.ListUtil;
 import com.jing.app.jjgallery.gdb.view.settings.IManageView;
+import com.jing.app.jjgallery.gdb.view.update.GdbUpdateListener;
+import com.jing.app.jjgallery.gdb.view.update.GdbUpdateManager;
+import com.king.app.gdb.data.entity.FavorRecord;
+import com.king.app.gdb.data.entity.FavorRecordOrder;
+import com.king.app.gdb.data.entity.FavorStar;
+import com.king.app.gdb.data.entity.FavorStarOrder;
+import com.king.app.gdb.data.entity.Star;
+import com.king.app.gdb.data.entity.StarDao;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.ObservableSource;
+import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
@@ -31,14 +45,11 @@ import io.reactivex.schedulers.Schedulers;
  * <p/>作者：景阳
  * <p/>创建时间: 2017/11/22 15:54
  */
-public class ManagePresenter {
+public class ManagePresenter extends BasePresenter<IManageView> {
 
-    private IManageView view;
-    private CompositeDisposable compositeDisposable;
+    @Override
+    public void onCreate() {
 
-    public ManagePresenter(IManageView view) {
-        this.view = view;
-        compositeDisposable = new CompositeDisposable();
     }
 
     public void checkServerStatus() {
@@ -63,7 +74,7 @@ public class ManagePresenter {
                         view.onServerUnavailable();
                     }
                 });
-        compositeDisposable.add(disposable);
+        addDisposable(disposable);
     }
 
     /**
@@ -95,7 +106,7 @@ public class ManagePresenter {
                         view.onMoveImagesFail();
                     }
                 });
-        compositeDisposable.add(disposable);
+        addDisposable(disposable);
     }
 
     /**
@@ -123,7 +134,7 @@ public class ManagePresenter {
                         view.onRequestFail();
                     }
                 });
-        compositeDisposable.add(disposable);
+        addDisposable(disposable);
     }
 
     private Observable<CheckDownloadBean> parseCheckStarBean(final GdbCheckNewFileBean bean) {
@@ -208,7 +219,7 @@ public class ManagePresenter {
                         view.onRequestFail();
                     }
                 });
-        compositeDisposable.add(disposable);
+        addDisposable(disposable);
     }
 
     private Observable<CheckDownloadBean> parseCheckRecordBean(final GdbCheckNewFileBean bean) {
@@ -266,9 +277,179 @@ public class ManagePresenter {
         return list;
     }
 
-    public void dispose() {
-        if (compositeDisposable != null) {
-            compositeDisposable.clear();
+    /**
+     * save favor in memory, insert into database after downloaded new one
+     */
+    private Map<String, Integer> favorMap = new HashMap<>();
+
+    private List<FavorRecord> favorRecordList;
+
+    private List<FavorStar> favorStarList;
+
+    private List<FavorRecordOrder> favorRecordOrderList;
+
+    private List<FavorStarOrder> favorStarOrderList;
+
+    private GdbUpdateManager updateManager;
+
+    public void checkDbUpdate() {
+
+        updateManager = new GdbUpdateManager(view.getContext(), new GdbUpdateListener() {
+            @Override
+            public void onUpdateFinish() {
+                // update favor to database
+                updateData();
+            }
+
+            @Override
+            public void onUpdateCancel() {
+
+            }
+
+            @Override
+            public boolean consumeYes(AppCheckBean bean) {
+                // 点击是后才开始进行下载更新
+                startUpdate(bean);
+                return true;
+            }
+        });
+        updateManager.setFragmentManagerV4(view.getFtManager());
+        updateManager.showMessageWarning();
+        updateManager.startCheck();
+    }
+
+    private void startUpdate(AppCheckBean bean) {
+        // save data in memory
+        saveData(bean)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(new Observer<AppCheckBean>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        addDisposable(d);
+                    }
+
+                    @Override
+                    public void onNext(AppCheckBean appCheckBean) {
+                        updateManager.startDownload(appCheckBean);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        e.printStackTrace();
+                        view.showToastLong("Pre-save data failed: " + e.getMessage());
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+    }
+
+    /**
+     * save data in memory
+     */
+    private Observable<AppCheckBean> saveData(final AppCheckBean bean) {
+        return Observable.create(new ObservableOnSubscribe<AppCheckBean>() {
+            @Override
+            public void subscribe(ObservableEmitter<AppCheckBean> e) throws Exception {
+                // 保存star的favor字段
+                favorMap.clear();
+                saveFavorMap();
+
+                // 保存favor_oder等favor相关列表
+                favorRecordList = GdbApplication.getInstance().getDaoSession().getFavorRecordDao()
+                        .queryBuilder().list();
+                favorRecordOrderList = GdbApplication.getInstance().getDaoSession().getFavorRecordOrderDao()
+                        .queryBuilder().list();
+                favorStarList = GdbApplication.getInstance().getDaoSession().getFavorStarDao()
+                        .queryBuilder().list();
+                favorStarOrderList = GdbApplication.getInstance().getDaoSession().getFavorStarOrderDao()
+                        .queryBuilder().list();
+                e.onNext(bean);
+            }
+        });
+    }
+
+    private void saveFavorMap() {
+
+        StarDao dao = GdbApplication.getInstance().getDaoSession().getStarDao();
+        List<Star> list = dao.queryBuilder().build().list();
+        for (Star star:list) {
+            if (star.getFavor() > 0) {
+                favorMap.put(star.getName(), star.getFavor());
+            }
         }
     }
+
+    private void updateData() {
+        view.showLoading();
+        Observable.create(new ObservableOnSubscribe<Object>() {
+            @Override
+            public void subscribe(ObservableEmitter<Object> e) throws Exception {
+                GdbApplication.getInstance().reCreateGreenDao();
+
+                updateStarFavorFiled();
+                updateFavorTables();
+                e.onNext(new Object());
+            }
+        }).observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(new Observer<Object>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        addDisposable(d);
+                    }
+
+                    @Override
+                    public void onNext(Object object) {
+                        view.dismissLoading();
+                        view.showToastLong("Update successfully!");
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        e.printStackTrace();
+                        view.dismissLoading();
+                        view.showToastLong("Update failed: " + e.getMessage());
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+    }
+
+    /**
+     * update favor to database
+     */
+    private void updateStarFavorFiled() {
+        StarDao dao = GdbApplication.getInstance().getDaoSession().getStarDao();
+        List<Star> list = dao.queryBuilder().build().list();
+        for (Star star:list) {
+            Integer favor = favorMap.get(star.getName());
+            if (favor != null && favor > 0) {
+                star.setFavor(favor);
+                dao.update(star);
+            }
+        }
+    }
+
+    private void updateFavorTables() {
+        if (!ListUtil.isEmpty(favorRecordList)) {
+            GdbApplication.getInstance().getDaoSession().getFavorRecordDao().insertInTx(favorRecordList);
+        }
+        if (!ListUtil.isEmpty(favorRecordOrderList)) {
+            GdbApplication.getInstance().getDaoSession().getFavorRecordOrderDao().insertInTx(favorRecordOrderList);
+        }
+        if (!ListUtil.isEmpty(favorStarList)) {
+            GdbApplication.getInstance().getDaoSession().getFavorStarDao().insertInTx(favorStarList);
+        }
+        if (!ListUtil.isEmpty(favorStarOrderList)) {
+            GdbApplication.getInstance().getDaoSession().getFavorStarOrderDao().insertInTx(favorStarOrderList);
+        }
+    }
+
 }

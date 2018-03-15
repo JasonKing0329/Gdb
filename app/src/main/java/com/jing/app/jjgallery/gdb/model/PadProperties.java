@@ -63,4 +63,20 @@ public class PadProperties {
     public static void setStarRecordViewMode(int mode) {
         setInt(PreferenceKey.PAD_STAR_RECORDS_VIEW_MODE, mode);
     }
+
+    /**
+     * PAD_ORDER_RECORD_SORT
+     * @return
+     */
+    public static int getRecordOrderSortType() {
+        return getInt(PreferenceKey.PAD_ORDER_RECORD_SORT);
+    }
+
+    /**
+     * PAD_ORDER_RECORD_SORT
+     * @param mode
+     */
+    public static void setRecordOrderSortType(int mode) {
+        setInt(PreferenceKey.PAD_ORDER_RECORD_SORT, mode);
+    }
 }

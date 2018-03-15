@@ -1,7 +1,10 @@
 package com.jing.app.jjgallery.gdb.view.record;
 
+import android.view.View;
+
 import com.jing.app.jjgallery.gdb.IFragmentHolder;
 import com.jing.app.jjgallery.gdb.model.bean.FilterBean;
+import com.king.app.gdb.data.entity.Record;
 
 /**
  * 描述:
@@ -11,4 +14,6 @@ import com.jing.app.jjgallery.gdb.model.bean.FilterBean;
 public interface IRecordListHolder extends IFragmentHolder {
 
     void updateFilter(FilterBean bean);
+
+    void showRecordPopup(View v, Record record);
 }

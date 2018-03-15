@@ -105,6 +105,10 @@
                 android:id="@+id/iv_icon_filter"
                 style="@style/IvPadActionIcon"
                 android:src="@drawable/ic_filter_list_3f51b5" />
+            <ImageView
+                android:id="@+id/iv_icon_favor"
+                style="@style/IvPadActionIcon"
+                android:src="@drawable/ic_favorite_border_3f51b5_36dp" />
         </LinearLayout>
     </LinearLayout>
     <RelativeLayout

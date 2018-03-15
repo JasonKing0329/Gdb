@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import android.view.View;
 
 import com.jing.app.jjgallery.gdb.model.conf.ConfManager;
+import com.jing.app.jjgallery.gdb.view.favor.record.RecordOrderPadActivity;
 import com.jing.app.jjgallery.gdb.view.game.RandomActivity;
 import com.jing.app.jjgallery.gdb.view.home.GHomeActivity;
 import com.jing.app.jjgallery.gdb.view.home.pad.HomePadActivity;
@@ -90,6 +91,19 @@ public class ActivityManager {
 
     public static boolean startRecordListPadActivity(Activity from) {
         startRecordListPadActivity(from, null);
+        return true;
+    }
+
+    public static boolean startRecordOrderActivity(Activity from) {
+        Intent intent = new Intent().setClass(from, RecordOrderPadActivity.class);
+        from.startActivity(intent);
+        return true;
+    }
+
+    public static boolean startRecordOrderActivity(Activity from, int requestCode) {
+        Intent intent = new Intent().setClass(from, RecordOrderPadActivity.class);
+        intent.putExtra(RecordOrderPadActivity.KEY_SELECT_MODE, true);
+        from.startActivityForResult(intent, requestCode);
         return true;
     }
 

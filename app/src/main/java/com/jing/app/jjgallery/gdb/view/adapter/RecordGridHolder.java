@@ -46,6 +46,7 @@ public class RecordGridHolder extends RecyclerListAdapter.ViewHolder<Record> {
     
     private int sortMode;
     private View.OnClickListener onClickListener;
+    private View.OnClickListener popupListener;
 
     public RecordGridHolder(ViewGroup parent) {
         this(LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_gdb_record_grid, parent, false));
@@ -56,8 +57,9 @@ public class RecordGridHolder extends RecyclerListAdapter.ViewHolder<Record> {
         ButterKnife.bind(this, view);
     }
 
-    public void setParameters(View.OnClickListener onClickListener) {
+    public void setParameters(View.OnClickListener onClickListener, View.OnClickListener popupListener) {
         this.onClickListener = onClickListener;
+        this.popupListener = popupListener;
     }
 
     @Override
@@ -96,6 +98,9 @@ public class RecordGridHolder extends RecyclerListAdapter.ViewHolder<Record> {
 
         groupRecord.setTag(item);
         groupRecord.setOnClickListener(onClickListener);
+
+        tvSeq.setTag(item);
+        tvSeq.setOnClickListener(popupListener);
     }
 
     public void setSortMode(int sortMode) {

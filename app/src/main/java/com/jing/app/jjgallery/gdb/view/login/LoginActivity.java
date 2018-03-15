@@ -143,6 +143,7 @@ public class LoginActivity extends GBaseActivity implements ILoginView {
                 .subscribe(new Consumer<Boolean>() {
                     @Override
                     public void accept(Boolean hasPref) throws Exception {
+
                         if (hasPref) {
                             new DefaultDialogManager().showWarningActionDialog(LoginActivity.this
                                     , getResources().getString(R.string.login_extend_pref_exist)

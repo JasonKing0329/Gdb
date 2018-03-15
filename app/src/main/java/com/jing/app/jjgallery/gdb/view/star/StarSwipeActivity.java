@@ -266,6 +266,11 @@ public class StarSwipeActivity extends GBaseActivity implements IStarSwipeView {
                     pairs[2] = Pair.create(v.findViewById(R.id.record_scene), getString(R.string.anim_record_page_scene));
                     ActivityManager.startRecordActivity(StarSwipeActivity.this, record, pairs);
                 }
+
+                @Override
+                public void onPopupMenu(View v, Record record) {
+
+                }
             });
             rvRecords.setAdapter(recordsListAdapter);
         } else {

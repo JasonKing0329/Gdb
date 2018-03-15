@@ -89,12 +89,11 @@ public class GdbUpdateManager implements IGdbUpdateView {
                     public void onClick(DialogInterface dialog, int which) {
                         if (which == DialogInterface.BUTTON_POSITIVE) {
                             if (updateListener != null) {
-                                if (updateListener.consumeYes()) {
+                                if (updateListener.consumeYes(bean)) {
                                     return;
                                 }
                             }
-                            isUpdating = true;
-                            startDownloadNewApp(bean);
+                            startDownload(bean);
                         }
                     }
                 }
@@ -149,7 +148,9 @@ public class GdbUpdateManager implements IGdbUpdateView {
         return isShowing;
     }
 
-    private void startDownloadNewApp(AppCheckBean bean) {
+    public void startDownload(AppCheckBean bean) {
+
+        isUpdating = true;
 
         if (fragmentManager != null) {
             showDownloadDialogFragment(bean);

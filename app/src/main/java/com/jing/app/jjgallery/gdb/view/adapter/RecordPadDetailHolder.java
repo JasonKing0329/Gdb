@@ -81,6 +81,9 @@ public class RecordPadDetailHolder extends RecyclerView.ViewHolder implements Vi
         groupRecord.setOnClickListener(this);
 
         tvSeq.setText(String.valueOf(position + 1));
+        tvSeq.setTag(record);
+        tvSeq.setOnClickListener(this);
+
         tvName.setText(record.getName());
         tvDir.setText(record.getDirectory());
         tvScene.setText(record.getScene());
@@ -319,7 +322,12 @@ public class RecordPadDetailHolder extends RecyclerView.ViewHolder implements Vi
     public void onClick(View view) {
         Object obj = view.getTag();
         if (obj instanceof Record) {
-            onDetailActionListener.onClickCardItem(view, (Record) obj);
+            if (view.getId() == R.id.tv_seq) {
+                onDetailActionListener.onPopupMenu(view, (Record) obj);
+            }
+            else {
+                onDetailActionListener.onClickCardItem(view, (Record) obj);
+            }
         }
         else if (obj instanceof Star) {
             onDetailActionListener.onClickStar(view, (Star) obj);

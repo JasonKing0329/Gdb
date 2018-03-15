@@ -38,7 +38,7 @@ public class RecordsGridAdapter extends RecyclerView.Adapter<RecordGridHolder> i
     @Override
     public RecordGridHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         RecordGridHolder holder = new RecordGridHolder(parent);
-        holder.setParameters(this);
+        holder.setParameters(this, popupListener);
         return holder;
     }
 
@@ -60,5 +60,15 @@ public class RecordsGridAdapter extends RecyclerView.Adapter<RecordGridHolder> i
             itemClickListener.onClickRecordItem(v, record);
         }
     }
+
+    View.OnClickListener popupListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            if (itemClickListener != null) {
+                Record record = (Record) v.getTag();
+                itemClickListener.onPopupMenu(v, record);
+            }
+        }
+    };
 
 }

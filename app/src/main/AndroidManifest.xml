@@ -81,8 +81,12 @@
             android:screenOrientation="portrait"/>
         <activity android:name=".view.game.RandomActivity"
             android:screenOrientation="portrait"/>
-        <activity android:name=".view.settings.ManageActivity"
-            android:screenOrientation="portrait"/>
+        <activity android:name=".view.settings.ManageActivity"/>
+
+        <activity android:name=".view.favor.record.RecordOrderPadActivity"
+            android:screenOrientation="landscape"
+            android:launchMode="singleTask"
+            android:theme="@style/AppTheme.NoActionBar"/>
 
         <service android:name=".service.FileService"/>
 

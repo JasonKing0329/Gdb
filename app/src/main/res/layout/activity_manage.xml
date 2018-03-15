@@ -172,7 +172,6 @@
             </LinearLayout>
         </android.support.v7.widget.CardView>
 
-
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="80dp"
@@ -199,6 +198,43 @@
                     android:textColor="@color/colorPrimary"
                     android:textSize="20dp"
                     android:text="Check server online"/>
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:layout_marginTop="20dp"
+            app:cardCornerRadius="15dp">
+            <LinearLayout
+                android:id="@+id/group_check_db"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:background="?android:attr/selectableItemBackground"
+                android:gravity="center_vertical">
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginLeft="30dp"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_http_3f3a71_48dp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:layout_marginLeft="20dp"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="20dp"
+                    android:text="Check database update"/>
+                <TextView
+                    android:id="@+id/tv_db_version"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:layout_marginLeft="10dp"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="20dp"/>
             </LinearLayout>
         </android.support.v7.widget.CardView>
 

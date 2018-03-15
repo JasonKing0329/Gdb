@@ -8,11 +8,13 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
-import com.jing.app.jjgallery.gdb.MvpActivity;
+import com.jing.app.jjgallery.gdb.FavorPopupMvpActivity;
 import com.jing.app.jjgallery.gdb.R;
 import com.jing.app.jjgallery.gdb.util.ScreenUtils;
 import com.jing.app.jjgallery.gdb.view.pub.dialog.AlertDialogFragmentV4;
 import com.jing.app.jjgallery.gdb.view.record.common.RecordCommonListFragment;
+import com.jing.app.jjgallery.gdb.view.record.common.RecordCommonListHolder;
+import com.king.app.gdb.data.entity.Record;
 import com.king.app.gdb.data.entity.Star;
 
 import butterknife.BindView;
@@ -24,7 +26,7 @@ import butterknife.OnClick;
  * @time 2018/2/15 0015 19:18
  */
 
-public class StarPageActivity extends MvpActivity<StarPagePresenter> implements StarPageView {
+public class StarPageActivity extends FavorPopupMvpActivity<StarPagePresenter> implements StarPageView, RecordCommonListHolder {
 
     public static final String KEY_STAR_ID = "key_star_id";
 
@@ -173,5 +175,10 @@ public class StarPageActivity extends MvpActivity<StarPagePresenter> implements 
                 }
                 break;
         }
+    }
+
+    @Override
+    public void showRecordPopup(View anchor, Record record) {
+        getFavorPopup().popupRecord(this, anchor, record.getId());
     }
 }

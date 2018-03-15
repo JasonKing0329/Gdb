@@ -53,9 +53,11 @@ public class RecordCommonListFragment extends MvpFragmentV4<RecordCommonListPres
     private int currentSortMode = -1;
     private boolean currentSortDesc = true;
 
+    private RecordCommonListHolder holder;
+
     @Override
     protected void bindFragmentHolder(IFragmentHolder holder) {
-
+        this.holder = (RecordCommonListHolder) holder;
     }
 
     @Override
@@ -148,6 +150,11 @@ public class RecordCommonListFragment extends MvpFragmentV4<RecordCommonListPres
                     public void onClickRecordItem(View v, Record record) {
                         ActivityManager.startRecordPadActivity(getActivity(), record);
                     }
+
+                    @Override
+                    public void onPopupMenu(View v, Record record) {
+
+                    }
                 });
                 rvRecords.setAdapter(mListAdapter);
             }
@@ -172,6 +179,11 @@ public class RecordCommonListFragment extends MvpFragmentV4<RecordCommonListPres
                     @Override
                     public void onClickCardItem(View v, Record record) {
                         ActivityManager.startRecordPadActivity(getActivity(), record);
+                    }
+
+                    @Override
+                    public void onPopupMenu(View v, Record record) {
+                        holder.showRecordPopup(v, record);
                     }
 
                     @Override
@@ -203,6 +215,11 @@ public class RecordCommonListFragment extends MvpFragmentV4<RecordCommonListPres
                     @Override
                     public void onClickCardItem(View v, Record record) {
                         ActivityManager.startRecordPadActivity(getActivity(), record);
+                    }
+
+                    @Override
+                    public void onPopupMenu(View v, Record record) {
+                        holder.showRecordPopup(v, record);
                     }
 
                     @Override

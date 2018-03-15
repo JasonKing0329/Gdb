@@ -80,7 +80,7 @@ public abstract class GBaseActivity extends AppCompatActivity implements BaseVie
 
     @Override
     public boolean dismissLoading() {
-        if (loadingDialog != null && loadingDialog.isVisible()) {
+        if (loadingDialog != null) {
             loadingDialog.dismiss();
             return true;
         }
@@ -97,7 +97,7 @@ public abstract class GBaseActivity extends AppCompatActivity implements BaseVie
     }
 
     public boolean dismissLoadingV4() {
-        if (loadingDialogV4 != null && loadingDialogV4.isVisible()) {
+        if (loadingDialogV4 != null) {
             loadingDialogV4.dismiss();
             return true;
         }

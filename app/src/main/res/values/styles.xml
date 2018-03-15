@@ -188,6 +188,16 @@
         <item name="android:gravity">center</item>
     </style>
 
+    <style name="TvPadActionText">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:gravity">center</item>
+        <item name="android:minWidth">80dp</item>
+        <item name="android:background">?android:attr/selectableItemBackgroundBorderless</item>
+        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:textSize">18dp</item>
+    </style>
+
     <style name="TvStarTag">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>

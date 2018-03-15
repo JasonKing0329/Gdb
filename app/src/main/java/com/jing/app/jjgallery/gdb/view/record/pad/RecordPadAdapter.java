@@ -2,17 +2,14 @@ package com.jing.app.jjgallery.gdb.view.record.pad;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.PopupMenu;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.jing.app.jjgallery.gdb.R;
 import com.jing.app.jjgallery.gdb.util.GlideUtil;
-import com.jing.app.jjgallery.gdb.view.star.pad.StarPageStarAdapter;
 
 import java.util.List;
 
@@ -73,20 +70,7 @@ public class RecordPadAdapter extends RecyclerView.Adapter<RecordPadAdapter.Reco
     @Override
     public void onClick(View view) {
         final String filePath = (String) view.getTag();
-        PopupMenu menu = new PopupMenu(view.getContext(), view);
-        menu.getMenuInflater().inflate(R.menu.popup_image, menu.getMenu());
-        menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem menuItem) {
-                switch (menuItem.getItemId()) {
-                    case R.id.menu_delete:
-                        onItemClickListener.onDeleteItem(filePath);
-                        break;
-                }
-                return true;
-            }
-        });
-        menu.show();
+        onItemClickListener.onClickItem(view, filePath);
     }
 
     public void removeItem(String filePath) {
@@ -116,6 +100,6 @@ public class RecordPadAdapter extends RecyclerView.Adapter<RecordPadAdapter.Reco
     }
 
     public interface OnItemClickListener {
-        void onDeleteItem(String filePath);
+        void onClickItem(View view, String filePath);
     }
 }

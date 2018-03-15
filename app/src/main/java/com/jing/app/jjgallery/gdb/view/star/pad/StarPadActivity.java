@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.jing.app.jjgallery.gdb.FavorPopupMvpActivity;
 import com.jing.app.jjgallery.gdb.GdbConstants;
 import com.jing.app.jjgallery.gdb.MvpActivity;
 import com.jing.app.jjgallery.gdb.R;
@@ -19,9 +20,11 @@ import com.jing.app.jjgallery.gdb.model.PadProperties;
 import com.jing.app.jjgallery.gdb.model.conf.PreferenceValue;
 import com.jing.app.jjgallery.gdb.view.pub.WaveSideBarView;
 import com.jing.app.jjgallery.gdb.view.record.common.RecordCommonListFragment;
+import com.jing.app.jjgallery.gdb.view.record.common.RecordCommonListHolder;
 import com.jing.app.jjgallery.gdb.view.star.IStarListHolder;
 import com.jing.app.jjgallery.gdb.view.star.StarListFragment;
 import com.jing.app.jjgallery.gdb.view.star.StarListPagerAdapter;
+import com.king.app.gdb.data.entity.Record;
 import com.king.app.gdb.data.entity.Star;
 import com.king.app.gdb.data.param.DataConstants;
 import com.nightonke.boommenu.BoomButtons.ButtonPlaceAlignmentEnum;
@@ -48,7 +51,7 @@ import io.reactivex.functions.Consumer;
  * @time 2018/2/13 0013 11:06
  */
 
-public class StarPadActivity extends MvpActivity<StarPadPresenter> implements StarPadView, IStarListHolder {
+public class StarPadActivity extends FavorPopupMvpActivity<StarPadPresenter> implements StarPadView, IStarListHolder, RecordCommonListHolder {
 
     private final String[] titles = new String[]{
             "All", "1", "0", "0.5"
@@ -436,4 +439,8 @@ public class StarPadActivity extends MvpActivity<StarPadPresenter> implements St
         groupSearch.setVisibility(View.VISIBLE);
     }
 
+    @Override
+    public void showRecordPopup(View anchor, Record record) {
+        getFavorPopup().popupRecord(this, anchor, record.getId());
+    }
 }

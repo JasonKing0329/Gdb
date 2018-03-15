@@ -61,6 +61,7 @@ public class RecordPadDetailAdapter extends RecyclerView.Adapter<RecordPadDetail
 
     public interface OnDetailActionListener {
         void onClickCardItem(View v, Record record);
+        void onPopupMenu(View v, Record record);
         void onClickStar(View v, Star star);
         void onClickScene(View v, String scene);
     }

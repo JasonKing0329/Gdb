@@ -110,5 +110,6 @@ public class PreferenceKey {
      */
     // star records view mode
     public static final String PAD_STAR_RECORDS_VIEW_MODE = "pad_star_records_view_mode";
+    public static final String PAD_ORDER_RECORD_SORT = "pad_order_record_sort";
 
 }

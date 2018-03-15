@@ -257,6 +257,11 @@ public class RecordsListFragment extends MvpFragmentV4<RecordListPresenter> impl
     }
 
     @Override
+    public void onPopupMenu(View v, Record record) {
+        holder.showRecordPopup(v, record);
+    }
+
+    @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
         loadNewRecords();
