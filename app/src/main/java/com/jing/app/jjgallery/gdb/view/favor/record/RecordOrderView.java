@@ -13,4 +13,8 @@ public interface RecordOrderView extends BaseView {
     void showOrders(List<FavorRecordOrderEx> list);
 
     void focusToItem(long focusId);
+
+    void deleteDone(boolean notifyRefresh);
+
+    void warningDeleteOrder(String message, List<FavorRecordOrderEx> list);
 }

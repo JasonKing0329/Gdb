@@ -6,8 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.jing.app.jjgallery.gdb.ActivityManager;
-import com.jing.app.jjgallery.gdb.IFragmentHolder;
-import com.jing.app.jjgallery.gdb.MvpFragmentV4;
+import com.jing.app.jjgallery.gdb.MvpHolderFragmentV4;
 import com.jing.app.jjgallery.gdb.R;
 import com.jing.app.jjgallery.gdb.view.adapter.OnRecordItemClickListener;
 import com.jing.app.jjgallery.gdb.view.adapter.RecordsGridAdapter;
@@ -22,7 +21,7 @@ import butterknife.BindView;
  * <p/>作者：景阳
  * <p/>创建时间: 2018/3/15 15:43
  */
-public class RecordItemFragment extends MvpFragmentV4<RecordItemPresenter> implements RecordItemView {
+public class RecordItemFragment extends MvpHolderFragmentV4<RecordItemPresenter, RecordItemHolder> implements RecordItemView {
 
     private static final String KEY_ORDER_ID = "order_id";
 
@@ -37,11 +36,6 @@ public class RecordItemFragment extends MvpFragmentV4<RecordItemPresenter> imple
         RecordItemFragment fragment = new RecordItemFragment();
         fragment.setArguments(bundle);
         return fragment;
-    }
-
-    @Override
-    protected void bindFragmentHolder(IFragmentHolder holder) {
-
     }
 
     @Override
@@ -91,6 +85,28 @@ public class RecordItemFragment extends MvpFragmentV4<RecordItemPresenter> imple
         else {
             mGridAdapter.setRecordList(records);
             mGridAdapter.notifyDataSetChanged();
+        }
+    }
+
+    public void showSelectMode(boolean show) {
+        mGridAdapter.setSelectMode(show);
+        mGridAdapter.notifyDataSetChanged();
+    }
+
+    public void deleteSelectedItems() {
+        presenter.deleteItem(mGridAdapter.getSelectedItems());
+    }
+
+    @Override
+    public void deleteDone(boolean notifyRefresh) {
+        mGridAdapter.setSelectMode(false);
+        if (notifyRefresh) {
+            mGridAdapter.notifyDataSetChanged();
+        }
+
+        long orderId = getArguments().getLong(KEY_ORDER_ID);
+        if (holder != null) {
+            holder.notifyOrderChanged(orderId);
         }
     }
 }

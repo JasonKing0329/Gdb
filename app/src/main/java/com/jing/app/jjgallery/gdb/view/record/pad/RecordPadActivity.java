@@ -1,6 +1,5 @@
 package com.jing.app.jjgallery.gdb.view.record.pad;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.support.v7.widget.LinearLayoutManager;
@@ -318,5 +317,10 @@ public class RecordPadActivity extends FavorPopupMvpActivity<RecordPresenter> im
     @OnClick(R.id.group_scene)
     public void onClick() {
         ActivityManager.startRecordListPadActivity(this, presenter.getRecord().getScene());
+    }
+
+    @OnClick(R.id.tv_add_order)
+    public void onAddToOrder(View view) {
+        getFavorPopup().popupRecord(this, view, presenter.getRecord().getId());
     }
 }

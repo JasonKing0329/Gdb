@@ -14,7 +14,6 @@ import android.widget.TextView;
 
 import com.jing.app.jjgallery.gdb.FavorPopupMvpActivity;
 import com.jing.app.jjgallery.gdb.GdbConstants;
-import com.jing.app.jjgallery.gdb.MvpActivity;
 import com.jing.app.jjgallery.gdb.R;
 import com.jing.app.jjgallery.gdb.model.PadProperties;
 import com.jing.app.jjgallery.gdb.model.conf.PreferenceValue;
@@ -38,7 +37,6 @@ import com.nightonke.boommenu.Piece.PiecePlaceEnum;
 import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;

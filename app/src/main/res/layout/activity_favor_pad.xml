@@ -73,6 +73,10 @@
                 android:id="@+id/iv_icon_add"
                 style="@style/IvPadActionIcon"
                 android:src="@drawable/ic_add_purple_300_36dp" />
+            <ImageView
+                android:id="@+id/iv_icon_delete"
+                style="@style/IvPadActionIcon"
+                android:src="@drawable/ic_delete_purple_36dp" />
         </LinearLayout>
         <LinearLayout
             android:id="@+id/group_confirm"

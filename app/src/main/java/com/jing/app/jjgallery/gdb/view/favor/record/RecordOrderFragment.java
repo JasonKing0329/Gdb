@@ -1,5 +1,6 @@
 package com.jing.app.jjgallery.gdb.view.favor.record;
 
+import android.content.DialogInterface;
 import android.graphics.Rect;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.GridLayoutManager;
@@ -13,6 +14,7 @@ import com.jing.app.jjgallery.gdb.R;
 import com.jing.app.jjgallery.gdb.util.DebugLog;
 import com.jing.app.jjgallery.gdb.util.ScreenUtils;
 import com.jing.app.jjgallery.gdb.view.adapter.BaseRecyclerAdapter;
+import com.jing.app.jjgallery.gdb.view.pub.dialog.DefaultDialogManager;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView;
 import com.yanzhenjie.recyclerview.swipe.touch.OnItemMoveListener;
 import com.yanzhenjie.recyclerview.swipe.touch.OnItemStateChangedListener;
@@ -48,6 +50,12 @@ public class RecordOrderFragment extends MvpHolderFragmentV4<RecordOrderPresente
                 int position = parent.getChildAdapterPosition(view);
                 if (position % 4 != 0) {
                     outRect.left = ScreenUtils.dp2px(12);
+                }
+                if (position / 4 < 1) {
+                    outRect.top = ScreenUtils.dp2px(16);
+                }
+                else {
+                    outRect.top = ScreenUtils.dp2px(12);
                 }
             }
         });
@@ -97,7 +105,7 @@ public class RecordOrderFragment extends MvpHolderFragmentV4<RecordOrderPresente
      */
     public void doDrag() {
         if (presenter.isDraggable()) {
-            holder.showActionbarDragStatus(true);
+            holder.setDrag(true);
             orderAdapter.enableDrag(true);
             orderAdapter.notifyDataSetChanged();
         }
@@ -160,6 +168,12 @@ public class RecordOrderFragment extends MvpHolderFragmentV4<RecordOrderPresente
         presenter.addOrder(name);
     }
 
+    public void notifyOrderChanged(long orderId) {
+        if (orderAdapter != null) {
+            orderAdapter.notifyOrderChanged(orderId);
+        }
+    }
+
     /**
      * 监听拖拽和侧滑删除，更新UI和数据源。
      */
@@ -207,4 +221,34 @@ public class RecordOrderFragment extends MvpHolderFragmentV4<RecordOrderPresente
         }
     };
 
+    public void showSelectMode(boolean selectModel) {
+        orderAdapter.setSelectMode(selectModel);
+        orderAdapter.notifyDataSetChanged();
+    }
+
+    public void deleteSelectedItems() {
+        presenter.deleteItem(orderAdapter.getSelectedItems());
+    }
+
+    @Override
+    public void warningDeleteOrder(String message, final List<FavorRecordOrderEx> list) {
+        new DefaultDialogManager().showWarningActionDialog(getActivity(), message, getString(R.string.ok), null
+                , new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        if (i == DialogInterface.BUTTON_POSITIVE) {
+                            presenter.executeDelete(list);
+                        }
+                    }
+                });
+    }
+
+    @Override
+    public void deleteDone(boolean notifyRefresh) {
+        orderAdapter.setSelectMode(false);
+        if (notifyRefresh) {
+            orderAdapter.notifyDataSetChanged();
+        }
+        holder.cancelDeleteStatus();
+    }
 }

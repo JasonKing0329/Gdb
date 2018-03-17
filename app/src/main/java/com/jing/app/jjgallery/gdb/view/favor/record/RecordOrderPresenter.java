@@ -7,6 +7,7 @@ import com.jing.app.jjgallery.gdb.GdbApplication;
 import com.jing.app.jjgallery.gdb.model.GdbImageProvider;
 import com.jing.app.jjgallery.gdb.model.PadProperties;
 import com.jing.app.jjgallery.gdb.util.ListUtil;
+import com.king.app.gdb.data.entity.FavorRecordDao;
 import com.king.app.gdb.data.entity.FavorRecordOrder;
 import com.king.app.gdb.data.entity.FavorRecordOrderDao;
 import com.king.app.gdb.data.entity.Record;
@@ -126,38 +127,42 @@ public class RecordOrderPresenter extends BasePresenter<RecordOrderView> {
         });
     }
 
+    public static FavorRecordOrderEx parseFromOrder(FavorRecordOrder order) {
+        FavorRecordOrderEx orderEx = new FavorRecordOrderEx();
+        orderEx.setOrder(order);
+        if (TextUtils.isEmpty(order.getCoverUrl())) {
+            if (!ListUtil.isEmpty(order.getRecordList())) {
+                int index = Math.abs(new Random().nextInt()) % order.getRecordList().size();
+                order.setCoverUrl(GdbImageProvider.getRecordRandomPath(order.getRecordList().get(index).getName(), null));
+            }
+        }
+        else {
+            orderEx.setCover(order.getCoverUrl());
+        }
+
+        if (!ListUtil.isEmpty(order.getRecordList())) {
+            List<Record> temp = new ArrayList<>();
+            for (int i = 0; i < order.getRecordList().size(); i ++) {
+                temp.add(order.getRecordList().get(i));
+            }
+            List<String> thumbs = new ArrayList<>();
+            for (int i = 0; i < 3 && temp.size() > 0; i ++) {
+                int index = Math.abs(new Random().nextInt()) % temp.size();
+                thumbs.add(GdbImageProvider.getRecordRandomPath(temp.get(index).getName(), null));
+                temp.remove(index);
+            }
+            orderEx.setThumbItems(thumbs);
+        }
+        return orderEx;
+    }
+
     public Observable<List<FavorRecordOrderEx>> parseOrders(final List<FavorRecordOrder> list) {
         return Observable.create(new ObservableOnSubscribe<List<FavorRecordOrderEx>>() {
             @Override
             public void subscribe(ObservableEmitter<List<FavorRecordOrderEx>> e) throws Exception {
                 List<FavorRecordOrderEx> exList = new ArrayList<>();
-                Random random = new Random();
                 for (FavorRecordOrder order:list) {
-                    FavorRecordOrderEx orderEx = new FavorRecordOrderEx();
-                    orderEx.setOrder(order);
-                    if (TextUtils.isEmpty(order.getCoverUrl())) {
-                        if (!ListUtil.isEmpty(order.getRecordList())) {
-                            int index = Math.abs(random.nextInt()) % order.getRecordList().size();
-                            order.setCoverUrl(GdbImageProvider.getRecordRandomPath(order.getRecordList().get(index).getName(), null));
-                        }
-                    }
-                    else {
-                        orderEx.setCover(order.getCoverUrl());
-                    }
-
-                    if (!ListUtil.isEmpty(order.getRecordList())) {
-                        List<Record> temp = new ArrayList<>();
-                        for (int i = 0; i < order.getRecordList().size(); i ++) {
-                            temp.add(order.getRecordList().get(i));
-                        }
-                        List<String> thumbs = new ArrayList<>();
-                        for (int i = 0; i < 3 && temp.size() > 0; i ++) {
-                            int index = Math.abs(random.nextInt()) % temp.size();
-                            thumbs.add(GdbImageProvider.getRecordRandomPath(temp.get(index).getName(), null));
-                            temp.remove(index);
-                        }
-                        orderEx.setThumbItems(thumbs);
-                    }
+                    FavorRecordOrderEx orderEx = parseFromOrder(order);
                     exList.add(orderEx);
                 }
                 e.onNext(exList);
@@ -300,5 +305,108 @@ public class RecordOrderPresenter extends BasePresenter<RecordOrderView> {
             return true;
         }
         return false;
+    }
+
+    public void deleteItem(List<FavorRecordOrderEx> list) {
+        if (ListUtil.isEmpty(list)) {
+            view.deleteDone(true);
+            return;
+        }
+
+        if (list.size() == 1) {
+            if (list.get(0).getOrder().getNumber() == 0) {
+                executeDelete(list);
+            }
+            else {
+                String message = list.get(0).getOrder().getName() + " includes sub items, do you really want to delete it?";
+                view.warningDeleteOrder(message, list);
+                return;
+            }
+        }
+        else {
+            // 有包含子项的order只支持单独删除
+            boolean hasSub = false;
+            for (FavorRecordOrderEx order:list) {
+                if (order.getOrder().getNumber() > 0) {
+                    hasSub = true;
+                    break;
+                }
+            }
+            if (hasSub) {
+                view.showToastLong("Found order included sub items. Please delete it independently.");
+                return;
+            }
+
+            else {
+                executeDelete(list);
+            }
+        }
+    }
+
+    public void executeDelete(final List<FavorRecordOrderEx> list) {
+
+        view.showLoading();
+
+        deleteOrders(list)
+                .flatMap(new Function<Object, ObservableSource<List<FavorRecordOrder>>>() {
+                    @Override
+                    public ObservableSource<List<FavorRecordOrder>> apply(Object o) throws Exception {
+                        return queryOrders();
+                    }
+                })
+                .flatMap(new Function<List<FavorRecordOrder>, ObservableSource<List<FavorRecordOrderEx>>>() {
+                    @Override
+                    public ObservableSource<List<FavorRecordOrderEx>> apply(List<FavorRecordOrder> orders) throws Exception {
+                        return parseOrders(orders);
+                    }
+                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(new Observer<List<FavorRecordOrderEx>>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        addDisposable(d);
+                    }
+
+                    @Override
+                    public void onNext(List<FavorRecordOrderEx> orderExes) {
+                        view.dismissLoading();
+                        view.deleteDone(false);
+                        view.showOrders(orderExes);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        e.printStackTrace();
+                        view.dismissLoading();
+                        view.deleteDone(false);
+                        view.showToastLong("Delete error: " + e.getMessage());
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+    }
+
+    private Observable<Object> deleteOrders(final List<FavorRecordOrderEx> list) {
+        return Observable.create(new ObservableOnSubscribe<Object>() {
+            @Override
+            public void subscribe(ObservableEmitter<Object> e) throws Exception {
+                FavorRecordOrderDao orderDao = GdbApplication.getInstance().getDaoSession().getFavorRecordOrderDao();
+                FavorRecordDao dao = GdbApplication.getInstance().getDaoSession().getFavorRecordDao();
+                for (FavorRecordOrderEx orderEx:list) {
+                    orderDao.delete(orderEx.getOrder());
+                    dao.queryBuilder()
+                            .where(FavorRecordDao.Properties.OrderId.eq(orderEx.getOrder().getId()))
+                            .buildDelete()
+                            .executeDeleteWithoutDetachingEntities();
+                }
+                orderDao.detachAll();
+                dao.detachAll();
+                e.onNext(new Object());
+            }
+        });
     }
 }

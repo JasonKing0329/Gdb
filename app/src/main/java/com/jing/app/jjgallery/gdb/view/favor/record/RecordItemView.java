@@ -12,4 +12,6 @@ import java.util.List;
  */
 public interface RecordItemView extends BaseView {
     void showOrderItems(List<Record> records);
+
+    void deleteDone(boolean notifyRefresh);
 }

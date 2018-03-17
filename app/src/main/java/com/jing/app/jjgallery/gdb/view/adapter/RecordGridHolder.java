@@ -1,8 +1,10 @@
 package com.jing.app.jjgallery.gdb.view.adapter;
 
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -29,8 +31,10 @@ import butterknife.ButterKnife;
 /**
  * Created by Administrator on 2016/8/6 0006.
  */
-public class RecordGridHolder extends RecyclerListAdapter.ViewHolder<Record> {
+public class RecordGridHolder extends RecyclerView.ViewHolder {
 
+    @BindView(R.id.cb_check)
+    CheckBox cbCheck;
     @BindView(R.id.iv_image)
     ImageView ivImage;
     @BindView(R.id.tv_stars)
@@ -47,6 +51,7 @@ public class RecordGridHolder extends RecyclerListAdapter.ViewHolder<Record> {
     private int sortMode;
     private View.OnClickListener onClickListener;
     private View.OnClickListener popupListener;
+    private boolean isSelectMode;
 
     public RecordGridHolder(ViewGroup parent) {
         this(LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_gdb_record_grid, parent, false));
@@ -62,9 +67,27 @@ public class RecordGridHolder extends RecyclerListAdapter.ViewHolder<Record> {
         this.popupListener = popupListener;
     }
 
-    @Override
-    public void bind(Record item, int position) {
-        tvSeq.setText(String.valueOf(position + 1));
+    public void bind(Record item, int position, boolean isCheck) {
+
+        if (isSelectMode) {
+            tvSeq.setVisibility(View.GONE);
+            cbCheck.setVisibility(View.VISIBLE);
+            cbCheck.setChecked(isCheck);
+
+            groupRecord.setTag(position);
+            groupRecord.setOnClickListener(onClickListener);
+        }
+        else {
+            tvSeq.setVisibility(View.VISIBLE);
+            cbCheck.setVisibility(View.GONE);
+
+            tvSeq.setText(String.valueOf(position + 1));
+            tvSeq.setTag(item);
+            tvSeq.setOnClickListener(popupListener);
+
+            groupRecord.setTag(item);
+            groupRecord.setOnClickListener(onClickListener);
+        }
 
         List<Star> starList = item.getStarList();
         StringBuffer starBuffer = new StringBuffer();
@@ -95,12 +118,6 @@ public class RecordGridHolder extends RecyclerListAdapter.ViewHolder<Record> {
                 .into(ivImage);
 
         showSortScore(item);
-
-        groupRecord.setTag(item);
-        groupRecord.setOnClickListener(onClickListener);
-
-        tvSeq.setTag(item);
-        tvSeq.setOnClickListener(popupListener);
     }
 
     public void setSortMode(int sortMode) {
@@ -272,4 +289,7 @@ public class RecordGridHolder extends RecyclerListAdapter.ViewHolder<Record> {
         }
     }
 
+    public void setSelectMode(boolean selectMode) {
+        this.isSelectMode = selectMode;
+    }
 }

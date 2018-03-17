@@ -10,5 +10,7 @@ import com.jing.app.jjgallery.gdb.IFragmentHolder;
 public interface RecordOrderHolder extends IFragmentHolder {
     void onClickOrder(long id);
 
-    void showActionbarDragStatus(boolean isDrag);
+    void setDrag(boolean isDrag);
+
+    void cancelDeleteStatus();
 }

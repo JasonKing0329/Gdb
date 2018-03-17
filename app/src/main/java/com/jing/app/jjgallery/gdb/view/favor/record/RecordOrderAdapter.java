@@ -2,20 +2,25 @@ package com.jing.app.jjgallery.gdb.view.favor.record;
 
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.SparseBooleanArray;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.jing.app.jjgallery.gdb.GdbApplication;
 import com.jing.app.jjgallery.gdb.R;
 import com.jing.app.jjgallery.gdb.util.GlideUtil;
 import com.jing.app.jjgallery.gdb.util.ListUtil;
 import com.jing.app.jjgallery.gdb.view.adapter.BaseRecyclerAdapter;
 import com.king.app.gdb.data.entity.FavorRecordOrder;
+import com.king.app.gdb.data.entity.FavorRecordOrderDao;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -33,9 +38,13 @@ public class RecordOrderAdapter extends BaseRecyclerAdapter<RecordOrderAdapter.O
     private RequestOptions coverOptions;
     private boolean isDrag;
     private SwipeMenuRecyclerView menuRecyclerView;
+    private boolean isSelectMode;
+
+    private SparseBooleanArray checkMap;
 
     public RecordOrderAdapter() {
         coverOptions = GlideUtil.getRecordOptions();
+        checkMap = new SparseBooleanArray();
     }
 
     @Override
@@ -106,6 +115,9 @@ public class RecordOrderAdapter extends BaseRecyclerAdapter<RecordOrderAdapter.O
                 holder.ivImage3.setVisibility(View.INVISIBLE);
             }
         }
+
+        holder.cbCheck.setVisibility(isSelectMode ? View.VISIBLE:View.GONE);
+        holder.cbCheck.setChecked(checkMap.get(position));
     }
 
     public int getItemPosition(long focusId) {
@@ -141,10 +153,56 @@ public class RecordOrderAdapter extends BaseRecyclerAdapter<RecordOrderAdapter.O
 
     @Override
     public void onClick(View view) {
-        if (onItemClickListener != null) {
+        if (isSelectMode) {
             int position = (int) view.getTag();
-            onItemClickListener.onClickItem(position, list.get(position));
+            if (checkMap.get(position)) {
+                checkMap.put(position, false);
+            }
+            else {
+                checkMap.put(position, true);
+            }
+            notifyItemChanged(position);
         }
+        else {
+            if (onItemClickListener != null) {
+                int position = (int) view.getTag();
+                onItemClickListener.onClickItem(position, list.get(position));
+            }
+        }
+    }
+
+    public void notifyOrderChanged(long orderId) {
+        for (int i = 0; i < getItemCount(); i ++) {
+            if (orderId == list.get(i).getOrder().getId()) {
+                refreshItem(list.get(i));
+                notifyItemChanged(i);
+                break;
+            }
+        }
+    }
+
+    private void refreshItem(FavorRecordOrderEx item) {
+        FavorRecordOrderDao dao = GdbApplication.getInstance().getDaoSession().getFavorRecordOrderDao();
+        dao.refresh(item.getOrder());
+        FavorRecordOrderEx orderEx = RecordOrderPresenter.parseFromOrder(item.getOrder());
+        item.setCover(orderEx.getCover());
+        item.setOrder(orderEx.getOrder());
+        item.setThumbItems(orderEx.getThumbItems());
+    }
+
+    public void setSelectMode(boolean selectMode) {
+        this.isSelectMode = selectMode;
+        checkMap.clear();
+    }
+
+    public List<FavorRecordOrderEx> getSelectedItems() {
+        List<FavorRecordOrderEx> resultList = new ArrayList<>();
+        for (int i = 0; i < getItemCount(); i ++) {
+            if (checkMap.get(i)) {
+                resultList.add(list.get(i));
+            }
+        }
+        return resultList;
     }
 
     public static class OrderHolder extends RecyclerView.ViewHolder implements View.OnTouchListener {
@@ -165,6 +223,8 @@ public class RecordOrderAdapter extends BaseRecyclerAdapter<RecordOrderAdapter.O
         CardView groupOrder;
         @BindView(R.id.iv_drag)
         ImageView ivDrag;
+        @BindView(R.id.cb_check)
+        CheckBox cbCheck;
 
         SwipeMenuRecyclerView mMenuRecyclerView;
 

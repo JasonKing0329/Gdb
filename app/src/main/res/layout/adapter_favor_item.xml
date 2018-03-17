@@ -6,8 +6,6 @@
         android:id="@+id/group_order"
         android:layout_width="303dp"
         android:layout_height="350dp"
-        android:layout_marginTop="7dp"
-        android:layout_marginBottom="7dp"
         android:layout_centerInParent="true"
         android:background="?attr/selectableItemBackground"
         app:cardElevation="5dp"
@@ -75,6 +73,9 @@
             </LinearLayout>
         </LinearLayout>
     </android.support.v7.widget.CardView>
+
+    <!-- CardView设置了elevation，所以想要在它的图层之上，不是其子view的view就需要设置高于它的elevation -->
+
     <ImageView
         android:id="@+id/iv_drag"
         android:layout_width="50dp"
@@ -84,5 +85,13 @@
         android:src="@drawable/ic_view_module_white_36dp"
         android:padding="15dp"
         android:scaleType="fitCenter"
+        android:elevation="7dp"/>
+    <CheckBox
+        android:id="@+id/cb_check"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:clickable="false"
         android:elevation="7dp"/>
 </RelativeLayout>

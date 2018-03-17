@@ -13,8 +13,6 @@ import com.king.app.gdb.data.entity.FavorRecordDao;
 import com.king.app.gdb.data.entity.FavorRecordOrder;
 import com.king.app.gdb.data.entity.FavorRecordOrderDao;
 
-import java.util.List;
-
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
@@ -102,6 +100,9 @@ public class FavorPopup {
                         .build().unique();
                 order.setNumber((int) count);
                 orderDao.update(order);
+
+                // 添加后一定要执行清除缓存，否则很容易出现下次查询从缓存里取出了旧值
+                orderDao.detachAll();
                 e.onNext(record);
             }
         });
@@ -137,6 +138,8 @@ public class FavorPopup {
                         .where(FavorRecordOrderDao.Properties.Id.eq(mOrderId))
                         .build().unique();
                 order.setCoverUrl(filePath);
+
+                dao.detachAll();
                 dao.update(order);
                 e.onNext(order);
             }

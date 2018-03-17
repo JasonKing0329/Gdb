@@ -23,13 +23,17 @@ import butterknife.OnClick;
  * <p/>作者：景阳
  * <p/>创建时间: 2018/3/14 13:02
  */
-public class RecordOrderPadActivity extends GBaseActivity implements RecordOrderHolder {
+public class RecordOrderPadActivity extends GBaseActivity implements RecordOrderHolder, RecordItemHolder {
 
     public static final String KEY_SELECT_MODE = "key_select_mode";
 
     public static final String KEY_SELECTED_ID = "key_selected_id";
 
     private boolean isSelectMode;
+
+    private boolean isDrag;
+
+    private boolean isDelete;
 
     @BindView(R.id.tv_title)
     TextView tvTitle;
@@ -43,6 +47,14 @@ public class RecordOrderPadActivity extends GBaseActivity implements RecordOrder
     ViewGroup groupConfirm;
     @BindView(R.id.iv_icon_sort)
     ImageView ivIconSort;
+    @BindView(R.id.iv_icon_search)
+    ImageView ivIconSearch;
+    @BindView(R.id.iv_icon_drag)
+    ImageView ivIconDrag;
+    @BindView(R.id.iv_icon_add)
+    ImageView ivIconAdd;
+    @BindView(R.id.iv_icon_delete)
+    ImageView ivIconDelete;
 
     private RecordOrderFragment ftOrder;
     private RecordItemFragment ftItem;
@@ -66,6 +78,10 @@ public class RecordOrderPadActivity extends GBaseActivity implements RecordOrder
     @Override
     protected void initController() {
         isSelectMode = getIntent().getBooleanExtra(KEY_SELECT_MODE, false);
+        if (isSelectMode) {
+            ivIconDelete.setVisibility(View.GONE);
+            ivIconDrag.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -80,6 +96,7 @@ public class RecordOrderPadActivity extends GBaseActivity implements RecordOrder
         setIntent(intent);
         isSelectMode = intent.getBooleanExtra(KEY_SELECT_MODE, false);
         if (ftItem != null && ftItem.isVisible()) {
+            showOrderActionbar();
             getSupportFragmentManager().beginTransaction()
                     .hide(ftItem)
                     .show(ftOrder)
@@ -87,8 +104,20 @@ public class RecordOrderPadActivity extends GBaseActivity implements RecordOrder
         }
     }
 
+    private void showOrderActionbar() {
+        ivIconAdd.setVisibility(View.VISIBLE);
+        ivIconSearch.setVisibility(View.VISIBLE);
+        ivIconDrag.setVisibility(View.VISIBLE);
+    }
+
+    private void showItemActionbar() {
+        ivIconAdd.setVisibility(View.GONE);
+        ivIconSearch.setVisibility(View.GONE);
+        ivIconDrag.setVisibility(View.GONE);
+    }
+
     @OnClick({R.id.iv_icon_back, R.id.iv_icon_close, R.id.iv_icon_search, R.id.iv_icon_sort
-            , R.id.iv_icon_add, R.id.iv_icon_drag, R.id.tv_ok, R.id.tv_cancel})
+            , R.id.iv_icon_add, R.id.iv_icon_delete, R.id.iv_icon_drag, R.id.tv_ok, R.id.tv_cancel})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.iv_icon_back:
@@ -108,13 +137,45 @@ public class RecordOrderPadActivity extends GBaseActivity implements RecordOrder
             case R.id.iv_icon_drag:
                 ftOrder.doDrag();
                 break;
+            case R.id.iv_icon_delete:
+                isDelete = true;
+                if (ftOrder.isVisible()) {
+                    ftOrder.showSelectMode(true);
+                }
+                else if (ftItem.isVisible()) {
+                    ftItem.showSelectMode(true);
+                }
+                showActionConfirmStatus(true);
+                break;
             case R.id.tv_ok:
-                showActionbarDragStatus(false);
-                ftOrder.dragDone();
+                if (isDrag) {
+                    setDrag(false);
+                    ftOrder.dragDone();
+                }
+                if (isDelete) {
+                    if (ftOrder.isVisible()) {
+                        ftOrder.deleteSelectedItems();
+                    }
+                    else if (ftItem.isVisible()) {
+                        ftItem.deleteSelectedItems();
+                        cancelDeleteStatus();
+                    }
+                }
                 break;
             case R.id.tv_cancel:
-                showActionbarDragStatus(false);
-                ftOrder.dragCanceled();
+                if (isDrag) {
+                    setDrag(false);
+                    ftOrder.dragCanceled();
+                }
+                if (isDelete) {
+                    if (ftOrder.isVisible()) {
+                        ftOrder.showSelectMode(false);
+                    }
+                    else if (ftItem.isVisible()) {
+                        ftItem.showSelectMode(false);
+                    }
+                    cancelDeleteStatus();
+                }
                 break;
             case R.id.iv_icon_add:
                 addNewOrder();
@@ -129,22 +190,23 @@ public class RecordOrderPadActivity extends GBaseActivity implements RecordOrder
             intent.putExtra(KEY_SELECTED_ID, orderId);
             setResult(RESULT_OK, intent);
             finish();
-        }
-        else {
+        } else {
             showOrder(orderId);
         }
     }
 
     private void showOrder(long orderId) {
+        showItemActionbar();
         if (ftItem == null) {
             ftItem = RecordItemFragment.newInstance(orderId);
             getSupportFragmentManager().beginTransaction()
+                    .setCustomAnimations(R.anim.activity_right_in, R.anim.activity_left_out)
                     .hide(ftOrder)
                     .add(R.id.group_ft_container, ftItem, "RecordItemFragment")
                     .commit();
-        }
-        else {
+        } else {
             getSupportFragmentManager().beginTransaction()
+                    .setCustomAnimations(R.anim.activity_right_in, R.anim.activity_left_out)
                     .hide(ftOrder)
                     .show(ftItem)
                     .commit();
@@ -153,12 +215,22 @@ public class RecordOrderPadActivity extends GBaseActivity implements RecordOrder
     }
 
     @Override
-    public void showActionbarDragStatus(boolean isDrag) {
-        if (isDrag) {
+    public void setDrag(boolean isDrag) {
+        this.isDrag = isDrag;
+        showActionConfirmStatus(isDrag);
+    }
+
+    @Override
+    public void cancelDeleteStatus() {
+        isDelete = false;
+        showActionConfirmStatus(false);
+    }
+
+    public void showActionConfirmStatus(boolean confirm) {
+        if (confirm) {
             groupConfirm.setVisibility(View.VISIBLE);
             groupIcon.setVisibility(View.INVISIBLE);
-        }
-        else {
+        } else {
             groupConfirm.setVisibility(View.GONE);
             groupIcon.setVisibility(View.VISIBLE);
         }
@@ -201,13 +273,19 @@ public class RecordOrderPadActivity extends GBaseActivity implements RecordOrder
     @Override
     public void onBackPressed() {
         if (ftItem != null && ftItem.isVisible()) {
+            showOrderActionbar();
             getSupportFragmentManager().beginTransaction()
+                    .setCustomAnimations(R.anim.activity_left_in, R.anim.activity_right_out)
                     .hide(ftItem)
                     .show(ftOrder)
                     .commit();
-        }
-        else {
+        } else {
             super.onBackPressed();
         }
+    }
+
+    @Override
+    public void notifyOrderChanged(long orderId) {
+        ftOrder.notifyOrderChanged(orderId);
     }
 }

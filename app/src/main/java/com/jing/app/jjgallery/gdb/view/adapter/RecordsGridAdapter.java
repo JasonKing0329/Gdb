@@ -1,11 +1,13 @@
 package com.jing.app.jjgallery.gdb.view.adapter;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.SparseBooleanArray;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.king.app.gdb.data.entity.Record;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -18,9 +20,13 @@ public class RecordsGridAdapter extends RecyclerView.Adapter<RecordGridHolder> i
     private OnRecordItemClickListener itemClickListener;
 
     private int sortMode;
+    private boolean selectMode;
+
+    private SparseBooleanArray checkMap;
 
     public RecordsGridAdapter(List<Record> list) {
         this.recordList = list;
+        checkMap = new SparseBooleanArray();
     }
 
     public void setRecordList(List<Record> recordList) {
@@ -39,13 +45,15 @@ public class RecordsGridAdapter extends RecyclerView.Adapter<RecordGridHolder> i
     public RecordGridHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         RecordGridHolder holder = new RecordGridHolder(parent);
         holder.setParameters(this, popupListener);
+        holder.setSelectMode(selectMode);
         return holder;
     }
 
     @Override
     public void onBindViewHolder(RecordGridHolder holder, int position) {
         holder.setSortMode(sortMode);
-        holder.bind(recordList.get(position), position);
+        holder.setSelectMode(selectMode);
+        holder.bind(recordList.get(position), position, checkMap.get(position));
     }
 
     @Override
@@ -55,9 +63,21 @@ public class RecordsGridAdapter extends RecyclerView.Adapter<RecordGridHolder> i
 
     @Override
     public void onClick(View v) {
-        if (itemClickListener != null) {
-            Record record = (Record) v.getTag();
-            itemClickListener.onClickRecordItem(v, record);
+        if (selectMode) {
+            int position = (int) v.getTag();
+            if (checkMap.get(position)) {
+                checkMap.put(position, false);
+            }
+            else {
+                checkMap.put(position, true);
+            }
+            notifyItemChanged(position);
+        }
+        else {
+            if (itemClickListener != null) {
+                Record record = (Record) v.getTag();
+                itemClickListener.onClickRecordItem(v, record);
+            }
         }
     }
 
@@ -71,4 +91,18 @@ public class RecordsGridAdapter extends RecyclerView.Adapter<RecordGridHolder> i
         }
     };
 
+    public void setSelectMode(boolean selectMode) {
+        this.selectMode = selectMode;
+        checkMap.clear();
+    }
+
+    public List<Record> getSelectedItems() {
+        List<Record> list = new ArrayList<>();
+        for (int i = 0; i < getItemCount(); i ++) {
+            if (checkMap.get(i)) {
+                list.add(recordList.get(i));
+            }
+        }
+        return list;
+    }
 }
