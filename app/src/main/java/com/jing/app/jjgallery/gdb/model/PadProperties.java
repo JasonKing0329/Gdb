@@ -79,4 +79,36 @@ public class PadProperties {
     public static void setRecordOrderSortType(int mode) {
         setInt(PreferenceKey.PAD_ORDER_RECORD_SORT, mode);
     }
+
+    /**
+     * PAD_ORDER_ITEM_RECORD_SORT
+     * @return  PreferenceValue.GDB_SR_ORDERBY_XX
+     */
+    public static int getRecordOrderItemSortType() {
+        return getInt(PreferenceKey.PAD_ORDER_ITEM_RECORD_SORT);
+    }
+
+    /**
+     * PAD_ORDER_ITEM_RECORD_SORT
+     * @param mode
+     */
+    public static void setRecordOrderItemSortType(int mode) {
+        setInt(PreferenceKey.PAD_ORDER_ITEM_RECORD_SORT, mode);
+    }
+
+    /**
+     * PAD_ORDER_RECORD_SORT
+     * @return
+     */
+    public static boolean isRecordOrderItemSortDesc() {
+        return getBoolean(PreferenceKey.PAD_ORDER_ITEM_RECORD_DESC);
+    }
+
+    /**
+     * PAD_ORDER_ITEM_RECORD_DESC
+     * @param desc
+     */
+    public static void setRecordOrderItemSortDesc(boolean desc) {
+        setBoolean(PreferenceKey.PAD_ORDER_ITEM_RECORD_DESC, desc);
+    }
 }

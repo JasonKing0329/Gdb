@@ -37,6 +37,9 @@ public class RecordsGridAdapter extends RecyclerView.Adapter<RecordGridHolder> i
         this.itemClickListener = itemClickListener;
     }
 
+    /**
+     * @param sortMode PreferenceValue.GDB_SR_ORDERBY_XXX
+     */
     public void setSortMode(int sortMode) {
         this.sortMode = sortMode;
     }

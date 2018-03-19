@@ -39,6 +39,8 @@ public class RecordGridHolder extends RecyclerView.ViewHolder {
     ImageView ivImage;
     @BindView(R.id.tv_stars)
     TextView tvStars;
+    @BindView(R.id.tv_pics)
+    TextView tvPics;
     @BindView(R.id.iv_play)
     ImageView ivPlay;
     @BindView(R.id.tv_sort)
@@ -117,6 +119,8 @@ public class RecordGridHolder extends RecyclerView.ViewHolder {
                 .apply(recordOptions)
                 .into(ivImage);
 
+        tvPics.setText("(" + GdbImageProvider.getRecordPicNumber(item.getName()) + " pics)");
+
         showSortScore(item);
     }
 
@@ -127,6 +131,7 @@ public class RecordGridHolder extends RecyclerView.ViewHolder {
     private void showSortScore(Record item) throws NullPointerException{
         switch (sortMode) {
             case PreferenceValue.GDB_SR_ORDERBY_SCORE:
+                tvSort.setVisibility(View.VISIBLE);
                 tvSort.setText(String.valueOf(item.getScore()));
                 break;
             case PreferenceValue.GDB_SR_ORDERBY_DATE:

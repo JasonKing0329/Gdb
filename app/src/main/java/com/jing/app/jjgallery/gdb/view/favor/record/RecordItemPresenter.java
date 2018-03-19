@@ -2,12 +2,15 @@ package com.jing.app.jjgallery.gdb.view.favor.record;
 
 import com.jing.app.jjgallery.gdb.BasePresenter;
 import com.jing.app.jjgallery.gdb.GdbApplication;
+import com.jing.app.jjgallery.gdb.model.PadProperties;
+import com.jing.app.jjgallery.gdb.model.RecordComparator;
 import com.jing.app.jjgallery.gdb.util.ListUtil;
 import com.king.app.gdb.data.entity.FavorRecordDao;
 import com.king.app.gdb.data.entity.FavorRecordOrder;
 import com.king.app.gdb.data.entity.FavorRecordOrderDao;
 import com.king.app.gdb.data.entity.Record;
 
+import java.util.Collections;
 import java.util.List;
 
 import io.reactivex.Observable;
@@ -29,14 +32,25 @@ public class RecordItemPresenter extends BasePresenter<RecordItemView> {
 
     private FavorRecordOrder mOrder;
 
+    private int mSortMode;
+    private boolean mSortDesc;
+
     @Override
     public void onCreate() {
 
     }
 
-    public void loadOrder(long orderId) {
+    public void loadOrder(long orderId, int sortMode, boolean sortDesc) {
+        mSortMode = sortMode;
+        mSortDesc = sortDesc;
         view.showLoading();
         queryOrderRecords(orderId)
+                .flatMap(new Function<List<Record>, ObservableSource<List<Record>>>() {
+                    @Override
+                    public ObservableSource<List<Record>> apply(List<Record> records) throws Exception {
+                        return sortRecords(records);
+                    }
+                })
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Observer<List<Record>>() {
@@ -47,6 +61,8 @@ public class RecordItemPresenter extends BasePresenter<RecordItemView> {
 
                     @Override
                     public void onNext(List<Record> records) {
+                        PadProperties.setRecordOrderItemSortType(mSortMode);
+                        PadProperties.setRecordOrderItemSortDesc(mSortDesc);
                         view.dismissLoading();
                         view.showOrderItems(records);
                     }
@@ -73,7 +89,18 @@ public class RecordItemPresenter extends BasePresenter<RecordItemView> {
                 mOrder = dao.queryBuilder()
                         .where(FavorRecordOrderDao.Properties.Id.eq(orderId))
                         .build().unique();
-                e.onNext(mOrder.getRecordList());
+                List<Record> list = mOrder.getRecordList();
+                e.onNext(list);
+            }
+        });
+    }
+
+    private ObservableSource<List<Record>> sortRecords(final List<Record> records) {
+        return Observable.create(new ObservableOnSubscribe<List<Record>>() {
+            @Override
+            public void subscribe(ObservableEmitter<List<Record>> e) throws Exception {
+                Collections.sort(records, new RecordComparator(mSortMode, mSortDesc));
+                e.onNext(records);
             }
         });
     }
@@ -89,6 +116,7 @@ public class RecordItemPresenter extends BasePresenter<RecordItemView> {
         }
 
         view.showLoading();
+        // delete, refresh, sort
         deleteOrderItems(selectedItems)
                 .flatMap(new Function<Object, ObservableSource<List<Record>>>() {
                     @Override
@@ -102,6 +130,12 @@ public class RecordItemPresenter extends BasePresenter<RecordItemView> {
                                 observer.onNext(mOrder.getRecordList());
                             }
                         };
+                    }
+                })
+                .flatMap(new Function<List<Record>, ObservableSource<List<Record>>>() {
+                    @Override
+                    public ObservableSource<List<Record>> apply(List<Record> records) throws Exception {
+                        return sortRecords(records);
                     }
                 })
                 .observeOn(AndroidSchedulers.mainThread())

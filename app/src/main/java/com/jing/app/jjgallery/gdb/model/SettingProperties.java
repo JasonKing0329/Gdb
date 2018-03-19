@@ -174,8 +174,8 @@ public class SettingProperties {
     }
 
     /**
-     * gdb record list界面默认排序模式
-     * @return see PreferenceValue.ORDERBY_XXX
+     * record list界面默认排序模式
+     * @return see PreferenceValue.GDB_SR_ORDERBY_XXX
      */
     public static int getGdbRecordOrderMode(Context context) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
@@ -184,8 +184,8 @@ public class SettingProperties {
     }
 
     /**
-     * 设置gdb star record默认排序模式
-     * @param mode see PreferenceValue.SORDER_COVER_XXX
+     * 设置record默认排序模式
+     * @param mode see PreferenceValue.GDB_SR_ORDERBY_XXX
      */
     public static void setGdbRecordOrderMode(Context context, int mode) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);

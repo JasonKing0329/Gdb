@@ -66,6 +66,33 @@ public class GdbImageProvider {
         return file.exists() && file.isDirectory();
     }
 
+    public static int getRecordPicNumber(String name) {
+        return getPicNumber(Configuration.GDB_IMG_RECORD, name);
+    }
+
+    public static int getStarPicNumber(String name) {
+        return getPicNumber(Configuration.GDB_IMG_STAR, name);
+    }
+
+    private static int getPicNumber(String parent, String name) {
+        int count = 0;
+        String path;
+        if (hasFolder(parent, name)) {
+            File file = new File(parent + "/" + name);
+            count = countImageFiles(file);
+        }
+        if (count == 0) {
+            path = parent + "/" + name;
+            if (!name.endsWith(".png")) {
+                path = path.concat(".png");
+            }
+            if (new File(path).exists()) {
+                count ++;
+            }
+        }
+        return count;
+    }
+
     /**
      *
      * @param parent
@@ -110,6 +137,24 @@ public class GdbImageProvider {
             }
         }
         return path;
+    }
+
+    /**
+     * @param file
+     */
+    private static int countImageFiles(File file) {
+        int result = 0;
+        if (file.isDirectory()) {
+            File[] files = file.listFiles(fileFilter);
+            for (File f:files) {
+                result += countImageFiles(f);
+            }
+            return result;
+        }
+        else {
+            result = 1;
+        }
+        return result;
     }
 
     /**

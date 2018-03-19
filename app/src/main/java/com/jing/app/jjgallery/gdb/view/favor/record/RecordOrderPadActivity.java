@@ -117,7 +117,8 @@ public class RecordOrderPadActivity extends GBaseActivity implements RecordOrder
     }
 
     @OnClick({R.id.iv_icon_back, R.id.iv_icon_close, R.id.iv_icon_search, R.id.iv_icon_sort
-            , R.id.iv_icon_add, R.id.iv_icon_delete, R.id.iv_icon_drag, R.id.tv_ok, R.id.tv_cancel})
+            , R.id.iv_icon_add, R.id.iv_icon_delete, R.id.iv_icon_drag
+            , R.id.tv_ok, R.id.tv_cancel})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.iv_icon_back:
@@ -237,10 +238,15 @@ public class RecordOrderPadActivity extends GBaseActivity implements RecordOrder
     }
 
     public void showSortPopup(View anchor) {
-        PopupMenu menu = new PopupMenu(this, anchor);
-        menu.getMenuInflater().inflate(ftOrder.getSortPopupMenu(), menu.getMenu());
-        menu.show();
-        menu.setOnMenuItemClickListener(ftOrder.getSortListener());
+        if (ftOrder.isVisible()) {
+            PopupMenu menu = new PopupMenu(this, anchor);
+            menu.getMenuInflater().inflate(ftOrder.getSortPopupMenu(), menu.getMenu());
+            menu.setOnMenuItemClickListener(ftOrder.getSortListener());
+            menu.show();
+        }
+        else if (ftItem.isVisible()) {
+            ftItem.changeSortType();
+        }
     }
 
     /**

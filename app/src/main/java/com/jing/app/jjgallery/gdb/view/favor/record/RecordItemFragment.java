@@ -8,8 +8,10 @@ import android.view.View;
 import com.jing.app.jjgallery.gdb.ActivityManager;
 import com.jing.app.jjgallery.gdb.MvpHolderFragmentV4;
 import com.jing.app.jjgallery.gdb.R;
+import com.jing.app.jjgallery.gdb.model.PadProperties;
 import com.jing.app.jjgallery.gdb.view.adapter.OnRecordItemClickListener;
 import com.jing.app.jjgallery.gdb.view.adapter.RecordsGridAdapter;
+import com.jing.app.jjgallery.gdb.view.record.SortDialogFragment;
 import com.king.app.gdb.data.entity.Record;
 
 import java.util.List;
@@ -29,6 +31,9 @@ public class RecordItemFragment extends MvpHolderFragmentV4<RecordItemPresenter,
     RecyclerView rvItems;
 
     private RecordsGridAdapter mGridAdapter;
+
+    private int currentSortMode = -1;
+    private boolean currentSortDesc = true;
 
     public static RecordItemFragment newInstance(long orderId) {
         Bundle bundle = new Bundle();
@@ -56,19 +61,21 @@ public class RecordItemFragment extends MvpHolderFragmentV4<RecordItemPresenter,
 
     @Override
     protected void initData() {
-        long orderId = getArguments().getLong(KEY_ORDER_ID);
-        presenter.loadOrder(orderId);
+        currentSortMode = PadProperties.getRecordOrderItemSortType();
+        currentSortDesc = PadProperties.isRecordOrderItemSortDesc();
+        reload();
     }
 
     public void showOrder(long orderId) {
         getArguments().putLong(KEY_ORDER_ID, orderId);
-        presenter.loadOrder(orderId);
+        reload();
     }
 
     @Override
     public void showOrderItems(List<Record> records) {
         if (mGridAdapter == null) {
             mGridAdapter = new RecordsGridAdapter(records);
+            mGridAdapter.setSortMode(currentSortMode);
             mGridAdapter.setItemClickListener(new OnRecordItemClickListener() {
                 @Override
                 public void onClickRecordItem(View v, Record record) {
@@ -83,6 +90,7 @@ public class RecordItemFragment extends MvpHolderFragmentV4<RecordItemPresenter,
             rvItems.setAdapter(mGridAdapter);
         }
         else {
+            mGridAdapter.setSortMode(currentSortMode);
             mGridAdapter.setRecordList(records);
             mGridAdapter.notifyDataSetChanged();
         }
@@ -109,4 +117,27 @@ public class RecordItemFragment extends MvpHolderFragmentV4<RecordItemPresenter,
             holder.notifyOrderChanged(orderId);
         }
     }
+
+    public void changeSortType() {
+        SortDialogFragment dialog = new SortDialogFragment();
+        dialog.setDesc(currentSortDesc);
+        dialog.setSortMode(currentSortMode);
+        dialog.setOnSortListener(new SortDialogFragment.OnSortListener() {
+            @Override
+            public void onSort(boolean desc, int sortMode) {
+                if (currentSortMode != sortMode || currentSortDesc != desc) {
+                    currentSortMode = sortMode;
+                    currentSortDesc = desc;
+                    reload();
+                }
+            }
+        });
+        dialog.show(getChildFragmentManager(), "SortDialogFragment");
+    }
+
+    private void reload() {
+        long orderId = getArguments().getLong(KEY_ORDER_ID);
+        presenter.loadOrder(orderId, currentSortMode, currentSortDesc);
+    }
+
 }
