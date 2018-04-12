@@ -1,15 +1,15 @@
 apply plugin: 'com.android.application'
 
-ext.appVersionName = "4.1.1"
-ext.appVersionCode = 60
+ext.appVersionName = "4.2"
+ext.appVersionCode = 61
 ext.appReleaseDir = "E:/temp/release/gdb"
 
 android {
-    compileSdkVersion 26
+    compileSdkVersion 27
     defaultConfig {
         applicationId "com.jing.app.jjgallery.gdb"
         minSdkVersion 21
-        targetSdkVersion 26
+        targetSdkVersion 27
         versionCode appVersionCode
         versionName appVersionName
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -33,11 +33,13 @@ android {
     buildTypes {
         debug {
             signingConfig signingConfigs.debugConfig
+            buildConfigField("boolean", "checkUser", "false")
         }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.releaseConfig
+            buildConfigField("boolean", "checkUser", "true")
         }
     }
 }
@@ -59,9 +61,9 @@ dependencies {
     implementation "com.allure0:LMBanners:${LMBANNER_VERSION}"
 
     /*glide*/
-    implementation "com.github.bumptech.glide:glide:${GLIDE_VERSION}"
-    annotationProcessor "com.github.bumptech.glide:compiler:${GLIDE_VERSION}"
-
+    implementation 'com.github.bumptech.glide:glide:4.6.1'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.6.1'
+    implementation 'com.github.florent37:glidepalette:2.1.2'
     /*gson*/
     implementation "com.google.code.gson:gson:${GSON_VERSION}"
 

@@ -67,6 +67,10 @@
             android:screenOrientation="landscape"
             android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name=".view.record.pad.RecordPageActivity"
+            android:screenOrientation="landscape"
+            android:launchMode="singleTask"
+            android:theme="@style/AppTheme.NoActionBar"/>
         <activity android:name=".view.record.phone.RecordListActivity"
             android:screenOrientation="portrait"/>
         <activity android:name=".view.record.pad.RecordListPadActivity"

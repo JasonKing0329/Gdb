@@ -344,7 +344,7 @@ public class RecordPhoneActivity extends MvpActivity<RecordPresenter> implements
             keyList.add("Special");
             contentList.add(record.getScoreFkType6() + " ");
         }
-        groupFk.addPoint(keyList, contentList);
+        groupFk.addPoints(keyList, contentList);
     }
 
     private void initFkDetails(RecordType3w record) {
@@ -382,7 +382,7 @@ public class RecordPhoneActivity extends MvpActivity<RecordPresenter> implements
             keyList.add("Special");
             contentList.add(record.getScoreFkType6() + " ");
         }
-        groupFk.addPoint(keyList, contentList);
+        groupFk.addPoints(keyList, contentList);
     }
 
     @OnClick({R.id.group_scene})

@@ -1,17 +1,24 @@
 package com.jing.app.jjgallery.gdb.presenter.record;
 
+import android.text.TextUtils;
+
 import com.jing.app.jjgallery.gdb.BasePresenter;
 import com.jing.app.jjgallery.gdb.GdbApplication;
 import com.jing.app.jjgallery.gdb.model.conf.Configuration;
+import com.jing.app.jjgallery.gdb.view.record.pad.TitleValueBean;
 import com.jing.app.jjgallery.gdb.view.record.phone.IRecordView;
 import com.king.app.gdb.data.entity.Record;
 import com.king.app.gdb.data.entity.RecordDao;
 import com.king.app.gdb.data.entity.RecordStar;
+import com.king.app.gdb.data.entity.RecordType1v1;
+import com.king.app.gdb.data.entity.RecordType3w;
 import com.king.app.gdb.data.param.DataConstants;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 import io.reactivex.Observable;
@@ -141,5 +148,56 @@ public class RecordPresenter extends BasePresenter<IRecordView> {
 
     public void deleteFile(String filePath) {
         new File(filePath).delete();
+    }
+
+    public List<TitleValueBean> getScoreDetails() {
+        List<TitleValueBean> list = new ArrayList<>();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        newValue(list, sdf.format(new Date(mRecord.getLastModifyTime())));
+        newTitleValue(list, "HD level", mRecord.getHdLevel());
+        newTitleValue(list, "Feel", mRecord.getScoreFeel());
+        newTitleValue(list, "Stars", mRecord.getScoreStar());
+        newTitleValue(list, "Passion", mRecord.getScorePassion());
+        newTitleValue(list, "Cum", mRecord.getScoreCum());
+        newTitleValue(list, "Special", mRecord.getScoreSpecial());
+        newValue(list, mRecord.getSpecialDesc());
+        if (mRecord.getType() == DataConstants.VALUE_RECORD_TYPE_1V1) {
+            RecordType1v1 record = mRecord.getRecordType1v1();
+            newTitleValue(list, "BJob", record.getScoreBjob());
+            newTitleValue(list, "Scene", record.getScoreScene());
+            newTitleValue(list, "CShow", record.getScoreCshow());
+            newTitleValue(list, "Rhythm", record.getScoreRhythm());
+            newTitleValue(list, "Story", record.getScoreStory());
+            newTitleValue(list, "Rim", record.getScoreRim());
+            newTitleValue(list, "Foreplay", record.getScoreForePlay());
+        } else if (mRecord.getType() == DataConstants.VALUE_RECORD_TYPE_3W
+                || mRecord.getType() == DataConstants.VALUE_RECORD_TYPE_MULTI) {
+            RecordType3w record = mRecord.getRecordType3w();
+            newTitleValue(list, "BJob", record.getScoreBjob());
+            newTitleValue(list, "Scene", record.getScoreScene());
+            newTitleValue(list, "CShow", record.getScoreCshow());
+            newTitleValue(list, "Rhythm", record.getScoreRhythm());
+            newTitleValue(list, "Story", record.getScoreStory());
+            newTitleValue(list, "Rim", record.getScoreRim());
+            newTitleValue(list, "Foreplay", record.getScoreForePlay());
+        }
+        return list;
+    }
+
+    private void newValue(List<TitleValueBean> list, String value) {
+        if (!TextUtils.isEmpty(value)) {
+            TitleValueBean bean = new TitleValueBean();
+            bean.setValue(value);
+            list.add(bean);
+        }
+    }
+
+    private void newTitleValue(List<TitleValueBean> list, String title, int value) {
+        if (value > 0) {
+            TitleValueBean bean = new TitleValueBean();
+            bean.setTitle(title);
+            bean.setValue(String.valueOf(value));
+            list.add(bean);
+        }
     }
 }

@@ -272,7 +272,7 @@ public class RecordPadActivity extends FavorPopupMvpActivity<RecordPresenter> im
             contentList.add(record.getScoreFkType6() + " ");
         }
         groupFk.removeAllViews();
-        groupFk.addPoint(keyList, contentList);
+        groupFk.addPoints(keyList, contentList);
     }
 
     private void initFkDetails(RecordType3w record) {
@@ -311,7 +311,7 @@ public class RecordPadActivity extends FavorPopupMvpActivity<RecordPresenter> im
             contentList.add(record.getScoreFkType6() + " ");
         }
         groupFk.removeAllViews();
-        groupFk.addPoint(keyList, contentList);
+        groupFk.addPoints(keyList, contentList);
     }
 
     @OnClick(R.id.group_scene)

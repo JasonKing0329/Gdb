@@ -12,6 +12,7 @@ import android.widget.ScrollView;
 
 import com.jing.app.jjgallery.gdb.ActivityManager;
 import com.jing.app.jjgallery.gdb.BaseView;
+import com.jing.app.jjgallery.gdb.BuildConfig;
 import com.jing.app.jjgallery.gdb.GBaseActivity;
 import com.jing.app.jjgallery.gdb.GdbApplication;
 import com.jing.app.jjgallery.gdb.R;
@@ -143,6 +144,11 @@ public class LoginActivity extends GBaseActivity implements ILoginView {
                 .subscribe(new Consumer<Boolean>() {
                     @Override
                     public void accept(Boolean hasPref) throws Exception {
+
+                        if (!BuildConfig.checkUser) {
+                            superUser();
+                            return;
+                        }
 
                         if (hasPref) {
                             new DefaultDialogManager().showWarningActionDialog(LoginActivity.this

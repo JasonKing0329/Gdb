@@ -14,6 +14,7 @@ import com.jing.app.jjgallery.gdb.view.home.GHomeActivity;
 import com.jing.app.jjgallery.gdb.view.home.pad.HomePadActivity;
 import com.jing.app.jjgallery.gdb.view.record.pad.RecordListPadActivity;
 import com.jing.app.jjgallery.gdb.view.record.pad.RecordPadActivity;
+import com.jing.app.jjgallery.gdb.view.record.pad.RecordPageActivity;
 import com.jing.app.jjgallery.gdb.view.record.phone.RecordListActivity;
 import com.jing.app.jjgallery.gdb.view.record.phone.RecordPhoneActivity;
 import com.jing.app.jjgallery.gdb.view.settings.ManageActivity;
@@ -162,8 +163,8 @@ public class ActivityManager {
      * @param pairs transition转场动画
      */
     public static void startRecordPadActivity(Context from, Record record, android.util.Pair<View, String>[] pairs) {
-        Intent intent = new Intent().setClass(from, RecordPadActivity.class);
-        intent.putExtra(RecordPadActivity.KEY_RECORD_ID, record.getId());
+        Intent intent = new Intent().setClass(from, RecordPageActivity.class);
+        intent.putExtra(RecordPageActivity.KEY_RECORD_ID, record.getId());
         from.startActivity(intent);
 //        if (from instanceof Activity) {
 //            if (pairs == null) {
