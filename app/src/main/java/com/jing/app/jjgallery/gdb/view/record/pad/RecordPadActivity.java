@@ -14,6 +14,7 @@ import com.jing.app.jjgallery.gdb.ActivityManager;
 import com.jing.app.jjgallery.gdb.FavorPopupMvpActivity;
 import com.jing.app.jjgallery.gdb.R;
 import com.jing.app.jjgallery.gdb.model.VideoModel;
+import com.jing.app.jjgallery.gdb.model.palette.PaletteResponse;
 import com.jing.app.jjgallery.gdb.presenter.record.RecordPresenter;
 import com.jing.app.jjgallery.gdb.util.ScreenUtils;
 import com.jing.app.jjgallery.gdb.view.pub.PointDescLayout;
@@ -143,6 +144,11 @@ public class RecordPadActivity extends FavorPopupMvpActivity<RecordPresenter> im
         showStars(record);
 
         showValues(record);
+    }
+
+    @Override
+    public void loadBackground(PaletteResponse paletteResponse) {
+
     }
 
     private void showImages(Record record) {

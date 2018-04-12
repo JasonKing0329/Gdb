@@ -151,20 +151,20 @@ public class PointDescLayout extends LinearLayout {
         this.itemAnimation = itemAnimation;
     }
 
-    public void showItems(long delay) {
+    public void showItems(long delay, final boolean useAnim) {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                showItems();
+                showItems(useAnim);
             }
         }, delay);
     }
 
-    public void showItems() {
+    public void showItems(boolean useAnim) {
         if (getChildCount() > 0) {
             for (int i = 0; i < getChildCount(); i ++) {
                 getChildAt(i).setVisibility(VISIBLE);
-                if (itemAnimation != null) {
+                if (useAnim && itemAnimation != null) {
                     getChildAt(i).startAnimation(itemAnimation);
                 }
             }

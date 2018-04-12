@@ -1,10 +1,10 @@
 package com.jing.app.jjgallery.gdb.view.record.pad;
 
-import android.graphics.Bitmap;
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Handler;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import android.support.v4.view.ViewPager;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -20,18 +20,23 @@ import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.load.DataSource;
-import com.bumptech.glide.load.engine.GlideException;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.target.Target;
+import com.bigkoo.convenientbanner.ConvenientBanner;
+import com.bigkoo.convenientbanner.holder.CBViewHolderCreator;
+import com.bigkoo.convenientbanner.holder.Holder;
 import com.jing.app.jjgallery.gdb.ActivityManager;
 import com.jing.app.jjgallery.gdb.FavorPopupMvpActivity;
 import com.jing.app.jjgallery.gdb.R;
 import com.jing.app.jjgallery.gdb.model.GdbImageProvider;
 import com.jing.app.jjgallery.gdb.model.VideoModel;
+import com.jing.app.jjgallery.gdb.model.palette.PaletteCallback;
+import com.jing.app.jjgallery.gdb.model.palette.PaletteRequestListener;
+import com.jing.app.jjgallery.gdb.model.palette.PaletteResponse;
+import com.jing.app.jjgallery.gdb.model.palette.ViewColorBound;
 import com.jing.app.jjgallery.gdb.presenter.record.RecordPresenter;
 import com.jing.app.jjgallery.gdb.util.ColorUtils;
+import com.jing.app.jjgallery.gdb.util.DebugLog;
 import com.jing.app.jjgallery.gdb.util.GlideApp;
+import com.jing.app.jjgallery.gdb.util.ListUtil;
 import com.jing.app.jjgallery.gdb.util.ScreenUtils;
 import com.jing.app.jjgallery.gdb.view.pub.PointDescLayout;
 import com.jing.app.jjgallery.gdb.view.pub.dialog.VideoDialogFragment;
@@ -57,12 +62,12 @@ public class RecordPageActivity extends FavorPopupMvpActivity<RecordPresenter> i
 
     public static final String KEY_RECORD_ID = "key_record_id";
 
-    @BindView(R.id.iv_bg)
-    ImageView ivBg;
+    @BindView(R.id.banner)
+    ConvenientBanner banner;
     @BindView(R.id.iv_play)
     ImageView ivPlay;
     @BindView(R.id.iv_order)
-    ImageView iv_order;
+    ImageView ivOrder;
     @BindView(R.id.group_fk)
     PointDescLayout groupFk;
     @BindView(R.id.tv_name)
@@ -93,6 +98,7 @@ public class RecordPageActivity extends FavorPopupMvpActivity<RecordPresenter> i
     private RecordPageScoreDetailAdapter scoreDetailAdapter;
 
     private String videoPath;
+    private boolean isFirstTimeUpdatePalette = true;
 
     @Override
     protected int getContentView() {
@@ -100,13 +106,21 @@ public class RecordPageActivity extends FavorPopupMvpActivity<RecordPresenter> i
     }
 
     @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+        initData();
+    }
+
+    @Override
     protected void initView() {
         ColorUtils.updateIconColor(ivBack, getResources().getColor(R.color.colorPrimary));
-        ColorUtils.updateIconColor(iv_order, getResources().getColor(R.color.colorPrimary));
+        ColorUtils.updateIconColor(ivOrder, getResources().getColor(R.color.colorPrimary));
 
         // 禁止添加即显示(要改变颜色以及允许动画)
         groupFk.disableInstantShow();
         groupFk.registerItemAnimation(getPointAnim());
+        groupFk.setVisibility(View.INVISIBLE);
 
         LinearLayoutManager manager = new LinearLayoutManager(this);
         manager.setOrientation(LinearLayoutManager.HORIZONTAL);
@@ -146,6 +160,35 @@ public class RecordPageActivity extends FavorPopupMvpActivity<RecordPresenter> i
                 }
             }
         });
+
+        banner.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                presenter.refreshBackground(position);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        banner.startTurning(5000);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        banner.stopTurning();
     }
 
     @Override
@@ -156,6 +199,26 @@ public class RecordPageActivity extends FavorPopupMvpActivity<RecordPresenter> i
     @Override
     protected void initData() {
         presenter.loadRecord(getIntent().getLongExtra(KEY_RECORD_ID, -1));
+    }
+
+    @Override
+    public void loadBackground(PaletteResponse paletteResponse) {
+        if (!ListUtil.isEmpty(paletteResponse.viewColorBounds)) {
+            for (ViewColorBound bound:paletteResponse.viewColorBounds) {
+                ColorUtils.updateIconColor((ImageView) bound.view, bound.color);
+            }
+        }
+        updateColorsBy(paletteResponse.palette);
+
+        if (groupFk.getVisibility() == View.VISIBLE) {
+            groupFk.showItems(false);
+        }
+        // 首次出现，加载动画
+        else {
+            groupFk.setVisibility(View.VISIBLE);
+            // 延迟一些效果更好
+            groupFk.showItems(200, true);
+        }
     }
 
     @Override
@@ -225,7 +288,69 @@ public class RecordPageActivity extends FavorPopupMvpActivity<RecordPresenter> i
             ivPlay.setVisibility(View.VISIBLE);
         }
 
-        loadBackground(record);
+        banner.setPages(new CBViewHolderCreator<PageHolder>() {
+            @Override
+            public PageHolder createHolder() {
+                return new PageHolder(new PaletteCallback() {
+                    // 注册那些需要根据在背景图上的位置而改变响应颜色的view
+                    // 采取view所在区域颜色平均值是否是深色，从而返回view应该使用的颜色（现在只支持黑/白两种）
+                    // register views to change color by its position on the background image
+                    // the algorithm to pick color is based on whether its average color is deep in that area, deep then white, otherwise, black
+                    @Override
+                    public List<View> getTargetViews() {
+                        List<View> list = new ArrayList<>();
+                        list.add(ivBack);
+                        list.add(ivOrder);
+                        return list;
+                    }
+
+                    @Override
+                    public void noPaletteResponseLoaded(int position) {
+                        presenter.removePaletteCache(position);
+                    }
+
+                    @Override
+                    public void onPaletteResponse(int position, PaletteResponse response) {
+                        presenter.cachePaletteResponse(position, response);
+
+                        // onPageSelected第一次加载第0页的速度快于holder里加载图片的速度，导致第0页没有执行过更新，用变量来标记
+                        if (isFirstTimeUpdatePalette && position == 0) {
+                            isFirstTimeUpdatePalette = false;
+                            loadBackground(response);
+                        }
+                    }
+                });
+            }
+        }, presenter.getImageList());
+    }
+
+    public static class PageHolder implements Holder<String> {
+
+        private ImageView imageView;
+
+        private PaletteCallback callback;
+
+        public PageHolder(PaletteCallback callback) {
+            this.callback = callback;
+        }
+
+        @Override
+        public View createView(Context context) {
+            imageView = new ImageView(context);
+            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            return imageView;
+        }
+
+        @Override
+        public void UpdateUI(Context context, int position, String data) {
+            GlideApp.with(context)
+                    .asBitmap()
+                    .load(data)
+                    // need load Palette and special colors for specific views
+                    .listener(new PaletteRequestListener(position, callback))
+                    .into(imageView);
+        }
+
     }
 
     private void showScoreDetails() {
@@ -233,7 +358,7 @@ public class RecordPageActivity extends FavorPopupMvpActivity<RecordPresenter> i
         scoreDetailAdapter.setList(presenter.getScoreDetails());
         rvScoreDetail.setAdapter(scoreDetailAdapter);
 
-        // 延迟一些效果更好
+        // it will be a little stuck as soon as activity started, it's better delay executing animation
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -321,74 +446,41 @@ public class RecordPageActivity extends FavorPopupMvpActivity<RecordPresenter> i
     }
 
     /**
-     * 根据背景自适应图标、文字等颜色
-     * @param record
+     * apply suitable color for bottom bar background, text color, icon color
+     * judged by background resource
+     * @param palette
      */
-    private void loadBackground(Record record) {
-        String url = GdbImageProvider.getRecordRandomPath(record.getName(), null);
-        GlideApp.with(this)
-                .asBitmap()
-                .load(url)
-                .listener(new RequestListener<Bitmap>() {
-                    @Override
-                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Bitmap> target, boolean isFirstResource) {
-                        // 延迟一些效果更好
-                        groupFk.showItems(200);
-                        return false;
-                    }
-
-                    @Override
-                    public boolean onResourceReady(Bitmap resource, Object model, Target<Bitmap> target, DataSource dataSource, boolean isFirstResource) {
-                        updateColorForBackground(resource);
-                        // 延迟一些效果更好
-                        groupFk.showItems(200);
-                        return false;
-                    }
-                })
-                .into(ivBg);
-    }
-
-    private void updateColorForBackground(Bitmap resource) {
-        if (resource == null) {
+    private void updateColorsBy(Palette palette) {
+        if (palette == null) {
             return;
         }
-        int color = ColorUtils.averageImageColor(resource, ivBack);
-        ColorUtils.updateIconColor(ivBack, ColorUtils.generateForgroundColorForBg(color));
-        color = ColorUtils.averageImageColor(resource, iv_order);
-        ColorUtils.updateIconColor(iv_order, ColorUtils.generateForgroundColorForBg(color));
-        Palette.from(resource)
-                .generate(new Palette.PaletteAsyncListener() {
-                    @Override
-                    public void onGenerated(@NonNull Palette palette) {
-                        Palette.Swatch vibrant = palette.getVibrantSwatch();
-                        if (vibrant == null) {
-                            Palette.Swatch mute = palette.getMutedSwatch();
-                            if (mute == null) {
-                                tvName.setTextColor(getResources().getColor(R.color.white));
-                                tvParent.setTextColor(getResources().getColor(R.color.white));
-                                tvBareback.setTextColor(getResources().getColor(R.color.white));
-                                tvScene.setTextColor(getResources().getColor(R.color.white));
-                                tvScore.setTextColor(getResources().getColor(R.color.white));
-                                groupBottom.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
-                            } else {
-                                tvName.setTextColor(mute.getTitleTextColor());
-                                tvParent.setTextColor(mute.getBodyTextColor());
-                                tvBareback.setTextColor(mute.getBodyTextColor());
-                                tvScene.setTextColor(mute.getBodyTextColor());
-                                tvScore.setTextColor(mute.getTitleTextColor());
-                                groupBottom.setBackgroundColor(mute.getRgb());
-                            }
-                        } else {
-                            tvName.setTextColor(vibrant.getTitleTextColor());
-                            tvParent.setTextColor(vibrant.getBodyTextColor());
-                            tvBareback.setTextColor(vibrant.getBodyTextColor());
-                            tvScene.setTextColor(vibrant.getBodyTextColor());
-                            tvScore.setTextColor(vibrant.getTitleTextColor());
-                            groupBottom.setBackgroundColor(vibrant.getRgb());
-                        }
-                        groupFk.setSwatches(palette.getSwatches());
-                    }
-                });
+        Palette.Swatch vibrant = palette.getVibrantSwatch();
+        if (vibrant == null) {
+            Palette.Swatch mute = palette.getMutedSwatch();
+            if (mute == null) {
+                tvName.setTextColor(getResources().getColor(R.color.white));
+                tvParent.setTextColor(getResources().getColor(R.color.white));
+                tvBareback.setTextColor(getResources().getColor(R.color.white));
+                tvScene.setTextColor(getResources().getColor(R.color.white));
+                tvScore.setTextColor(getResources().getColor(R.color.white));
+                groupBottom.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+            } else {
+                tvName.setTextColor(mute.getTitleTextColor());
+                tvParent.setTextColor(mute.getBodyTextColor());
+                tvBareback.setTextColor(mute.getBodyTextColor());
+                tvScene.setTextColor(mute.getBodyTextColor());
+                tvScore.setTextColor(mute.getTitleTextColor());
+                groupBottom.setBackgroundColor(mute.getRgb());
+            }
+        } else {
+            tvName.setTextColor(vibrant.getTitleTextColor());
+            tvParent.setTextColor(vibrant.getBodyTextColor());
+            tvBareback.setTextColor(vibrant.getBodyTextColor());
+            tvScene.setTextColor(vibrant.getBodyTextColor());
+            tvScore.setTextColor(vibrant.getTitleTextColor());
+            groupBottom.setBackgroundColor(vibrant.getRgb());
+        }
+        groupFk.setSwatches(palette.getSwatches());
     }
 
     @OnClick(R.id.tv_scene)
@@ -424,6 +516,10 @@ public class RecordPageActivity extends FavorPopupMvpActivity<RecordPresenter> i
         getFavorPopup().popupRecord(this, view, presenter.getRecord().getId());
     }
 
+    /**
+     * appear animation of groupDetail
+     * @return
+     */
     private Animation getDetailAppear() {
         groupDetail.setVisibility(View.VISIBLE);
         AnimationSet set = new AnimationSet(true);
@@ -438,6 +534,10 @@ public class RecordPageActivity extends FavorPopupMvpActivity<RecordPresenter> i
         return set;
     }
 
+    /**
+     * disappear animation of groupDetail
+     * @return
+     */
     private Animation getDetailDisappear() {
         AnimationSet set = new AnimationSet(true);
         set.setInterpolator(new AccelerateDecelerateInterpolator());
@@ -467,6 +567,10 @@ public class RecordPageActivity extends FavorPopupMvpActivity<RecordPresenter> i
         return set;
     }
 
+    /**
+     * appear animation for item of groupFk
+     * @return
+     */
     private Animation getPointAnim() {
         AnimationSet set = new AnimationSet(true);
         set.setInterpolator(new AccelerateDecelerateInterpolator());

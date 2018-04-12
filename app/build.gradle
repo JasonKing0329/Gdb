@@ -1,7 +1,7 @@
 apply plugin: 'com.android.application'
 
-ext.appVersionName = "4.2"
-ext.appVersionCode = 61
+ext.appVersionName = "4.2.1"
+ext.appVersionCode = 62
 ext.appReleaseDir = "E:/temp/release/gdb"
 
 android {
@@ -59,6 +59,8 @@ dependencies {
 
     /*LMBanners 轮播视图  require min sdk 15*/
     implementation "com.allure0:LMBanners:${LMBANNER_VERSION}"
+
+    implementation 'com.bigkoo:convenientbanner:2.0.5'
 
     /*glide*/
     implementation 'com.github.bumptech.glide:glide:4.6.1'

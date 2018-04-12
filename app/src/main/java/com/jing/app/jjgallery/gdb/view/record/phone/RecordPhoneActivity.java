@@ -23,6 +23,7 @@ import com.jing.app.jjgallery.gdb.R;
 import com.jing.app.jjgallery.gdb.model.GdbImageProvider;
 import com.jing.app.jjgallery.gdb.model.SettingProperties;
 import com.jing.app.jjgallery.gdb.model.VideoModel;
+import com.jing.app.jjgallery.gdb.model.palette.PaletteResponse;
 import com.jing.app.jjgallery.gdb.presenter.record.RecordPresenter;
 import com.jing.app.jjgallery.gdb.util.GlideApp;
 import com.jing.app.jjgallery.gdb.util.GlideUtil;
@@ -225,6 +226,11 @@ public class RecordPhoneActivity extends MvpActivity<RecordPresenter> implements
                     .load(cuPath)
                     .into(ivCum);
         }
+    }
+
+    @Override
+    public void loadBackground(PaletteResponse paletteResponse) {
+
     }
 
     private void showStars(Record record) {

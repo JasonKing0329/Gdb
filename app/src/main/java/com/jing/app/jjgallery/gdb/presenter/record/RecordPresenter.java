@@ -4,7 +4,9 @@ import android.text.TextUtils;
 
 import com.jing.app.jjgallery.gdb.BasePresenter;
 import com.jing.app.jjgallery.gdb.GdbApplication;
+import com.jing.app.jjgallery.gdb.model.GdbImageProvider;
 import com.jing.app.jjgallery.gdb.model.conf.Configuration;
+import com.jing.app.jjgallery.gdb.model.palette.PaletteResponse;
 import com.jing.app.jjgallery.gdb.view.record.pad.TitleValueBean;
 import com.jing.app.jjgallery.gdb.view.record.phone.IRecordView;
 import com.king.app.gdb.data.entity.Record;
@@ -19,14 +21,19 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.ObservableSource;
+import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -38,9 +45,13 @@ public class RecordPresenter extends BasePresenter<IRecordView> {
 
     private Record mRecord;
 
+    private List<String> mImageList;
+
+    private Map<Integer, PaletteResponse> paletteMap;
+
     @Override
     public void onCreate() {
-
+        paletteMap = new HashMap<>();
     }
 
     public void loadRecord(final long recordId) {
@@ -54,7 +65,19 @@ public class RecordPresenter extends BasePresenter<IRecordView> {
                         .build().unique();
                 e.onNext(record);
             }
-        }).observeOn(AndroidSchedulers.mainThread())
+        }).flatMap(new Function<Record, ObservableSource<Record>>() {
+            @Override
+            public ObservableSource<Record> apply(final Record record) throws Exception {
+                return new ObservableSource<Record>() {
+                    @Override
+                    public void subscribe(Observer<? super Record> observer) {
+                        mImageList = GdbImageProvider.getRecordPathList("123");
+                        observer.onNext(record);
+                    }
+                };
+            }
+        })
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Consumer<Record>() {
                     @Override
@@ -199,5 +222,21 @@ public class RecordPresenter extends BasePresenter<IRecordView> {
             bean.setValue(String.valueOf(value));
             list.add(bean);
         }
+    }
+
+    public void refreshBackground(int position) {
+        view.loadBackground(paletteMap.get(position));
+    }
+
+    public List<String> getImageList() {
+        return mImageList;
+    }
+
+    public void cachePaletteResponse(int position, PaletteResponse response) {
+        paletteMap.put(position, response);
+    }
+
+    public void removePaletteCache(int position) {
+        paletteMap.remove(position);
     }
 }

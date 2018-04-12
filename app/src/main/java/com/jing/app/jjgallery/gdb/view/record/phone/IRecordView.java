@@ -1,6 +1,7 @@
 package com.jing.app.jjgallery.gdb.view.record.phone;
 
 import com.jing.app.jjgallery.gdb.BaseView;
+import com.jing.app.jjgallery.gdb.model.palette.PaletteResponse;
 import com.king.app.gdb.data.entity.Record;
 
 /**
@@ -9,4 +10,6 @@ import com.king.app.gdb.data.entity.Record;
 public interface IRecordView extends BaseView {
 
     void showRecord(Record record);
+
+    void loadBackground(PaletteResponse paletteResponse);
 }
