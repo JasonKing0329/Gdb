@@ -20,8 +20,6 @@ import com.jing.app.jjgallery.gdb.R;
 import com.jing.app.jjgallery.gdb.util.ColorUtils;
 import com.jing.app.jjgallery.gdb.util.ListUtil;
 import com.jing.app.jjgallery.gdb.util.ScreenUtils;
-import com.king.lib.jindicator.DensityUtil;
-import com.king.lib.jindicator.IndicatorView;
 
 import java.util.List;
 

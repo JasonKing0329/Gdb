@@ -26,7 +26,6 @@ import com.bigkoo.convenientbanner.holder.Holder;
 import com.jing.app.jjgallery.gdb.ActivityManager;
 import com.jing.app.jjgallery.gdb.FavorPopupMvpActivity;
 import com.jing.app.jjgallery.gdb.R;
-import com.jing.app.jjgallery.gdb.model.GdbImageProvider;
 import com.jing.app.jjgallery.gdb.model.VideoModel;
 import com.jing.app.jjgallery.gdb.model.palette.PaletteCallback;
 import com.jing.app.jjgallery.gdb.model.palette.PaletteRequestListener;
@@ -34,7 +33,6 @@ import com.jing.app.jjgallery.gdb.model.palette.PaletteResponse;
 import com.jing.app.jjgallery.gdb.model.palette.ViewColorBound;
 import com.jing.app.jjgallery.gdb.presenter.record.RecordPresenter;
 import com.jing.app.jjgallery.gdb.util.ColorUtils;
-import com.jing.app.jjgallery.gdb.util.DebugLog;
 import com.jing.app.jjgallery.gdb.util.GlideApp;
 import com.jing.app.jjgallery.gdb.util.ListUtil;
 import com.jing.app.jjgallery.gdb.util.ScreenUtils;
@@ -98,7 +96,7 @@ public class RecordPageActivity extends FavorPopupMvpActivity<RecordPresenter> i
     private RecordPageScoreDetailAdapter scoreDetailAdapter;
 
     private String videoPath;
-    private boolean isFirstTimeUpdatePalette = true;
+    private boolean isFirstTimeLoadFirstPage = true;
 
     @Override
     protected int getContentView() {
@@ -168,8 +166,20 @@ public class RecordPageActivity extends FavorPopupMvpActivity<RecordPresenter> i
             }
 
             @Override
-            public void onPageSelected(int position) {
-                presenter.refreshBackground(position);
+            public void onPageSelected(final int position) {
+                // 第一次触发时，holder里image还没有加载完成，presenter里还没有缓存
+                if (isFirstTimeLoadFirstPage && position == 0) {
+                    isFirstTimeLoadFirstPage = false;
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            presenter.refreshBackground(position);
+                        }
+                    }, 900);
+                }
+                else {
+                    presenter.refreshBackground(position);
+                }
             }
 
             @Override
@@ -203,12 +213,14 @@ public class RecordPageActivity extends FavorPopupMvpActivity<RecordPresenter> i
 
     @Override
     public void loadBackground(PaletteResponse paletteResponse) {
-        if (!ListUtil.isEmpty(paletteResponse.viewColorBounds)) {
-            for (ViewColorBound bound:paletteResponse.viewColorBounds) {
-                ColorUtils.updateIconColor((ImageView) bound.view, bound.color);
+        if (paletteResponse != null) {
+            if (!ListUtil.isEmpty(paletteResponse.viewColorBounds)) {
+                for (ViewColorBound bound:paletteResponse.viewColorBounds) {
+                    ColorUtils.updateIconColor((ImageView) bound.view, bound.color);
+                }
             }
+            updateColorsBy(paletteResponse.palette);
         }
-        updateColorsBy(paletteResponse.palette);
 
         if (groupFk.getVisibility() == View.VISIBLE) {
             groupFk.showItems(false);
@@ -216,8 +228,7 @@ public class RecordPageActivity extends FavorPopupMvpActivity<RecordPresenter> i
         // 首次出现，加载动画
         else {
             groupFk.setVisibility(View.VISIBLE);
-            // 延迟一些效果更好
-            groupFk.showItems(200, true);
+            groupFk.showItems(true);
         }
     }
 
@@ -312,12 +323,6 @@ public class RecordPageActivity extends FavorPopupMvpActivity<RecordPresenter> i
                     @Override
                     public void onPaletteResponse(int position, PaletteResponse response) {
                         presenter.cachePaletteResponse(position, response);
-
-                        // onPageSelected第一次加载第0页的速度快于holder里加载图片的速度，导致第0页没有执行过更新，用变量来标记
-                        if (isFirstTimeUpdatePalette && position == 0) {
-                            isFirstTimeUpdatePalette = false;
-                            loadBackground(response);
-                        }
                     }
                 });
             }

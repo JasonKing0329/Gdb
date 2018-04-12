@@ -71,7 +71,8 @@ public class RecordPresenter extends BasePresenter<IRecordView> {
                 return new ObservableSource<Record>() {
                     @Override
                     public void subscribe(Observer<? super Record> observer) {
-                        mImageList = GdbImageProvider.getRecordPathList("123");
+                        mImageList = GdbImageProvider.getRecordPathList(record.getName());
+                        Collections.shuffle(mImageList);
                         observer.onNext(record);
                     }
                 };
