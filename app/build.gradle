@@ -33,7 +33,7 @@ android {
     buildTypes {
         debug {
             signingConfig signingConfigs.debugConfig
-            buildConfigField("boolean", "checkUser", "false")
+            buildConfigField("boolean", "checkUser", "true")
         }
         release {
             minifyEnabled false
