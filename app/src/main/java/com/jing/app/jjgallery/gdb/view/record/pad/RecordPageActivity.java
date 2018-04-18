@@ -37,6 +37,7 @@ import com.jing.app.jjgallery.gdb.util.GlideApp;
 import com.jing.app.jjgallery.gdb.util.ListUtil;
 import com.jing.app.jjgallery.gdb.util.ScreenUtils;
 import com.jing.app.jjgallery.gdb.view.pub.PointDescLayout;
+import com.jing.app.jjgallery.gdb.view.pub.dialog.GalleryDialog;
 import com.jing.app.jjgallery.gdb.view.pub.dialog.VideoDialogFragment;
 import com.jing.app.jjgallery.gdb.view.record.phone.IRecordView;
 import com.king.app.gdb.data.entity.Record;
@@ -97,6 +98,8 @@ public class RecordPageActivity extends FavorPopupMvpActivity<RecordPresenter> i
 
     private String videoPath;
     private boolean isFirstTimeLoadFirstPage = true;
+
+    private GalleryDialog galleryDialog;
 
     @Override
     protected int getContentView() {
@@ -173,11 +176,17 @@ public class RecordPageActivity extends FavorPopupMvpActivity<RecordPresenter> i
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
+                            if (galleryDialog != null) {
+                                galleryDialog.setCurrentPage(position);
+                            }
                             presenter.refreshBackground(position);
                         }
                     }, 900);
                 }
                 else {
+                    if (galleryDialog != null) {
+                        galleryDialog.setCurrentPage(position);
+                    }
                     presenter.refreshBackground(position);
                 }
             }
@@ -187,6 +196,7 @@ public class RecordPageActivity extends FavorPopupMvpActivity<RecordPresenter> i
 
             }
         });
+
     }
 
     @Override
@@ -519,6 +529,24 @@ public class RecordPageActivity extends FavorPopupMvpActivity<RecordPresenter> i
     @OnClick(R.id.iv_order)
     public void onClickOrder(View view) {
         getFavorPopup().popupRecord(this, view, presenter.getRecord().getId());
+    }
+
+    @OnClick(R.id.group_bottom)
+    public void onClickBottom() {
+        initPager();
+        galleryDialog.show(getSupportFragmentManager(), "GalleryDialog");
+    }
+
+    private void initPager() {
+        galleryDialog = new GalleryDialog();
+        galleryDialog.setCurrentPage(banner.getCurrentItem());
+        galleryDialog.setImageList(presenter.getImageList());
+        galleryDialog.setOnItemClickListener(new PagePagerAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                banner.getViewPager().setCurrentItem(position);
+            }
+        });
     }
 
     /**
