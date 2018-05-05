@@ -55,6 +55,8 @@ public class RecordGridDetailHolder extends RecyclerView.ViewHolder implements V
     TextView tvStarMore;
     @BindView(R.id.tv_special)
     TextView tvSpecial;
+    @BindView(R.id.tv_pics)
+    TextView tvPics;
     @BindView(R.id.group_record)
     RelativeLayout groupRecord;
 
@@ -111,6 +113,9 @@ public class RecordGridDetailHolder extends RecyclerView.ViewHolder implements V
             tvSpecial.setText(record.getSpecialDesc());
             tvSpecial.setVisibility(View.VISIBLE);
         }
+
+        tvPics.setText("(" + GdbImageProvider.getRecordPicNumber(record.getName()) + " pics)");
+
 
         setStarTag(record);
 
