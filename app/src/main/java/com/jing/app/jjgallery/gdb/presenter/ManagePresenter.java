@@ -22,6 +22,7 @@ import com.king.app.gdb.data.entity.FavorStar;
 import com.king.app.gdb.data.entity.FavorStarOrder;
 import com.king.app.gdb.data.entity.Star;
 import com.king.app.gdb.data.entity.StarDao;
+import com.king.app.gdb.data.entity.StarRating;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -290,6 +291,8 @@ public class ManagePresenter extends BasePresenter<IManageView> {
 
     private List<FavorStarOrder> favorStarOrderList;
 
+    private List<StarRating> starRatingList;
+
     private GdbUpdateManager updateManager;
 
     public void checkDbUpdate() {
@@ -367,6 +370,11 @@ public class ManagePresenter extends BasePresenter<IManageView> {
                         .queryBuilder().list();
                 favorStarOrderList = GdbApplication.getInstance().getDaoSession().getFavorStarOrderDao()
                         .queryBuilder().list();
+
+                // 保存star_rating表数据
+                starRatingList = GdbApplication.getInstance().getDaoSession().getStarRatingDao()
+                        .queryBuilder().list();
+
                 e.onNext(bean);
             }
         });
@@ -392,6 +400,7 @@ public class ManagePresenter extends BasePresenter<IManageView> {
 
                 updateStarFavorFiled();
                 updateFavorTables();
+                updateStarRatings();
                 e.onNext(new Object());
             }
         }).observeOn(AndroidSchedulers.mainThread())
@@ -449,6 +458,15 @@ public class ManagePresenter extends BasePresenter<IManageView> {
         }
         if (!ListUtil.isEmpty(favorStarOrderList)) {
             GdbApplication.getInstance().getDaoSession().getFavorStarOrderDao().insertInTx(favorStarOrderList);
+        }
+    }
+
+    /**
+     * update star_rating
+     */
+    private void updateStarRatings() {
+        if (!ListUtil.isEmpty(starRatingList)) {
+            GdbApplication.getInstance().getDaoSession().getStarRatingDao().insertInTx(starRatingList);
         }
     }
 

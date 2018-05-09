@@ -16,8 +16,9 @@ import com.jing.app.jjgallery.gdb.R;
 import com.jing.app.jjgallery.gdb.model.bean.StarProxy;
 import com.jing.app.jjgallery.gdb.presenter.star.StarListPresenter;
 import com.jing.app.jjgallery.gdb.util.GlideUtil;
+import com.jing.app.jjgallery.gdb.util.ListUtil;
+import com.jing.app.jjgallery.gdb.util.StarRatingUtil;
 import com.jing.app.jjgallery.gdb.view.pub.CircleImageView;
-import com.jing.app.jjgallery.gdb.view.pub.dialog.DefaultDialogManager;
 import com.jing.app.jjgallery.gdb.view.star.OnStarClickListener;
 
 import java.util.ArrayList;
@@ -86,15 +87,16 @@ public class StarListCircleAdapter extends RecyclerView.Adapter<StarListCircleAd
         holder.groupItem.setOnClickListener(this);
         holder.groupItem.setOnLongClickListener(this);
 
-        holder.ivFavor.setTag(position);
-        holder.ivFavor.setOnClickListener(this);
-
-        if (item.getStar().getFavor() > 0) {
-            holder.ivFavor.setSelected(true);
+        if (ListUtil.isEmpty(item.getStar().getRatings())) {
+            holder.tvRating.setText(StarRatingUtil.NON_RATING);
+            StarRatingUtil.updateRatingColor(holder.tvRating, null);
         }
         else {
-            holder.ivFavor.setSelected(false);
+            holder.tvRating.setText(StarRatingUtil.getRatingValue(item.getStar().getRatings().get(0).getComplex()));
+            StarRatingUtil.updateRatingColor(holder.tvRating, item.getStar().getRatings().get(0));
         }
+        holder.tvRating.setTag(item);
+        holder.tvRating.setOnClickListener(this);
     }
 
     private void saveFavor(StarProxy starProxy, int favor) {
@@ -146,25 +148,10 @@ public class StarListCircleAdapter extends RecyclerView.Adapter<StarListCircleAd
                 onStarClickListener.onStarClick(star);
             }
         }
-        else if (v instanceof ImageView) {
-            final int position = (int) v.getTag();
-            if (curList.get(position).getStar().getFavor() > 0) {
-                saveFavor(curList.get(position), 0);
-                notifyItemChanged(position);
-            }
-            else {
-                new DefaultDialogManager().openInputDialog(v.getContext(), new DefaultDialogManager.OnDialogActionListener() {
-                    @Override
-                    public void onOk(String name) {
-                        try {
-                            int favor = Integer.parseInt(name);
-                            saveFavor(curList.get(position), favor);
-                            notifyItemChanged(position);
-                        } catch (Exception e) {
-
-                        }
-                    }
-                });
+        else if (v instanceof TextView) {
+            StarProxy star = (StarProxy) v.getTag();
+            if (onStarClickListener != null) {
+                onStarClickListener.onUpdateRating(star.getStar().getId());
             }
         }
     }
@@ -196,8 +183,8 @@ public class StarListCircleAdapter extends RecyclerView.Adapter<StarListCircleAd
         CircleImageView ivHead;
         @BindView(R.id.tv_name)
         TextView tvName;
-        @BindView(R.id.iv_favor)
-        ImageView ivFavor;
+        @BindView(R.id.tv_rating)
+        TextView tvRating;
         @BindView(R.id.group_item)
         RelativeLayout groupItem;
 

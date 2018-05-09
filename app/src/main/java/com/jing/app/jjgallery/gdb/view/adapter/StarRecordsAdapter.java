@@ -23,6 +23,8 @@ import com.jing.app.jjgallery.gdb.model.bean.StarProxy;
 import com.jing.app.jjgallery.gdb.util.FormatUtil;
 import com.jing.app.jjgallery.gdb.util.GlideUtil;
 import com.jing.app.jjgallery.gdb.util.LMBannerViewUtil;
+import com.jing.app.jjgallery.gdb.util.ListUtil;
+import com.jing.app.jjgallery.gdb.util.StarRatingUtil;
 import com.jing.app.jjgallery.gdb.view.pub.PullZoomRecyclerView;
 import com.jing.app.jjgallery.gdb.view.pub.dialog.DefaultDialogManager;
 import com.king.app.gdb.data.entity.Record;
@@ -54,8 +56,8 @@ public class StarRecordsAdapter extends RecyclerListAdapter {
 
     public interface OnRecordItemClickListener {
         void onClickRecordItem(Pair<View, String>[] pairs, Record record);
-        void onFavorStar(Star star, int score);
         void showAnimSetting();
+        void onUpdateRating(Long id);
     }
 
     private PullZoomHeaderHolder headerHolder;
@@ -223,7 +225,7 @@ public class StarRecordsAdapter extends RecyclerListAdapter {
 
     private class PullZoomHeaderHolder extends RecyclerListAdapter.ViewHolder<Object> {
         private ImageView zoomView;
-        private ImageView ivFavor;
+        private TextView tvRating;
         private ImageView ivCardMode;
         private ImageView ivSetting;
         private TextView nameView;
@@ -243,7 +245,7 @@ public class StarRecordsAdapter extends RecyclerListAdapter {
             ivSetting = (ImageView) view.findViewById(R.id.iv_setting);
             ivCardMode = (ImageView) view.findViewById(R.id.iv_card_mode);
             lmBanners = (LMBanners) view.findViewById(R.id.lmbanner);
-            ivFavor = (ImageView) view.findViewById(R.id.iv_favor);
+            tvRating = view.findViewById(R.id.tv_rating);
             zoomHeaderContainer = (ViewGroup) view.findViewById(R.id.gdb_star_header_container);
             nameView = (TextView) view.findViewById(R.id.gdb_star_header_name);
             numberView = (TextView) view.findViewById(R.id.gdb_star_header_number);
@@ -345,29 +347,20 @@ public class StarRecordsAdapter extends RecyclerListAdapter {
                     .append("  ").append("min(").append(star.getStar().getCmax()).append(")");
             cscoreView.setText(buffer.toString());
 
-            ivFavor.setSelected(isStarFavor);
+            if (ListUtil.isEmpty(star.getStar().getRatings())) {
+                tvRating.setText(StarRatingUtil.NON_RATING);
+                StarRatingUtil.updateRatingColor(tvRating, null);
+            }
+            else {
+                tvRating.setText(StarRatingUtil.getRatingValue(star.getStar().getRatings().get(0).getComplex()));
+                StarRatingUtil.updateRatingColor(tvRating, star.getStar().getRatings().get(0));
+            }
 
-            ivFavor.setOnClickListener(new View.OnClickListener() {
+            tvRating.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (v.isSelected()) {
-                        // cancel favor
-                        itemClickListener.onFavorStar(star.getStar(), 0);
-                        ivFavor.setSelected(false);
-                    }
-                    else {
-                        new DefaultDialogManager().openInputDialog(v.getContext(), new DefaultDialogManager.OnDialogActionListener() {
-                            @Override
-                            public void onOk(String name) {
-                                try {
-                                    int favor = Integer.parseInt(name);
-                                    itemClickListener.onFavorStar(star.getStar(), favor);
-                                    ivFavor.setSelected(true);
-                                } catch (Exception e) {
-
-                                }
-                            }
-                        });
+                    if (itemClickListener != null) {
+                        itemClickListener.onUpdateRating(star.getStar().getId());
                     }
                 }
             });

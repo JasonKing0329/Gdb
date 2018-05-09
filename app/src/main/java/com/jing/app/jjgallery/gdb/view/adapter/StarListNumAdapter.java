@@ -16,7 +16,8 @@ import com.jing.app.jjgallery.gdb.R;
 import com.jing.app.jjgallery.gdb.model.bean.StarProxy;
 import com.jing.app.jjgallery.gdb.presenter.star.StarListPresenter;
 import com.jing.app.jjgallery.gdb.util.GlideUtil;
-import com.jing.app.jjgallery.gdb.view.pub.dialog.DefaultDialogManager;
+import com.jing.app.jjgallery.gdb.util.ListUtil;
+import com.jing.app.jjgallery.gdb.util.StarRatingUtil;
 import com.jing.app.jjgallery.gdb.view.star.OnStarClickListener;
 
 import java.util.List;
@@ -71,18 +72,16 @@ public class StarListNumAdapter extends RecyclerView.Adapter<StarListNumAdapter.
         holder.name.setTag(item);
         holder.name.setOnClickListener(this);
 
-        holder.favorView.setTag(position);
-        holder.favorView.setOnClickListener(this);
-
-        if (item.getStar().getFavor() > 0) {
-            holder.favorView.setSelected(true);
-            holder.favorScore.setVisibility(View.VISIBLE);
-            holder.favorScore.setText(String.valueOf(item.getStar().getFavor()));
+        if (ListUtil.isEmpty(item.getStar().getRatings())) {
+            holder.ratingView.setText(StarRatingUtil.NON_RATING);
+            StarRatingUtil.updateRatingColor(holder.ratingView, null);
         }
         else {
-            holder.favorView.setSelected(false);
-            holder.favorScore.setVisibility(View.INVISIBLE);
+            holder.ratingView.setText(StarRatingUtil.getRatingValue(item.getStar().getRatings().get(0).getComplex()));
+            StarRatingUtil.updateRatingColor(holder.ratingView, item.getStar().getRatings().get(0));
         }
+        holder.ratingView.setTag(item);
+        holder.ratingView.setOnClickListener(this);
     }
 
     public StarProxy getItem(int position) {
@@ -96,52 +95,31 @@ public class StarListNumAdapter extends RecyclerView.Adapter<StarListNumAdapter.
 
     @Override
     public void onClick(View v) {
-        if (v instanceof TextView) {
+        if (v.getId() == R.id.gdb_star_name) {
             if (onStarClickListener != null) {
                 StarProxy star = (StarProxy) v.getTag();
                 onStarClickListener.onStarClick(star);
             }
         }
-        else if (v instanceof ImageView) {
+        else if (v.getId() == R.id.gdb_star_rating) {
             final int position = (int) v.getTag();
-            if (originList.get(position).getStar().getFavor() > 0) {
-                saveFavor(originList.get(position), 0);
-                notifyItemChanged(position);
-            }
-            else {
-                new DefaultDialogManager().openInputDialog(v.getContext(), new DefaultDialogManager.OnDialogActionListener() {
-                    @Override
-                    public void onOk(String name) {
-                        try {
-                            int favor = Integer.parseInt(name);
-                            saveFavor(originList.get(position), favor);
-                            notifyItemChanged(position);
-                        } catch (Exception e) {
-                        }
-                    }
-                });
+            if (onStarClickListener != null) {
+                onStarClickListener.onUpdateRating(originList.get(position).getStar().getId());
             }
         }
-    }
-
-    private void saveFavor(StarProxy starProxy, int favor) {
-        starProxy.getStar().setFavor(favor);
-        mPresenter.saveFavor(starProxy.getStar());
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
         TextView name;
         CircularImageView imageView;
-        ImageView favorView;
-        TextView favorScore;
+        TextView ratingView;
         
         public ViewHolder(View itemView) {
             super(itemView);
             name = (TextView) itemView.findViewById(R.id.gdb_star_name);
             imageView = (CircularImageView) itemView.findViewById(R.id.gdb_star_headimg);
-            favorView = (ImageView) itemView.findViewById(R.id.gdb_star_favor);
-            favorScore = (TextView) itemView.findViewById(R.id.gdb_star_favor_score);
+            ratingView = itemView.findViewById(R.id.gdb_star_rating);
         }
     }
 }

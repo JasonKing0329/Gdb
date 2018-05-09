@@ -21,6 +21,7 @@ import com.jing.app.jjgallery.gdb.view.adapter.StarListCircleAdapter;
 import com.jing.app.jjgallery.gdb.view.adapter.StarListGridAdapter;
 import com.jing.app.jjgallery.gdb.view.adapter.StarListNumAdapter;
 import com.jing.app.jjgallery.gdb.view.pub.PinnedHeaderDecoration;
+import com.jing.app.jjgallery.gdb.view.pub.dialog.StarRatingDialog;
 
 import java.util.List;
 
@@ -253,6 +254,13 @@ public class StarListFragment extends MvpFragmentV4<StarListPresenter> implement
             return;
         }
         ActivityManager.startStarActivity(getActivity(), star.getStar());
+    }
+
+    @Override
+    public void onUpdateRating(Long starId) {
+        StarRatingDialog dialog = new StarRatingDialog();
+        dialog.setStarId(starId);
+        dialog.show(getChildFragmentManager(), "StarRatingDialog");
     }
 
     public void filterStar(String text) {

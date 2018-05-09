@@ -18,6 +18,8 @@ import com.king.app.gdb.data.entity.FavorRecordDao;
 import com.king.app.gdb.data.entity.FavorRecordOrderDao;
 import com.king.app.gdb.data.entity.FavorStarDao;
 import com.king.app.gdb.data.entity.FavorStarOrderDao;
+import com.king.app.gdb.data.entity.StarRating;
+import com.king.app.gdb.data.entity.StarRatingDao;
 import com.orhanobut.logger.AndroidLogAdapter;
 import com.orhanobut.logger.Logger;
 
@@ -211,12 +213,16 @@ public class GdbApplication extends Application {
 
         @Override
         public void onUpgrade(Database db, int oldVersion, int newVersion) {
-            DebugLog.e(" oldVersion=" + oldVersion + ", newVersion=" + newVersion);
-            if (newVersion == 2) {
-                FavorRecordDao.createTable(db, true);
-                FavorRecordOrderDao.createTable(db, true);
-                FavorStarDao.createTable(db, true);
-                FavorStarOrderDao.createTable(db, true);
+            DebugLog.e("oldVersion=" + oldVersion + ", newVersion=" + newVersion);
+            switch (oldVersion) {
+                case 1:
+                    FavorRecordDao.createTable(db, true);
+                    FavorRecordOrderDao.createTable(db, true);
+                    FavorStarDao.createTable(db, true);
+                    FavorStarOrderDao.createTable(db, true);
+                case 2:
+                    StarRatingDao.createTable(db, true);
+                    break;
             }
         }
     }

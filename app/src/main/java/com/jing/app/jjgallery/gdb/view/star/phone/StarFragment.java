@@ -17,6 +17,7 @@ import com.jing.app.jjgallery.gdb.view.pub.ActionBar;
 import com.jing.app.jjgallery.gdb.view.pub.ActionBarManager;
 import com.jing.app.jjgallery.gdb.view.pub.BannerAnimDialogFragment;
 import com.jing.app.jjgallery.gdb.view.pub.PullZoomRecyclerView;
+import com.jing.app.jjgallery.gdb.view.pub.dialog.StarRatingDialog;
 import com.jing.app.jjgallery.gdb.view.record.SortDialogFragment;
 import com.jing.app.jjgallery.gdb.view.star.IStarView;
 import com.king.app.gdb.data.entity.Record;
@@ -158,9 +159,10 @@ public class StarFragment extends BaseFragmentV4 implements IStarView, StarRecor
     }
 
     @Override
-    public void onFavorStar(Star star, int score) {
-        star.setFavor(score);
-        mPresenter.saveFavor(star);
+    public void onUpdateRating(Long starId) {
+        StarRatingDialog dialog = new StarRatingDialog();
+        dialog.setStarId(starId);
+        dialog.show(getChildFragmentManager(), "StarRatingDialog");
     }
 
     @Override

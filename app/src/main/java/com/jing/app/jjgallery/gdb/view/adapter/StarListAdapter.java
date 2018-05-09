@@ -15,7 +15,8 @@ import com.jing.app.jjgallery.gdb.R;
 import com.jing.app.jjgallery.gdb.model.bean.StarProxy;
 import com.jing.app.jjgallery.gdb.presenter.star.StarListPresenter;
 import com.jing.app.jjgallery.gdb.util.GlideUtil;
-import com.jing.app.jjgallery.gdb.view.pub.dialog.DefaultDialogManager;
+import com.jing.app.jjgallery.gdb.util.ListUtil;
+import com.jing.app.jjgallery.gdb.util.StarRatingUtil;
 import com.jing.app.jjgallery.gdb.view.star.OnStarClickListener;
 
 import java.util.List;
@@ -121,18 +122,17 @@ public class StarListAdapter extends BaseTurboAdapter<StarProxy, BaseViewHolder>
             nHolder.name.setOnClickListener(this);
 
             nHolder.starProxy = item;
-            nHolder.favorView.setTag(nHolder);
-            nHolder.favorView.setOnClickListener(this);
 
-            if (item.getStar().getFavor() > 0) {
-                nHolder.favorView.setSelected(true);
-                nHolder.favorScore.setVisibility(View.VISIBLE);
-                nHolder.favorScore.setText(String.valueOf(item.getStar().getFavor()));
+            if (ListUtil.isEmpty(item.getStar().getRatings())) {
+                nHolder.ratingView.setText(StarRatingUtil.NON_RATING);
+                StarRatingUtil.updateRatingColor(nHolder.ratingView, null);
             }
             else {
-                nHolder.favorView.setSelected(false);
-                nHolder.favorScore.setVisibility(View.INVISIBLE);
+                nHolder.ratingView.setText(StarRatingUtil.getRatingValue(item.getStar().getRatings().get(0).getComplex()));
+                StarRatingUtil.updateRatingColor(nHolder.ratingView, item.getStar().getRatings().get(0));
             }
+            nHolder.ratingView.setTag(item);
+            nHolder.ratingView.setOnClickListener(this);
         }
     }
 
@@ -160,52 +160,30 @@ public class StarListAdapter extends BaseTurboAdapter<StarProxy, BaseViewHolder>
 
         TextView name;
         CircularImageView imageView;
-        ImageView favorView;
         StarProxy starProxy;
-        TextView favorScore;
+        TextView ratingView;
         public NameHolder(View view) {
             super(view);
             name = findViewById(R.id.gdb_star_name);
             imageView = findViewById(R.id.gdb_star_headimg);
-            favorView = (ImageView) itemView.findViewById(R.id.gdb_star_favor);
-            favorScore = (TextView) itemView.findViewById(R.id.gdb_star_favor_score);
+            ratingView = itemView.findViewById(R.id.gdb_star_rating);
         }
     }
 
     @Override
     public void onClick(View v) {
-        if (v instanceof TextView) {
+        if (v.getId() == R.id.gdb_star_name) {
             if (onStarClickListener != null) {
                 StarProxy star = (StarProxy) v.getTag();
                 onStarClickListener.onStarClick(star);
             }
         }
-        else if (v instanceof ImageView) {
-            final NameHolder holder = (NameHolder) v.getTag();
-            if (holder.starProxy.getStar().getFavor() > 0) {
-                saveFavor(holder.starProxy, 0);
-                notifyItemChanged(holder.getAdapterPosition());
-            }
-            else {
-                new DefaultDialogManager().openInputDialog(v.getContext(), new DefaultDialogManager.OnDialogActionListener() {
-                    @Override
-                    public void onOk(String name) {
-                        try {
-                            int favor = Integer.parseInt(name);
-                            saveFavor(holder.starProxy, favor);
-                            notifyItemChanged(holder.getAdapterPosition());
-                        } catch (Exception e) {
-//                            e.printStackTrace();
-                        }
-                    }
-                });
+        else if (v.getId() == R.id.gdb_star_rating) {
+            if (onStarClickListener != null) {
+                StarProxy star = (StarProxy) v.getTag();
+                onStarClickListener.onUpdateRating(star.getStar().getId());
             }
         }
-    }
-
-    private void saveFavor(StarProxy starProxy, int favor) {
-        starProxy.getStar().setFavor(favor);
-        mPresenter.saveFavor(starProxy.getStar());
     }
 
     public void onStarFilter(String name) {

@@ -24,18 +24,12 @@
         android:maxLines="1"
         android:ellipsize="end"/>
 
-    <ImageView
-        android:id="@+id/iv_favor"
-        android:layout_width="@dimen/starlist_grid_favor_size"
-        android:layout_height="@dimen/starlist_grid_favor_size"
-        android:scaleType="fitCenter"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:paddingTop="20dp"
-        android:paddingBottom="0dp"
-        android:src="@drawable/selector_favor_red"
-        android:background="?android:attr/selectableItemBackgroundBorderless"
-        android:layout_above="@id/tv_name"
+    <TextView
+        android:id="@+id/tv_rating"
+        style="@style/TvStarRating"
+        android:layout_centerVertical="true"
+        android:layout_alignBottom="@id/iv_head"
         android:layout_alignParentRight="true"
-        android:layout_marginRight="0dp"/>
+        android:layout_marginRight="10dp"
+        android:layout_above="@id/tv_name" />
 </RelativeLayout>
