@@ -11,7 +11,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.jing.app.jjgallery.gdb.R;
-import com.jing.app.jjgallery.gdb.util.DebugLog;
 import com.jing.app.jjgallery.gdb.util.ScreenUtils;
 
 /**
@@ -78,11 +77,12 @@ public class StarRatingView extends LinearLayout implements View.OnTouchListener
 
     private ImageView createStar(int index) {
         ImageView view = new ImageView(getContext());
-        LayoutParams params = new LayoutParams(starSize, starColor);
+        LayoutParams params = new LayoutParams(starSize, starSize);
         view.setPadding(starPadding, starPadding, starPadding, starPadding);
         if (index > 0 && starSpace > 0) {
             params.leftMargin = starSpace;
         }
+        view.setLayoutParams(params);
         if (checkNumber > index) {
             // half
             if (supportHalf && checkNumber < index + 1) {
@@ -95,6 +95,7 @@ public class StarRatingView extends LinearLayout implements View.OnTouchListener
         else {
             view.setImageResource(R.drawable.ic_star_border_black_24dp);
         }
+        view.setScaleType(ImageView.ScaleType.FIT_CENTER);
         updateIconColor(view, starColor);
         return view;
     }
@@ -139,7 +140,6 @@ public class StarRatingView extends LinearLayout implements View.OnTouchListener
                 }
                 break;
             case MotionEvent.ACTION_OUTSIDE:
-                DebugLog.e("ACTION_OUTSIDE");
                 if (checkNumber <= 1) {
                     changeCheckNumber(0);
                     checkNumber = 0;

@@ -223,15 +223,18 @@
     </style>
 
     <style name="TvPlayerStarTitle">
-        <item name="android:layout_width">50dp</item>
+        <item name="android:layout_width">@dimen/rating_title_width</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginLeft">15dp</item>
+        <item name="android:layout_marginLeft">@dimen/rating_margin_hor</item>
+        <item name="android:textSize">@dimen/rating_title_size</item>
     </style>
 
     <style name="TvPlayerStarValue">
-        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_width">@dimen/rating_value_width</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginLeft">15dp</item>
+        <item name="android:gravity">right</item>
+        <item name="android:textSize">@dimen/rating_title_size</item>
     </style>
 
     <style name="GroupPlayerStar">
@@ -239,7 +242,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:orientation">horizontal</item>
         <item name="android:gravity">center_vertical</item>
-        <item name="android:layout_marginTop">3dp</item>
+        <item name="android:layout_marginTop">@dimen/rating_item_top</item>
     </style>
 
     <style name="TvStarRating">
@@ -257,5 +260,4 @@
         <item name="android:textSize">14dp</item>
         <item name="android:background">@drawable/shape_oval_index</item>
     </style>
-
 </resources>

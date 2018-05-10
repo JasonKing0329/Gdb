@@ -186,4 +186,21 @@
     <dimen name="home_pop_menu_left">10dp</dimen>
     <dimen name="boom_menu_btn_margin_ver">10dp</dimen>
     <dimen name="pad_star_records_item_grid_width">420dp</dimen>
+    <dimen name="dlg_rating_width">300dp</dimen>
+    <dimen name="dlg_rating_radius">10dp</dimen>
+
+    <dimen name="video_actionbar_text_padding">10dp</dimen>
+
+    <dimen name="rating_img_height">170dp</dimen>
+    <dimen name="rating_name">18dp</dimen>
+    <dimen name="rating_margin_hor">15dp</dimen>
+    <dimen name="rating_star_size">24dp</dimen>
+    <dimen name="rating_star_space">4dp</dimen>
+    <dimen name="rating_bottom_top">10dp</dimen>
+    <dimen name="rating_bottom_height">40dp</dimen>
+    <dimen name="rating_bottom_text">18dp</dimen>
+    <dimen name="rating_title_size">16dp</dimen>
+    <dimen name="rating_item_top">3dp</dimen>
+    <dimen name="rating_title_width">50dp</dimen>
+    <dimen name="rating_value_width">40dp</dimen>
 </resources>
