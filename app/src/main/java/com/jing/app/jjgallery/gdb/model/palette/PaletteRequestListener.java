@@ -50,12 +50,13 @@ public class PaletteRequestListener implements RequestListener<Bitmap> {
     }
 
     @Override
-    public boolean onResourceReady(Bitmap resource, Object model, Target<Bitmap> target, DataSource dataSource, boolean isFirstResource) {
+    public boolean onResourceReady(final Bitmap resource, Object model, Target<Bitmap> target, DataSource dataSource, boolean isFirstResource) {
         Observable.combineLatest(createPalette(resource), createViewColorBound(resource), new BiFunction<Palette, List<ViewColorBound>, PaletteResponse>() {
             @Override
             public PaletteResponse apply(Palette palette, List<ViewColorBound> viewColorBounds) throws Exception {
                 PaletteResponse response = new PaletteResponse();
                 response.palette = palette;
+                response.bitmap = resource;
                 response.viewColorBounds = viewColorBounds;
                 return response;
             }

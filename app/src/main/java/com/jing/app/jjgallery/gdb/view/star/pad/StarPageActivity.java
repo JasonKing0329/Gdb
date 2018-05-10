@@ -10,8 +10,10 @@ import android.widget.TextView;
 
 import com.jing.app.jjgallery.gdb.FavorPopupMvpActivity;
 import com.jing.app.jjgallery.gdb.R;
+import com.jing.app.jjgallery.gdb.util.DebugLog;
 import com.jing.app.jjgallery.gdb.util.ScreenUtils;
 import com.jing.app.jjgallery.gdb.view.pub.dialog.AlertDialogFragmentV4;
+import com.jing.app.jjgallery.gdb.view.pub.dialog.StarRatingDialog;
 import com.jing.app.jjgallery.gdb.view.record.common.RecordCommonListFragment;
 import com.jing.app.jjgallery.gdb.view.record.common.RecordCommonListHolder;
 import com.king.app.gdb.data.entity.Record;
@@ -38,6 +40,8 @@ public class StarPageActivity extends FavorPopupMvpActivity<StarPagePresenter> i
     TextView tvTagTop;
     @BindView(R.id.tv_tag_bottom)
     TextView tvTagBottom;
+    @BindView(R.id.tv_rating)
+    TextView tvRating;
     @BindView(R.id.rv_star)
     RecyclerView rvStar;
 
@@ -61,6 +65,22 @@ public class StarPageActivity extends FavorPopupMvpActivity<StarPagePresenter> i
             public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
                 outRect.top = ScreenUtils.dp2px(10);
                 outRect.bottom = ScreenUtils.dp2px(10);
+            }
+        });
+
+        tvRating.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                StarRatingDialog dialog = new StarRatingDialog();
+                dialog.setStarId(presenter.getStar().getId());
+                dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        DebugLog.e();
+                        presenter.reloadRating();
+                    }
+                });
+                dialog.show(getSupportFragmentManager(), "StarRatingDialog");
             }
         });
 
@@ -88,6 +108,11 @@ public class StarPageActivity extends FavorPopupMvpActivity<StarPagePresenter> i
         tvTagBottom.setSelected(false);
         tvTagVideo.setSelected(true);
         initData();
+    }
+
+    @Override
+    public TextView getRatingTextView() {
+        return tvRating;
     }
 
     @Override
@@ -133,6 +158,11 @@ public class StarPageActivity extends FavorPopupMvpActivity<StarPagePresenter> i
         rvStar.setAdapter(starAdapter);
 
         ftRecord.showStarRecords(star);
+    }
+
+    @Override
+    public void showRating(String rating) {
+        tvRating.setText(rating);
     }
 
     @OnClick({R.id.iv_icon_back, R.id.iv_icon_sort})

@@ -1,5 +1,6 @@
 package com.jing.app.jjgallery.gdb.view.pub.dialog;
 
+import android.content.DialogInterface;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -31,6 +32,8 @@ public class StarRatingDialog extends BaseDialogFragmentV4 implements StarRating
 
     @BindView(R.id.iv_star)
     ImageView ivStar;
+    @BindView(R.id.iv_close)
+    ImageView ivClose;
     @BindView(R.id.tv_star)
     TextView tvStar;
     @BindView(R.id.tv_rating)
@@ -60,6 +63,8 @@ public class StarRatingDialog extends BaseDialogFragmentV4 implements StarRating
     @BindView(R.id.tv_video)
     TextView tvVideo;
 
+    private DialogInterface.OnDismissListener onDismissListener;
+
     private long starId;
 
     private StarRatingPresenter presenter;
@@ -80,12 +85,32 @@ public class StarRatingDialog extends BaseDialogFragmentV4 implements StarRating
         starVideo.setOnStarChangeListener(this);
         starSex.setOnStarChangeListener(this);
 
+        ivClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismissAllowingStateLoss();
+            }
+        });
+
         presenter = new StarRatingPresenter(this);
         presenter.loadStarRating(starId);
+
     }
 
     public void setStarId(long starId) {
         this.starId = starId;
+    }
+
+    public void setOnDismissListener(DialogInterface.OnDismissListener onDismissListener) {
+        this.onDismissListener = onDismissListener;
+    }
+
+    @Override
+    public void onDismiss(DialogInterface dialog) {
+        super.onDismiss(dialog);
+        if (onDismissListener != null) {
+            onDismissListener.onDismiss(dialog);
+        }
     }
 
     @Override
@@ -171,6 +196,11 @@ public class StarRatingDialog extends BaseDialogFragmentV4 implements StarRating
     @Override
     public void showMessage(String message) {
         Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public ImageView getCloseIconView() {
+        return ivClose;
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.jing.app.jjgallery.gdb.model.palette;
 
+import android.graphics.Bitmap;
 import android.support.v7.graphics.Palette;
 
 import java.util.List;
@@ -10,6 +11,8 @@ import java.util.List;
  * <p/>创建时间: 2018/4/12 16:25
  */
 public class PaletteResponse {
+
+    public Bitmap bitmap;
 
     public Palette palette;
 

@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".view.star.pad.StarPageActivity"
     android:layout_width="match_parent" android:layout_height="match_parent">
     <LinearLayout
         android:id="@+id/group_actionbar"
@@ -26,6 +28,7 @@
             android:layout_weight="1"
             android:layout_height="wrap_content"
             android:layout_marginLeft="30dp"
+            android:layout_marginRight="20dp"
             android:orientation="horizontal">
             <TextView
                 android:id="@+id/tv_tag_video"
@@ -41,9 +44,20 @@
                 android:visibility="gone"
                 android:layout_marginLeft="10dp" />
         </LinearLayout>
+        <TextView
+            android:id="@+id/tv_rating"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:background="@drawable/shape_action_rating_bg_pad"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textSize="20dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"/>
         <ImageView
             android:id="@+id/iv_icon_sort"
             style="@style/IvPadActionIcon"
+            android:layout_marginLeft="10dp"
             android:src="@drawable/ic_sort_purple_3f3a71_36dp" />
     </LinearLayout>
     <android.support.v7.widget.RecyclerView

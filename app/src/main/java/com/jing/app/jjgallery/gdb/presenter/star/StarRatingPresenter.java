@@ -2,11 +2,13 @@ package com.jing.app.jjgallery.gdb.presenter.star;
 
 import android.content.Context;
 import android.support.v7.graphics.Palette;
+import android.widget.ImageView;
 
 import com.jing.app.jjgallery.gdb.GdbApplication;
 import com.jing.app.jjgallery.gdb.R;
 import com.jing.app.jjgallery.gdb.model.GdbImageProvider;
 import com.jing.app.jjgallery.gdb.model.palette.PaletteResponse;
+import com.jing.app.jjgallery.gdb.util.ColorUtils;
 import com.jing.app.jjgallery.gdb.util.FormatUtil;
 import com.jing.app.jjgallery.gdb.util.StarRatingUtil;
 import com.king.app.gdb.data.entity.Star;
@@ -120,6 +122,8 @@ public class StarRatingPresenter {
     public void handlePalette(PaletteResponse response) {
         if (response != null && response.palette != null) {
             view.setStarColor(getSuitableColor(response.palette));
+            int color = ColorUtils.generateForgroundColorForBg(ColorUtils.averageImageColor(response.bitmap, view.getCloseIconView()));
+            ColorUtils.updateIconColor(view.getCloseIconView(), color);
         }
         else {
             view.setStarColor(view.getContext().getResources().getColor(R.color.colorAccent));
@@ -165,5 +169,7 @@ public class StarRatingPresenter {
         void setStarColor(int color);
 
         void showComplex(String rating);
+
+        ImageView getCloseIconView();
     }
 }

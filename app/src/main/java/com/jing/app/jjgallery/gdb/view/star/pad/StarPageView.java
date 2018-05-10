@@ -1,5 +1,7 @@
 package com.jing.app.jjgallery.gdb.view.star.pad;
 
+import android.widget.TextView;
+
 import com.jing.app.jjgallery.gdb.BaseView;
 import com.king.app.gdb.data.entity.Star;
 
@@ -11,4 +13,8 @@ import com.king.app.gdb.data.entity.Star;
 
 public interface StarPageView extends BaseView {
     void showStar(Star star);
+
+    void showRating(String rating);
+
+    TextView getRatingTextView();
 }

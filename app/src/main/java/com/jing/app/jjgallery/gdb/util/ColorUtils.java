@@ -250,11 +250,9 @@ public class ColorUtils {
      * @return
      */
     public static int averageImageColor(Bitmap bitmap, View targetView) {
-        int pos[] = new int[2];
-        targetView.getLocationOnScreen(pos);
         int[] pixels = new int[targetView.getWidth() * targetView.getHeight()];
-        int offsetX = pos[0];
-        int offsetY = pos[1];
+        int offsetX = targetView.getLeft();
+        int offsetY = targetView.getTop();
         long red = 0;
         long green = 0;
         long blue = 0;

@@ -3,6 +3,9 @@ package com.jing.app.jjgallery.gdb.view.star.pad;
 import com.jing.app.jjgallery.gdb.BasePresenter;
 import com.jing.app.jjgallery.gdb.GdbApplication;
 import com.jing.app.jjgallery.gdb.model.conf.Configuration;
+import com.jing.app.jjgallery.gdb.util.FormatUtil;
+import com.jing.app.jjgallery.gdb.util.ListUtil;
+import com.jing.app.jjgallery.gdb.util.StarRatingUtil;
 import com.king.app.gdb.data.entity.Star;
 import com.king.app.gdb.data.entity.StarDao;
 
@@ -56,6 +59,8 @@ public class StarPagePresenter extends BasePresenter<StarPageView> {
                     public void onNext(Star star) {
                         mStar = star;
                         view.showStar(star);
+
+                        loadRating();
                     }
 
                     @Override
@@ -69,6 +74,24 @@ public class StarPagePresenter extends BasePresenter<StarPageView> {
 
                     }
                 });
+    }
+
+    public void loadRating() {
+        if (ListUtil.isEmpty(mStar.getRatings())) {
+            view.showRating(StarRatingUtil.NON_RATING);
+            StarRatingUtil.updateRatingColor(view.getRatingTextView(), null);
+        }
+        else {
+            float rating = mStar.getRatings().get(0).getComplex();
+            String strRating = StarRatingUtil.getRatingValue(rating);
+            view.showRating(strRating + "   " + FormatUtil.formatScore(rating, 2));
+            StarRatingUtil.updateRatingColor(view.getRatingTextView(), mStar.getRatings().get(0));
+        }
+    }
+
+    public void reloadRating() {
+        mStar.resetRatings();
+        loadRating();
     }
 
     public Star getStar() {
