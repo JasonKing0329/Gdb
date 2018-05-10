@@ -267,8 +267,8 @@ public class StarPadActivity extends FavorPopupMvpActivity<StarPadPresenter> imp
                     // 更新tabLayout的数据，回调在onStarCountLoaded
                     presenter.loadTitles(curSortMode);
                     break;
-                case 2:// favor
-                    curSortMode = GdbConstants.STAR_SORT_FAVOR;
+                case 2:// rating
+                    curSortMode = GdbConstants.STAR_SORT_RATING;
                     if (sideBar.getVisibility() == View.VISIBLE) {
                         sideBar.setVisibility(View.GONE);
                     }

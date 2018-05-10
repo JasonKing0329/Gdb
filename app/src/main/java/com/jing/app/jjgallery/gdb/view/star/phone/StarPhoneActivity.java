@@ -318,7 +318,7 @@ public class StarPhoneActivity extends MvpActivity<StarPhonePresenter> implement
                         view.setSelected(true);
                         actionBar.hideIndexIcon();
                         findViewById(R.id.actionbar_sort_by_num).setSelected(false);
-                        curSortMode = GdbConstants.STAR_SORT_FAVOR;
+                        curSortMode = GdbConstants.STAR_SORT_RATING;
                         if (sideBar.getVisibility() == View.VISIBLE) {
                             sideBar.setVisibility(View.GONE);
                         }

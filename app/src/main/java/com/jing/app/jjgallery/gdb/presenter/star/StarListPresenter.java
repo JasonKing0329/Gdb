@@ -99,9 +99,13 @@ public class StarListPresenter extends BasePresenter<StarListView> {
                     resultList.addAll(proxyList);
                     Collections.sort(resultList, new StarRecordsNumberComparator());
                 }
-                else if (sortMode == GdbConstants.STAR_SORT_FAVOR) {// order by records number
+                else if (sortMode == GdbConstants.STAR_SORT_FAVOR) {// order by favor
                     resultList.addAll(proxyList);
                     Collections.sort(resultList, new StarFavorComparator());
+                }
+                else if (sortMode == GdbConstants.STAR_SORT_RATING) {// order by rating
+                    resultList.addAll(proxyList);
+                    Collections.sort(resultList, new StarRatingComparator());
                 }
                 else {
                     // order by name
@@ -197,6 +201,42 @@ public class StarListPresenter extends BasePresenter<StarListView> {
                 result = l.getStar().getName().toLowerCase().compareTo(r.getStar().getName().toLowerCase());
             }
             return result;
+        }
+    }
+
+    /**
+     * order by rating
+     */
+    public class StarRatingComparator implements Comparator<StarProxy> {
+
+        @Override
+        public int compare(StarProxy l, StarProxy r) {
+            if (l == null || r == null) {
+                return 0;
+            }
+            float left;
+            try {
+                left = l.getStar().getRatings().get(0).getComplex();
+            } catch (Exception e) {
+                left = 0;
+            }
+            float right;
+            try {
+                right = r.getStar().getRatings().get(0).getComplex();
+            } catch (Exception e) {
+                right = 0;
+            }
+
+            if (right - left < 0) {
+                return -1;
+            }
+            else if (right - left > 0) {
+                return 1;
+            }
+            else {
+                // if same, then compare name and order by name asc
+                return l.getStar().getName().toLowerCase().compareTo(r.getStar().getName().toLowerCase());
+            }
         }
     }
 }

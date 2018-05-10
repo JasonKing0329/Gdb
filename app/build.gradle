@@ -1,7 +1,7 @@
 apply plugin: 'com.android.application'
 
-ext.appVersionName = "4.3"
-ext.appVersionCode = 66
+ext.appVersionName = "4.3.1"
+ext.appVersionCode = 67
 ext.appReleaseDir = "E:/temp/release/gdb"
 
 android {
