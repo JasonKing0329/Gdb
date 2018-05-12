@@ -36,45 +36,55 @@ public class AlertDialogFragmentV4 extends DialogFragment {
 
     private DialogInterface.OnDismissListener dismissListener;
 
-    public void setTitle(String title) {
+    public AlertDialogFragmentV4 setTitle(String title) {
         this.title = title;
+        return this;
     }
 
-    public void setMessage(String message) {
+    public AlertDialogFragmentV4 setMessage(String message) {
         this.message = message;
+        return this;
     }
 
-    public void setPositiveText(String positiveText) {
+    public AlertDialogFragmentV4 setPositiveText(String positiveText) {
         this.positiveText = positiveText;
+        return this;
     }
 
-    public void setNegativeText(String negativeText) {
+    public AlertDialogFragmentV4 setNegativeText(String negativeText) {
         this.negativeText = negativeText;
+        return this;
     }
 
-    public void setNeutralText(String neutralText) {
+    public AlertDialogFragmentV4 setNeutralText(String neutralText) {
         this.neutralText = neutralText;
+        return this;
     }
 
-    public void setPositiveListener(DialogInterface.OnClickListener positiveListener) {
+    public AlertDialogFragmentV4 setPositiveListener(DialogInterface.OnClickListener positiveListener) {
         this.positiveListener = positiveListener;
+        return this;
     }
 
-    public void setNegativeListener(DialogInterface.OnClickListener negativeListener) {
+    public AlertDialogFragmentV4 setNegativeListener(DialogInterface.OnClickListener negativeListener) {
         this.negativeListener = negativeListener;
+        return this;
     }
 
-    public void setNeutralListener(DialogInterface.OnClickListener neutralListener) {
+    public AlertDialogFragmentV4 setNeutralListener(DialogInterface.OnClickListener neutralListener) {
         this.neutralListener = neutralListener;
+        return this;
     }
 
-    public void setDismissListener(DialogInterface.OnDismissListener dismissListener) {
+    public AlertDialogFragmentV4 setDismissListener(DialogInterface.OnDismissListener dismissListener) {
         this.dismissListener = dismissListener;
+        return this;
     }
 
-    public void setItems(CharSequence[] items, final DialogInterface.OnClickListener listener) {
+    public AlertDialogFragmentV4 setItems(CharSequence[] items, final DialogInterface.OnClickListener listener) {
         this.items = items;
         this.itemListener = listener;
+        return this;
     }
 
     @NonNull

@@ -73,7 +73,8 @@ public class ManageActivity extends MvpActivity<ManagePresenter> implements IMan
     }
 
     @OnClick({R.id.group_down_stars, R.id.group_down_records, R.id.group_move_stars
-            , R.id.group_move_records, R.id.group_clear, R.id.group_check_server, R.id.group_check_db})
+            , R.id.group_move_records, R.id.group_clear, R.id.group_check_server, R.id.group_check_db
+            , R.id.group_upload_star_ratings, R.id.group_sync_star_ratings})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.group_down_stars:
@@ -117,6 +118,22 @@ public class ManageActivity extends MvpActivity<ManagePresenter> implements IMan
                 break;
             case R.id.group_check_db:
                 presenter.checkDbUpdate();
+                break;
+            case R.id.group_upload_star_ratings:
+                presenter.uploadStarRatings();
+                break;
+            case R.id.group_sync_star_ratings:
+                new AlertDialogFragmentV4()
+                        .setMessage("Synchronization will remove all star rating data in database. Please make sure you have uploaded changed data")
+                        .setPositiveText(getString(R.string.ok))
+                        .setPositiveListener(new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                presenter.syncStarRatings();
+                            }
+                        })
+                        .setNegativeText(getString(R.string.cancel))
+                        .show(getSupportFragmentManager(), "AlertDialogFragmentV4");
                 break;
         }
     }

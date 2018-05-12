@@ -7,9 +7,14 @@ import com.jing.app.jjgallery.gdb.http.Command;
 import com.jing.app.jjgallery.gdb.http.bean.data.DownloadItem;
 import com.jing.app.jjgallery.gdb.http.bean.request.GdbCheckNewFileBean;
 import com.jing.app.jjgallery.gdb.http.bean.request.GdbRequestMoveBean;
+import com.jing.app.jjgallery.gdb.http.bean.request.GetStarRatingsRequest;
+import com.jing.app.jjgallery.gdb.http.bean.request.UploadStarRatingRequest;
 import com.jing.app.jjgallery.gdb.http.bean.response.AppCheckBean;
+import com.jing.app.jjgallery.gdb.http.bean.response.BaseFlatMap;
+import com.jing.app.jjgallery.gdb.http.bean.response.BaseResponse;
 import com.jing.app.jjgallery.gdb.http.bean.response.GdbMoveResponse;
 import com.jing.app.jjgallery.gdb.http.bean.response.GdbRespBean;
+import com.jing.app.jjgallery.gdb.http.bean.response.GetStarRatingResponse;
 import com.jing.app.jjgallery.gdb.model.bean.CheckDownloadBean;
 import com.jing.app.jjgallery.gdb.model.conf.Configuration;
 import com.jing.app.jjgallery.gdb.util.ListUtil;
@@ -23,6 +28,7 @@ import com.king.app.gdb.data.entity.FavorStarOrder;
 import com.king.app.gdb.data.entity.Star;
 import com.king.app.gdb.data.entity.StarDao;
 import com.king.app.gdb.data.entity.StarRating;
+import com.king.app.gdb.data.entity.StarRatingDao;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -470,4 +476,111 @@ public class ManagePresenter extends BasePresenter<IManageView> {
         }
     }
 
+    public void uploadStarRatings() {
+        view.showLoading();
+        getStarRatings()
+                .flatMap(new Function<List<StarRating>, ObservableSource<BaseResponse>>() {
+                    @Override
+                    public ObservableSource<BaseResponse> apply(List<StarRating> starRatings) throws Exception {
+                        UploadStarRatingRequest request = new UploadStarRatingRequest();
+                        request.setRatingList(starRatings);
+                        return AppHttpClient.getInstance().getAppService().uploadStarRatings(request);
+                    }
+                })
+                .flatMap(new Function<BaseResponse, ObservableSource<Object>>() {
+                    @Override
+                    public ObservableSource<Object> apply(BaseResponse baseResponse) throws Exception {
+                        return BaseFlatMap.resultIncludeNull(baseResponse);
+                    }
+                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(new Observer<Object>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        addDisposable(d);
+                    }
+
+                    @Override
+                    public void onNext(Object o) {
+                        view.dismissLoading();
+                        view.showToastLong("Upload successfully");
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        e.printStackTrace();
+                        view.dismissLoading();
+                        view.showToastLong("Upload failed: " + e.getMessage());
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+    }
+
+    public void syncStarRatings() {
+        view.showLoading();
+        GetStarRatingsRequest request = new GetStarRatingsRequest();
+        AppHttpClient.getInstance().getAppService().getStarRatings(request)
+                .flatMap(new Function<BaseResponse<GetStarRatingResponse>, ObservableSource<GetStarRatingResponse>>() {
+                    @Override
+                    public ObservableSource<GetStarRatingResponse> apply(BaseResponse<GetStarRatingResponse> response) throws Exception {
+                        return BaseFlatMap.result(response);
+                    }
+                })
+                .flatMap(new Function<GetStarRatingResponse, ObservableSource<Object>>() {
+                    @Override
+                    public ObservableSource<Object> apply(final GetStarRatingResponse response) throws Exception {
+                        return new ObservableSource<Object>() {
+                            @Override
+                            public void subscribe(Observer<? super Object> observer) {
+                                if (!ListUtil.isEmpty(response.getRatingList())) {
+                                    StarRatingDao dao = GdbApplication.getInstance().getDaoSession().getStarRatingDao();
+                                    dao.deleteAll();
+                                    dao.insertInTx(response.getRatingList());
+                                }
+                                observer.onNext(new Object());
+                            }
+                        };
+                    }
+                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(new Observer<Object>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        addDisposable(d);
+                    }
+
+                    @Override
+                    public void onNext(Object o) {
+                        view.dismissLoading();
+                        view.showToastLong("Upload successfully");
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        e.printStackTrace();
+                        view.dismissLoading();
+                        view.showToastLong("Upload failed: " + e.getMessage());
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+    }
+
+    private Observable<List<StarRating>> getStarRatings() {
+        return Observable.create(new ObservableOnSubscribe<List<StarRating>>() {
+            @Override
+            public void subscribe(ObservableEmitter<List<StarRating>> e) throws Exception {
+                e.onNext(GdbApplication.getInstance().getDaoSession().getStarRatingDao().loadAll());
+            }
+        });
+    }
 }

@@ -3,10 +3,14 @@ package com.jing.app.jjgallery.gdb.http;
 import com.jing.app.jjgallery.gdb.http.bean.request.FolderRequest;
 import com.jing.app.jjgallery.gdb.http.bean.request.GdbCheckNewFileBean;
 import com.jing.app.jjgallery.gdb.http.bean.request.GdbRequestMoveBean;
+import com.jing.app.jjgallery.gdb.http.bean.request.GetStarRatingsRequest;
+import com.jing.app.jjgallery.gdb.http.bean.request.UploadStarRatingRequest;
 import com.jing.app.jjgallery.gdb.http.bean.response.AppCheckBean;
+import com.jing.app.jjgallery.gdb.http.bean.response.BaseResponse;
 import com.jing.app.jjgallery.gdb.http.bean.response.FolderResponse;
 import com.jing.app.jjgallery.gdb.http.bean.response.GdbMoveResponse;
 import com.jing.app.jjgallery.gdb.http.bean.response.GdbRespBean;
+import com.jing.app.jjgallery.gdb.http.bean.response.GetStarRatingResponse;
 
 import io.reactivex.Observable;
 import retrofit2.http.Body;
@@ -35,4 +39,10 @@ public interface AppService {
 
     @POST("surfFolder")
     Observable<FolderResponse> requestSurf(@Body FolderRequest data);
+
+    @POST("uploadStarRatings")
+    Observable<BaseResponse> uploadStarRatings(@Body UploadStarRatingRequest data);
+
+    @POST("getStarRatings")
+    Observable<BaseResponse<GetStarRatingResponse>> getStarRatings(@Body GetStarRatingsRequest data);
 }

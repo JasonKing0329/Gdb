@@ -201,6 +201,6 @@
     <dimen name="rating_bottom_text">18dp</dimen>
     <dimen name="rating_title_size">16dp</dimen>
     <dimen name="rating_item_top">3dp</dimen>
-    <dimen name="rating_title_width">50dp</dimen>
+    <dimen name="rating_title_width">60dp</dimen>
     <dimen name="rating_value_width">40dp</dimen>
 </resources>
