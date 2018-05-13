@@ -179,4 +179,5 @@
     <dimen name="rating_item_top">8dp</dimen>
     <dimen name="rating_title_width">75dp</dimen>
     <dimen name="rating_value_width">60dp</dimen>
+    <dimen name="home_star_name">14dp</dimen>
 </resources>

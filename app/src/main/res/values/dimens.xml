@@ -203,4 +203,5 @@
     <dimen name="rating_item_top">3dp</dimen>
     <dimen name="rating_title_width">60dp</dimen>
     <dimen name="rating_value_width">40dp</dimen>
+    <dimen name="home_star_name">12dp</dimen>
 </resources>

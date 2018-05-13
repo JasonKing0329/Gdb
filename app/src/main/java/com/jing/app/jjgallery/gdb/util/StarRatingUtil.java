@@ -26,12 +26,14 @@ public class StarRatingUtil {
     public static final String RATING_A = "A";
     public static final String RATING_AP = "A+";
 
+    public static final float RATING_VALUE_CP = 2.6f;
+
     private static String[] rateValues = new String[] {
             NON_RATING, RATING_E, RATING_EP, RATING_D, RATING_DP, RATING_C, RATING_CP, RATING_B, RATING_BP, RATING_A, RATING_AP
     };
 
     private static float[] rateFactors = new float[] {
-            0, 0.6f, 1.1f, 1.6f, 2.1f, 2.6f, 3.1f, 3.6f, 4.1f, 4.6f
+            0, 0.6f, 1.1f, 1.6f, 2.1f, RATING_VALUE_CP, 3.1f, 3.6f, 4.1f, 4.6f
     };
 
     public static String getRatingValue(float rating) {

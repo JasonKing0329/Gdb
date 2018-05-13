@@ -14,6 +14,9 @@ import com.jing.app.jjgallery.gdb.R;
 import com.jing.app.jjgallery.gdb.model.bean.StarProxy;
 import com.jing.app.jjgallery.gdb.util.DisplayHelper;
 import com.jing.app.jjgallery.gdb.util.GlideUtil;
+import com.jing.app.jjgallery.gdb.util.ListUtil;
+import com.jing.app.jjgallery.gdb.util.StarRatingUtil;
+import com.king.app.gdb.data.entity.StarRating;
 
 import java.util.List;
 
@@ -49,11 +52,18 @@ public class HomeStarAdapter extends RecyclerView.Adapter<HomeStarAdapter.Slider
         holder.groupCard.setOnClickListener(this);
 
         if (DisplayHelper.isTabModel(holder.tvName.getContext())) {
-            holder.tvName.setVisibility(View.VISIBLE);
+            holder.groupName.setVisibility(View.VISIBLE);
             holder.tvName.setText(list.get(position).getStar().getName());
+            List<StarRating> ratings = list.get(position).getStar().getRatings();
+            if (ListUtil.isEmpty(ratings)) {
+                holder.tvRating.setText(StarRatingUtil.NON_RATING);
+            }
+            else {
+                holder.tvRating.setText(StarRatingUtil.getRatingValue(ratings.get(0).getComplex()));
+            }
         }
         else {
-            holder.tvName.setVisibility(View.GONE);
+            holder.groupName.setVisibility(View.GONE);
         }
     }
 
@@ -82,14 +92,18 @@ public class HomeStarAdapter extends RecyclerView.Adapter<HomeStarAdapter.Slider
     public static class SliderCard extends RecyclerView.ViewHolder {
 
         ViewGroup groupCard;
+        ViewGroup groupName;
         ImageView imageView;
         TextView tvName;
+        TextView tvRating;
 
         public SliderCard(View itemView) {
             super(itemView);
             groupCard = (ViewGroup) itemView.findViewById(R.id.group_card);
+            groupName = (ViewGroup) itemView.findViewById(R.id.group_name);
             imageView = (ImageView) itemView.findViewById(R.id.iv_thumb);
             tvName = (TextView) itemView.findViewById(R.id.tv_name);
+            tvRating = (TextView) itemView.findViewById(R.id.tv_rating);
         }
     }
 }

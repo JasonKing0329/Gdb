@@ -10,6 +10,7 @@ import com.jing.app.jjgallery.gdb.model.bean.StarProxy;
 import com.jing.app.jjgallery.gdb.model.bean.recommend.FilterModel;
 import com.jing.app.jjgallery.gdb.model.db.RecordExtendDao;
 import com.jing.app.jjgallery.gdb.model.db.StarExtendDao;
+import com.jing.app.jjgallery.gdb.util.StarRatingUtil;
 import com.king.app.gdb.data.RecordCursor;
 import com.king.app.gdb.data.entity.Record;
 import com.king.app.gdb.data.entity.RecordDao;
@@ -205,7 +206,7 @@ public class HomePadPresenter extends BasePresenter<HomePadView> {
             public void subscribe(ObservableEmitter<List<StarProxy>> e) throws Exception {
                 List<StarProxy> starList = new ArrayList<>();
                 // 随机获取N个favor
-                List<Star> favorList = starExtendDao.getRandomFavors(10);
+                List<Star> favorList = starExtendDao.getRandomRatingAbove(StarRatingUtil.RATING_VALUE_CP, 10);
                 for (int i = 0; i < favorList.size(); i ++) {
                     StarProxy proxy = new StarProxy();
                     Star star = favorList.get(i);
