@@ -239,7 +239,7 @@ public class RecordPhoneActivity extends MvpActivity<RecordPresenter> implements
         starAdapter.setOnStarItemListener(new RecordStarAdapter.OnStarItemListener() {
             @Override
             public void onClickStar(RecordStar relation) {
-                ActivityManager.startStarPageActivity(RecordPhoneActivity.this, relation.getStar().getId());
+                ActivityManager.startStarActivity(RecordPhoneActivity.this, relation.getStar().getId());
             }
         });
         rvStars.setAdapter(starAdapter);

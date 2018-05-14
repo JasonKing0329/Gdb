@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Pair;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.jing.app.jjgallery.gdb.ActivityManager;
 import com.jing.app.jjgallery.gdb.GBaseActivity;
@@ -15,15 +16,18 @@ import com.jing.app.jjgallery.gdb.model.bean.StarProxy;
 import com.jing.app.jjgallery.gdb.model.conf.PreferenceValue;
 import com.jing.app.jjgallery.gdb.presenter.star.StarSwipePresenter;
 import com.jing.app.jjgallery.gdb.util.DisplayHelper;
+import com.jing.app.jjgallery.gdb.util.StarRatingUtil;
 import com.jing.app.jjgallery.gdb.view.adapter.OnRecordItemClickListener;
 import com.jing.app.jjgallery.gdb.view.adapter.RecordCardAdapter;
 import com.jing.app.jjgallery.gdb.view.adapter.RecordsListAdapter;
 import com.jing.app.jjgallery.gdb.view.adapter.SwipeAdapter;
 import com.jing.app.jjgallery.gdb.view.pub.dialog.DefaultDialogManager;
+import com.jing.app.jjgallery.gdb.view.pub.dialog.StarRatingDialog;
 import com.jing.app.jjgallery.gdb.view.pub.swipeview.SwipeFlingAdapterView;
 import com.jing.app.jjgallery.gdb.view.record.SortDialogFragment;
 import com.king.app.gdb.data.entity.Record;
 import com.king.app.gdb.data.entity.Star;
+import com.king.app.gdb.data.entity.StarRating;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,6 +50,8 @@ public class StarSwipeActivity extends GBaseActivity implements IStarSwipeView {
     SwipeFlingAdapterView sfvStars;
     @BindView(R.id.iv_orientation)
     ImageView ivOrientation;
+    @BindView(R.id.tv_rating)
+    TextView tvRating;
 
     private StarSwipePresenter presenter;
     private SwipeAdapter adapter;
@@ -83,7 +89,22 @@ public class StarSwipeActivity extends GBaseActivity implements IStarSwipeView {
         boolean isHorizontal = SettingProperties.isGdbSwipeListHorizontal();
         rvRecordsHor.setVisibility(isHorizontal ? View.VISIBLE:View.GONE);
         rvRecords.setVisibility(isHorizontal ? View.GONE:View.VISIBLE);
-        
+
+        tvRating.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                StarRatingDialog dialog = new StarRatingDialog();
+                dialog.setStarId(getCurrentStar().getStar().getId());
+                dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        refreshRating();
+                    }
+                });
+                dialog.show(getSupportFragmentManager(), "StarRatingDialog");
+            }
+        });
+
         sfvStars.setMinStackInAdapter(3);
         sfvStars.setFlingListener(new SwipeFlingAdapterView.onFlingListener() {
             @Override
@@ -99,18 +120,6 @@ public class StarSwipeActivity extends GBaseActivity implements IStarSwipeView {
              */
             @Override
             public void onLeftCardExit(Object dataObject) {
-                final StarProxy star = (StarProxy) dataObject;
-                new DefaultDialogManager().showOptionDialog(StarSwipeActivity.this, null, "Are you sure to make " + star.getStar().getName() + " unfavor?"
-                        , getString(R.string.ok), null, getString(R.string.cancel)
-                        , new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                if (i == DialogInterface.BUTTON_POSITIVE) {
-                                    star.getStar().setFavor(0);
-                                    presenter.saveFavor(star.getStar());
-                                }
-                            }
-                        }, null);
                 updateRecords();
             }
 
@@ -120,20 +129,6 @@ public class StarSwipeActivity extends GBaseActivity implements IStarSwipeView {
              */
             @Override
             public void onRightCardExit(Object dataObject) {
-                final StarProxy star = (StarProxy) dataObject;
-                new DefaultDialogManager().openInputDialog(StarSwipeActivity.this, "Mark favor to " + star.getStar().getName()
-                        , new DefaultDialogManager.OnDialogActionListener() {
-                            @Override
-                            public void onOk(String name) {
-                                try {
-                                    int favor = Integer.parseInt(name);
-                                    star.getStar().setFavor(favor);
-                                    presenter.saveFavor(star.getStar());
-                                } catch (Exception e) {
-
-                                }
-                            }
-                        });
                 updateRecords();
             }
 
@@ -201,6 +196,20 @@ public class StarSwipeActivity extends GBaseActivity implements IStarSwipeView {
         }
         sfvStars.invalidate();
         sfvStars.requestLayout();
+
+        refreshRating();
+    }
+
+    private void refreshRating() {
+        List<StarRating> ratings = getCurrentStar().getStar().getRatings();
+        if (ratings.size() == 0) {
+            tvRating.setText(StarRatingUtil.NON_RATING);
+            StarRatingUtil.updateRatingColor(tvRating, null);
+        }
+        else {
+            tvRating.setText(StarRatingUtil.getRatingValue(ratings.get(0).getComplex()));
+            StarRatingUtil.updateRatingColor(tvRating, ratings.get(0));
+        }
     }
 
     /**

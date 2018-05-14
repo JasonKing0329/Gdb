@@ -58,6 +58,14 @@
             android:layout_marginLeft="10dp"
             android:src="@drawable/ic_sort_by_alpha_purple_200_36dp" />
 
+        <TextView
+            android:id="@+id/tv_rating"
+            style="@style/TvStarRatingNoWH"
+            android:layout_width="@dimen/actionbar_icon_width"
+            android:layout_height="@dimen/actionbar_icon_width"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@id/iv_orientation"
+            android:layout_marginRight="10dp" />
     </RelativeLayout>
 
 </RelativeLayout>
