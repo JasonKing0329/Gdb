@@ -4,18 +4,25 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.RelativeLayout;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import com.jing.app.jjgallery.gdb.FavorPopupMvpActivity;
 import com.jing.app.jjgallery.gdb.GdbConstants;
 import com.jing.app.jjgallery.gdb.R;
 import com.jing.app.jjgallery.gdb.model.PadProperties;
+import com.jing.app.jjgallery.gdb.model.SettingProperties;
 import com.jing.app.jjgallery.gdb.model.conf.PreferenceValue;
 import com.jing.app.jjgallery.gdb.view.record.common.RecordCommonListFragment;
 import com.jing.app.jjgallery.gdb.view.record.common.RecordCommonListHolder;
@@ -74,6 +81,8 @@ public class StarPadActivity extends FavorPopupMvpActivity<StarPadPresenter> imp
     EditText etSearch;
     @BindView(R.id.group_search)
     RelativeLayout groupSearch;
+    @BindView(R.id.iv_more)
+    ImageView ivMore;
 
     private int curSortMode;
 
@@ -86,6 +95,8 @@ public class StarPadActivity extends FavorPopupMvpActivity<StarPadPresenter> imp
     private String curDetailIndex;
 
     private RecordCommonListFragment ftRecord;
+
+    private PopupMenu popupMenu;
 
     @Override
     protected int getContentView() {
@@ -155,6 +166,35 @@ public class StarPadActivity extends FavorPopupMvpActivity<StarPadPresenter> imp
 
             }
         });
+
+        ivMore.setOnClickListener(view -> showMore(view));
+    }
+
+    private void showMore(View view) {
+        if (popupMenu == null) {
+            popupMenu = new PopupMenu(this, view);
+            loadMenu(popupMenu.getMenuInflater(), popupMenu.getMenu());
+            popupMenu.setOnMenuItemClickListener(item -> {
+                switch (item.getItemId()) {
+                    case R.id.menu_gdb_sidebar:
+                        pagerAdapter.getItem(viewpager.getCurrentItem()).toggleSidebar();
+                        break;
+                    case R.id.menu_gdb_expand_all:
+                        pagerAdapter.getItem(viewpager.getCurrentItem()).setExpandAll(true);
+                        break;
+                    case R.id.menu_gdb_collapse_all:
+                        pagerAdapter.getItem(viewpager.getCurrentItem()).setExpandAll(false);
+                        break;
+                }
+                return false;
+            });
+        }
+        popupMenu.show();
+    }
+
+    private void loadMenu(MenuInflater menuInflater, Menu menu) {
+        menu.clear();
+        menuInflater.inflate(R.menu.gdb_star_list_pad, menu);
     }
 
     private void updateModeIcon() {
@@ -179,16 +219,19 @@ public class StarPadActivity extends FavorPopupMvpActivity<StarPadPresenter> imp
         int radius = bmbMenu.getContext().getResources().getDimensionPixelSize(R.dimen.boom_menu_btn_radius);
         bmbMenu.setButtonEnum(ButtonEnum.SimpleCircle);
         bmbMenu.setButtonRadius(radius);
-        bmbMenu.setPiecePlaceEnum(PiecePlaceEnum.DOT_4_1);
+        bmbMenu.setPiecePlaceEnum(PiecePlaceEnum.DOT_5_1);
         bmbMenu.setButtonPlaceEnum(ButtonPlaceEnum.Vertical);
         bmbMenu.setButtonPlaceAlignmentEnum(ButtonPlaceAlignmentEnum.BL);
         bmbMenu.setButtonLeftMargin(getResources().getDimensionPixelSize(R.dimen.home_pop_menu_left));
         bmbMenu.setButtonBottomMargin(getResources().getDimensionPixelSize(R.dimen.home_pop_menu_bottom));
         bmbMenu.setButtonVerticalMargin(getResources().getDimensionPixelSize(R.dimen.boom_menu_btn_margin_ver));
         bmbMenu.addBuilder(new SimpleCircleButton.Builder()
+                .normalImageRes(R.drawable.ic_view_quilt_white_36dp)
+                .buttonRadius(radius)
+                .listener(bmClickListener));
+        bmbMenu.addBuilder(new SimpleCircleButton.Builder()
                 .normalImageRes(R.drawable.ic_sort_by_alpha_white_36dp)
                 .buttonRadius(radius)
-//                .imagePadding(new Rect(padding, padding, padding, padding))
                 .listener(bmClickListener));
         bmbMenu.addBuilder(new SimpleCircleButton.Builder()
                 .normalImageRes(R.drawable.ic_looks_one_white_36dp)
@@ -226,25 +269,34 @@ public class StarPadActivity extends FavorPopupMvpActivity<StarPadPresenter> imp
 
             switch (index) {
                 case 0:// name
+                    if (SettingProperties.getStarListViewMode() == PreferenceValue.STAR_LIST_VIEW_RICH) {
+                        SettingProperties.setStarListViewMode(PreferenceValue.STAR_LIST_VIEW_CIRCLE);
+                    }
+                    else {
+                        SettingProperties.setStarListViewMode(PreferenceValue.STAR_LIST_VIEW_RICH);
+                    }
+                    pagerAdapter.onViewModeChanged();
+                    break;
+                case 1:// name
                     curSortMode = GdbConstants.STAR_SORT_NAME;
                     showSideBar();
                     pagerAdapter.getItem(viewpager.getCurrentItem()).updateSortType(curSortMode);
                     // 更新tabLayout的数据，回调在onStarCountLoaded
                     presenter.loadTitles(curSortMode);
                     break;
-                case 1:// number
+                case 2:// number
                     curSortMode = GdbConstants.STAR_SORT_RECORDS;
                     pagerAdapter.getItem(viewpager.getCurrentItem()).updateSortType(curSortMode);
                     // 更新tabLayout的数据，回调在onStarCountLoaded
                     presenter.loadTitles(curSortMode);
                     break;
-                case 2:// rating
+                case 3:// rating
                     curSortMode = GdbConstants.STAR_SORT_RATING;
                     pagerAdapter.getItem(viewpager.getCurrentItem()).updateSortType(curSortMode);
                     // 更新tabLayout的数据，回调在onStarCountLoaded
                     presenter.loadTitles(curSortMode);
                     break;
-                case 3:// go top
+                case 4:// go top
                     pagerAdapter.getItem(viewpager.getCurrentItem()).goTop();
                     break;
             }

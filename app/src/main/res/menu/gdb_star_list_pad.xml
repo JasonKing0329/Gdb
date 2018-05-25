@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+    <item android:id="@+id/menu_gdb_sidebar"
+        android:title="Toggle sidebar"/>
+    <item android:id="@+id/menu_gdb_expand_all"
+        android:title="Expand all"/>
+    <item android:id="@+id/menu_gdb_collapse_all"
+        android:title="Collapse all"/>
+</menu>
