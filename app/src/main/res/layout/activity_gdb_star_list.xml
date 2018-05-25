@@ -113,13 +113,4 @@
         android:background="@drawable/shape_oval_index"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
-    <com.jing.app.jjgallery.gdb.view.pub.WaveSideBarView
-        android:id="@+id/side_bar"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="right"
-        android:visibility="gone"
-        android:layout_marginBottom="50dp"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
-
 </android.support.design.widget.CoordinatorLayout>

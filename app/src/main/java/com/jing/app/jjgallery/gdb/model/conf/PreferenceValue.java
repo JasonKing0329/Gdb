@@ -50,6 +50,7 @@ public class PreferenceValue {
     public static final int STAR_LIST_VIEW_LIST =0;
     public static final int STAR_LIST_VIEW_GRID =1;
     public static final int STAR_LIST_VIEW_CIRCLE =2;
+    public static final int STAR_LIST_VIEW_RICH =3;
 
     public static final String SORT_COLUMN_KEY_NAME = "Name";
     public static final String SORT_COLUMN_KEY_DATE = "Date";

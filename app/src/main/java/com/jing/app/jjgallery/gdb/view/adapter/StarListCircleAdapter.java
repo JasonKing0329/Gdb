@@ -1,11 +1,8 @@
 package com.jing.app.jjgallery.gdb.view.adapter;
 
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -14,15 +11,11 @@ import com.bumptech.glide.request.RequestOptions;
 import com.jing.app.jjgallery.gdb.GdbApplication;
 import com.jing.app.jjgallery.gdb.R;
 import com.jing.app.jjgallery.gdb.model.bean.StarProxy;
-import com.jing.app.jjgallery.gdb.presenter.star.StarListPresenter;
 import com.jing.app.jjgallery.gdb.util.GlideUtil;
 import com.jing.app.jjgallery.gdb.util.ListUtil;
 import com.jing.app.jjgallery.gdb.util.StarRatingUtil;
 import com.jing.app.jjgallery.gdb.view.pub.CircleImageView;
 import com.jing.app.jjgallery.gdb.view.star.OnStarClickListener;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -31,25 +24,14 @@ import butterknife.ButterKnife;
  * Created by Administrator on 2017/10/28 0028.
  */
 
-public class StarListCircleAdapter extends RecyclerView.Adapter<StarListCircleAdapter.ItemHolder> implements View.OnClickListener
+public class StarListCircleAdapter extends BaseRecyclerAdapter<StarListCircleAdapter.ItemHolder, StarProxy> implements View.OnClickListener
     , View.OnLongClickListener{
 
     private OnStarClickListener onStarClickListener;
-    private StarListPresenter mPresenter;
 
     private RequestOptions requestOptions;
 
-    private List<StarProxy> originList;
-    private List<StarProxy> curList;
-
-    public StarListCircleAdapter(List<StarProxy> list) {
-        this.originList = list;
-        curList = new ArrayList<>();
-        if (originList != null) {
-            for (StarProxy proxy:originList) {
-                curList.add(proxy);
-            }
-        }
+    public StarListCircleAdapter() {
         requestOptions = GlideUtil.getStarWideOptions();
     }
 
@@ -57,23 +39,24 @@ public class StarListCircleAdapter extends RecyclerView.Adapter<StarListCircleAd
         onStarClickListener = listener;
     }
 
-    public void setPresenter(StarListPresenter mPresenter) {
-        this.mPresenter = mPresenter;
+    @Override
+    protected int getItemLayoutRes() {
+        return R.layout.adapter_gdb_starlist_circle;
     }
 
     @Override
-    public ItemHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new ItemHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_gdb_starlist_circle, parent, false));
+    protected ItemHolder newViewHolder(View view) {
+        return new ItemHolder(view);
     }
 
     public StarProxy getItem(int position) {
-        return curList.get(position);
+        return list.get(position);
     }
 
     @Override
     public void onBindViewHolder(ItemHolder holder, int position) {
 
-        StarProxy item = curList.get(position);
+        StarProxy item = list.get(position);
         holder.tvName.setText(item.getStar().getName() + " (" + item.getStar().getRecords() + ")");
 
         String headPath = item.getImagePath();
@@ -97,36 +80,6 @@ public class StarListCircleAdapter extends RecyclerView.Adapter<StarListCircleAd
         }
         holder.tvRating.setTag(item);
         holder.tvRating.setOnClickListener(this);
-    }
-
-    private void saveFavor(StarProxy starProxy, int favor) {
-        starProxy.getStar().setFavor(favor);
-        mPresenter.saveFavor(starProxy.getStar());
-    }
-
-    @Override
-    public int getItemCount() {
-        return curList == null ? 0 : curList.size();
-    }
-
-    public int getLetterPosition(String letter){
-        // curList should be ordered by ASC
-        if (letter.length() > 1) {
-            return -1;
-        }
-        for (int i = 0 ; i < getItemCount(); i++){
-            char value = curList.get(i).getStar().getName().toUpperCase().charAt(0);
-            char index = letter.toUpperCase().charAt(0);
-            if(value == index){
-                return i;
-            }
-
-            // 已超过当前letter无须再比较下去
-            if (value > index) {
-                break;
-            }
-        }
-        return -1;
     }
 
     @Override
@@ -156,25 +109,13 @@ public class StarListCircleAdapter extends RecyclerView.Adapter<StarListCircleAd
         }
     }
 
-    /**
-     * 按名称模糊过滤
-     * @param name
-     */
-    public void onStarFilter(String name) {
-        curList.clear();
-        if (originList != null) {
-            for (StarProxy proxy:originList) {
-                if (TextUtils.isEmpty(name)) {
-                    curList.add(proxy);
-                }
-                else {
-                    if (proxy.getStar().getName().toLowerCase().contains(name.toLowerCase())) {
-                        curList.add(proxy);
-                    }
-                }
+    public void notifyStarChanged(Long starId) {
+        for (int i = 0; i < getItemCount(); i ++) {
+            if (list.get(i).getStar().getId() == starId) {
+                notifyItemChanged(i);
+                break;
             }
         }
-        notifyDataSetChanged();
     }
 
     public static class ItemHolder extends RecyclerView.ViewHolder {

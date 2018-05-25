@@ -31,6 +31,7 @@ import cc.solart.turbo.BaseViewHolder;
  * so for Star object, make following rules:
  * if id is -1, then it stands for header, and the name stands for header text
  */
+@Deprecated
 public class StarListAdapter extends BaseTurboAdapter<StarProxy, BaseViewHolder> implements View.OnClickListener {
 
     private List<StarProxy> originList;

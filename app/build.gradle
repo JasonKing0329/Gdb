@@ -1,7 +1,7 @@
 apply plugin: 'com.android.application'
 
-ext.appVersionName = "4.3.6"
-ext.appVersionCode = 72
+ext.appVersionName = "4.4"
+ext.appVersionCode = 73
 ext.appReleaseDir = "E:/temp/release/gdb"
 
 android {
@@ -42,6 +42,10 @@ android {
             buildConfigField("boolean", "checkUser", "true")
         }
     }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 }
 
 dependencies {
@@ -52,6 +56,7 @@ dependencies {
     implementation "com.android.support:recyclerview-v7:${SUPPORT_V7_VERSION}"
     implementation "com.android.support:design:${SUPPORT_V7_VERSION}"
     implementation "com.android.support:cardview-v7:${SUPPORT_V7_VERSION}"
+    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
 
     /*butterknife*/
     implementation "com.jakewharton:butterknife:${BUTTERKNIFE_VERSION}"
@@ -97,6 +102,8 @@ dependencies {
     implementation 'id.zelory:compressor:2.1.0'
 
     implementation 'com.yanzhenjie:recyclerview-swipe:1.1.4'
+
+    implementation 'com.king.lib:jactionbar:1.0.2'
 
     implementation project(':libresmanager')
     implementation project(':shapimageview')

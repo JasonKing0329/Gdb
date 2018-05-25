@@ -29,7 +29,7 @@ import butterknife.ButterKnife;
 /**
  * Created by Administrator on 2017/10/28 0028.
  */
-
+@Deprecated
 public class StarListGridAdapter extends RecyclerView.Adapter<StarListGridAdapter.ItemHolder> implements View.OnClickListener {
 
     private OnStarClickListener onStarClickListener;

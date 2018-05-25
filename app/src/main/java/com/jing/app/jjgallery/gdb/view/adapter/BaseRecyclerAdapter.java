@@ -33,7 +33,27 @@ public abstract class BaseRecyclerAdapter<VH extends RecyclerView.ViewHolder, T>
     @Override
     public VH onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(getItemLayoutRes(), parent, false);
-        return newViewHolder(view);
+        final VH holder = newViewHolder(view);
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int position = holder.getLayoutPosition();
+                onClickItemView(v, position, list.get(position));
+            }
+        });
+        return holder;
+    }
+
+    /**
+     * 子类可选择覆盖
+     * @param v
+     * @param position
+     * @param t
+     */
+    protected void onClickItemView(View v, int position, T t) {
+        if (onItemClickListener != null) {
+            onItemClickListener.onClickItem(position, t);
+        }
     }
 
     protected abstract int getItemLayoutRes();

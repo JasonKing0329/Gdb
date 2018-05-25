@@ -2,6 +2,7 @@ package com.jing.app.jjgallery.gdb.view.star;
 
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +12,7 @@ import java.util.List;
  * <p/>作者：景阳
  * <p/>创建时间: 2017/7/13 17:21
  */
-public class StarListPagerAdapter extends FragmentPagerAdapter {
+public class StarListPagerAdapter extends FragmentStatePagerAdapter {
 
     private List<StarListFragment> fragmentList;
     private List<String> titleList;

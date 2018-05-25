@@ -29,7 +29,6 @@ import com.jing.app.jjgallery.gdb.util.GlideUtil;
 import com.jing.app.jjgallery.gdb.util.LMBannerViewUtil;
 import com.jing.app.jjgallery.gdb.view.pub.ActionBar;
 import com.jing.app.jjgallery.gdb.view.pub.BannerAnimDialogFragment;
-import com.jing.app.jjgallery.gdb.view.pub.WaveSideBarView;
 import com.jing.app.jjgallery.gdb.view.star.IStarListHolder;
 import com.jing.app.jjgallery.gdb.view.star.StarListFragment;
 import com.jing.app.jjgallery.gdb.view.star.StarListPagerAdapter;
@@ -59,8 +58,6 @@ public class StarPhoneActivity extends MvpActivity<StarPhonePresenter> implement
             "All", "1", "0", "0.5"
     };
 
-    @BindView(R.id.side_bar)
-    WaveSideBarView sideBar;
     @BindView(R.id.lmbanner)
     LMBanners lmBanners;
     @BindView(R.id.progress)
@@ -96,13 +93,6 @@ public class StarPhoneActivity extends MvpActivity<StarPhonePresenter> implement
         initActionbar();
         initBanner();
 
-        sideBar.setOnTouchLetterChangeListener(new WaveSideBarView.OnTouchLetterChangeListener() {
-            @Override
-            public void onLetterChange(String letter) {
-                pagerAdapter.getItem(viewpager.getCurrentItem()).onLetterChange(letter);
-            }
-        });
-
         viewpager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -111,7 +101,7 @@ public class StarPhoneActivity extends MvpActivity<StarPhonePresenter> implement
 
             @Override
             public void onPageSelected(int position) {
-                pagerAdapter.getItem(position).reloadStarList(curSortMode);
+                pagerAdapter.getItem(position).onRefresh(curSortMode);
             }
 
             @Override
@@ -194,21 +184,13 @@ public class StarPhoneActivity extends MvpActivity<StarPhonePresenter> implement
     public void showTitles(int all, int top, int bottom, int half) {
         if (pagerAdapter == null) {
             pagerAdapter = new StarListPagerAdapter(getSupportFragmentManager());
-            StarListFragment fragmentAll = new StarListFragment();
-            fragmentAll.setStarMode(DataConstants.STAR_MODE_ALL);
-            fragmentAll.setSortMode(curSortMode);
+            StarListFragment fragmentAll = StarListFragment.newInstance(DataConstants.STAR_MODE_ALL);
             pagerAdapter.addFragment(fragmentAll, titles[0] + "(" + all + ")");
-            StarListFragment fragment1 = new StarListFragment();
-            fragment1.setStarMode(DataConstants.STAR_MODE_TOP);
-            fragment1.setSortMode(curSortMode);
+            StarListFragment fragment1 = StarListFragment.newInstance(DataConstants.STAR_MODE_TOP);
             pagerAdapter.addFragment(fragment1, titles[1] + "(" + top + ")");
-            StarListFragment fragment0 = new StarListFragment();
-            fragment0.setStarMode(DataConstants.STAR_MODE_BOTTOM);
-            fragment0.setSortMode(curSortMode);
+            StarListFragment fragment0 = StarListFragment.newInstance(DataConstants.STAR_MODE_BOTTOM);
             pagerAdapter.addFragment(fragment0, titles[2] + "(" + bottom + ")");
-            StarListFragment fragment05 = new StarListFragment();
-            fragment05.setStarMode(DataConstants.STAR_MODE_HALF);
-            fragment05.setSortMode(curSortMode);
+            StarListFragment fragment05 = StarListFragment.newInstance(DataConstants.STAR_MODE_HALF);
             pagerAdapter.addFragment(fragment05, titles[3] + "(" + half + ")");
             viewpager.setAdapter(pagerAdapter);
             tabLayout.addTab(tabLayout.newTab().setText(titles[0]));
@@ -291,18 +273,13 @@ public class StarPhoneActivity extends MvpActivity<StarPhonePresenter> implement
                 case R.id.actionbar_sort_by_num:
                     if (view.isSelected()) {
                         view.setSelected(false);
-                        actionBar.addIndexIcon();
                         curSortMode = GdbConstants.STAR_SORT_NAME;
                     } else {
                         view.setSelected(true);
-                        actionBar.hideIndexIcon();
                         findViewById(R.id.actionbar_favor).setSelected(false);
                         curSortMode = GdbConstants.STAR_SORT_RECORDS;
-                        if (sideBar.getVisibility() == View.VISIBLE) {
-                            sideBar.setVisibility(View.GONE);
-                        }
                     }
-                    pagerAdapter.getItem(viewpager.getCurrentItem()).reloadStarList(curSortMode);
+                    pagerAdapter.getItem(viewpager.getCurrentItem()).updateSortType(curSortMode);
                     // 更新tabLayout的数据，回调在onStarCountLoaded
                     presenter.loadTitles(curSortMode);
                     break;
@@ -312,18 +289,13 @@ public class StarPhoneActivity extends MvpActivity<StarPhonePresenter> implement
                 case R.id.actionbar_favor:
                     if (view.isSelected()) {
                         view.setSelected(false);
-                        actionBar.addIndexIcon();
                         curSortMode = GdbConstants.STAR_SORT_NAME;
                     } else {
                         view.setSelected(true);
-                        actionBar.hideIndexIcon();
                         findViewById(R.id.actionbar_sort_by_num).setSelected(false);
                         curSortMode = GdbConstants.STAR_SORT_RATING;
-                        if (sideBar.getVisibility() == View.VISIBLE) {
-                            sideBar.setVisibility(View.GONE);
-                        }
                     }
-                    pagerAdapter.getItem(viewpager.getCurrentItem()).reloadStarList(curSortMode);
+                    pagerAdapter.getItem(viewpager.getCurrentItem()).updateSortType(curSortMode);
                     // 更新tabLayout的数据，回调在onStarCountLoaded
                     presenter.loadTitles(curSortMode);
                     break;
@@ -345,11 +317,11 @@ public class StarPhoneActivity extends MvpActivity<StarPhonePresenter> implement
         private void loadMenu(MenuInflater menuInflater, Menu menu) {
             menu.clear();
             menuInflater.inflate(R.menu.gdb_star_list, menu);
-            if (SettingProperties.getStarListViewMode() == PreferenceValue.STAR_LIST_VIEW_GRID) {
-                menu.findItem(R.id.menu_gdb_view_mode).setTitle(R.string.menu_view_mode_list);
+            if (SettingProperties.getStarListViewMode() == PreferenceValue.STAR_LIST_VIEW_RICH) {
+                menu.findItem(R.id.menu_gdb_view_mode).setTitle(R.string.menu_view_mode_circle);
             }
             else {
-                menu.findItem(R.id.menu_gdb_view_mode).setTitle(R.string.menu_view_mode_grid);
+                menu.findItem(R.id.menu_gdb_view_mode).setTitle(R.string.menu_view_mode_rich);
             }
         }
 
@@ -357,13 +329,19 @@ public class StarPhoneActivity extends MvpActivity<StarPhonePresenter> implement
         public boolean onMenuItemClick(MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.menu_gdb_view_mode:
-                    if (item.getTitle().toString().equals(getString(R.string.menu_view_mode_list))) {
-                        SettingProperties.setStarListViewMode(PreferenceValue.STAR_LIST_VIEW_LIST);
+                    if (item.getTitle().toString().equals(getString(R.string.menu_view_mode_rich))) {
+                        SettingProperties.setStarListViewMode(PreferenceValue.STAR_LIST_VIEW_RICH);
                     }
                     else {
-                        SettingProperties.setStarListViewMode(PreferenceValue.STAR_LIST_VIEW_GRID);
+                        SettingProperties.setStarListViewMode(PreferenceValue.STAR_LIST_VIEW_CIRCLE);
                     }
                     pagerAdapter.onViewModeChanged();
+                    break;
+                case R.id.menu_gdb_expand_all:
+                    pagerAdapter.getItem(viewpager.getCurrentItem()).setExpandAll(true);
+                    break;
+                case R.id.menu_gdb_collapse_all:
+                    pagerAdapter.getItem(viewpager.getCurrentItem()).setExpandAll(false);
                     break;
             }
             return false;
@@ -414,23 +392,7 @@ public class StarPhoneActivity extends MvpActivity<StarPhonePresenter> implement
     }
 
     public void changeSideBarVisible() {
-        sideBar.setVisibility(sideBar.getVisibility() == View.GONE ? View.VISIBLE : View.GONE);
-        invalidateSideBar();
-    }
-
-    private void invalidateSideBar() {
-        if (sideBar.getVisibility() == View.VISIBLE) {
-            // post刷新mSideBarView，根据调试发现重写初始化后WaveSideBarView会重新执行onMeasure(width,height=0)->onDraw->onMeasure(width,height=正确值)
-            // 缺少重新onDraw的过程，因此通过delay执行mSideBarView.invalidate()可以激活onDraw事件，根据正确的值重新绘制
-            // 用mSideBarView.post/postDelayed总是不准确
-            sideBar.post(new Runnable() {
-                @Override
-                public void run() {
-                    sideBar.requestLayout();
-                    sideBar.invalidate();
-                }
-            });
-        }
+        pagerAdapter.getItem(viewpager.getCurrentItem()).toggleSidebar();
     }
 
     @Override

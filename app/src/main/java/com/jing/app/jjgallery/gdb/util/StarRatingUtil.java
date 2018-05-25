@@ -1,6 +1,8 @@
 package com.jing.app.jjgallery.gdb.util;
 
+import android.content.res.Resources;
 import android.graphics.drawable.GradientDrawable;
+import android.view.View;
 import android.widget.TextView;
 
 import com.jing.app.jjgallery.gdb.R;
@@ -47,12 +49,23 @@ public class StarRatingUtil {
 
     public static void updateRatingColor(TextView view, StarRating rating) {
         GradientDrawable drawable = (GradientDrawable) view.getBackground();
+        int colorId = getRatingColorRes(rating == null ? 0:rating.getComplex());
+        int color = view.getResources().getColor(colorId);
+        drawable.setColor(color);
+        view.setBackground(drawable);
+    }
+
+    public static int getRatingColor(float rating, Resources resources) {
+        return resources.getColor(getRatingColorRes(rating));
+    }
+
+    public static int getRatingColorRes(float rating) {
         int colorId;
-        if (rating == null) {
+        if (rating == 0) {
             colorId = R.color.rating_nr;
         }
         else {
-            switch (getRatingValue(rating.getComplex())) {
+            switch (getRatingValue(rating)) {
                 case RATING_E:
                     colorId = R.color.rating_e;
                     break;
@@ -88,8 +101,6 @@ public class StarRatingUtil {
                     break;
             }
         }
-        int color = view.getResources().getColor(colorId);
-        drawable.setColor(color);
-        view.setBackground(drawable);
+        return colorId;
     }
 }

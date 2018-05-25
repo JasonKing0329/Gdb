@@ -17,7 +17,6 @@ import com.jing.app.jjgallery.gdb.GdbConstants;
 import com.jing.app.jjgallery.gdb.R;
 import com.jing.app.jjgallery.gdb.model.PadProperties;
 import com.jing.app.jjgallery.gdb.model.conf.PreferenceValue;
-import com.jing.app.jjgallery.gdb.view.pub.WaveSideBarView;
 import com.jing.app.jjgallery.gdb.view.record.common.RecordCommonListFragment;
 import com.jing.app.jjgallery.gdb.view.record.common.RecordCommonListHolder;
 import com.jing.app.jjgallery.gdb.view.star.IStarListHolder;
@@ -69,8 +68,6 @@ public class StarPadActivity extends FavorPopupMvpActivity<StarPadPresenter> imp
     ImageView ivIconSort;
     @BindView(R.id.iv_icon_mode)
     ImageView ivIconMode;
-    @BindView(R.id.side_bar)
-    WaveSideBarView sideBar;
     @BindView(R.id.bmb_menu)
     BoomMenuButton bmbMenu;
     @BindView(R.id.et_search)
@@ -128,19 +125,12 @@ public class StarPadActivity extends FavorPopupMvpActivity<StarPadPresenter> imp
 
             @Override
             public void onPageSelected(int position) {
-                pagerAdapter.getItem(position).reloadStarList(curSortMode);
+                pagerAdapter.getItem(position).updateSortType(curSortMode);
             }
 
             @Override
             public void onPageScrollStateChanged(int state) {
 
-            }
-        });
-
-        sideBar.setOnTouchLetterChangeListener(new WaveSideBarView.OnTouchLetterChangeListener() {
-            @Override
-            public void onLetterChange(String letter) {
-                pagerAdapter.getItem(viewpager.getCurrentItem()).onLetterChange(letter);
             }
         });
 
@@ -227,23 +217,7 @@ public class StarPadActivity extends FavorPopupMvpActivity<StarPadPresenter> imp
     }
 
     public void showSideBar() {
-        sideBar.setVisibility(View.VISIBLE);
-        invalidateSideBar();
-    }
-
-    private void invalidateSideBar() {
-        if (sideBar.getVisibility() == View.VISIBLE) {
-            // post刷新mSideBarView，根据调试发现重写初始化后WaveSideBarView会重新执行onMeasure(width,height=0)->onDraw->onMeasure(width,height=正确值)
-            // 缺少重新onDraw的过程，因此通过delay执行mSideBarView.invalidate()可以激活onDraw事件，根据正确的值重新绘制
-            // 用mSideBarView.post/postDelayed总是不准确
-            sideBar.post(new Runnable() {
-                @Override
-                public void run() {
-                    sideBar.requestLayout();
-                    sideBar.invalidate();
-                }
-            });
-        }
+        pagerAdapter.getItem(viewpager.getCurrentItem()).showSideBar(true);
     }
 
     OnBMClickListener bmClickListener = new OnBMClickListener() {
@@ -254,25 +228,19 @@ public class StarPadActivity extends FavorPopupMvpActivity<StarPadPresenter> imp
                 case 0:// name
                     curSortMode = GdbConstants.STAR_SORT_NAME;
                     showSideBar();
-                    pagerAdapter.getItem(viewpager.getCurrentItem()).reloadStarList(curSortMode);
+                    pagerAdapter.getItem(viewpager.getCurrentItem()).updateSortType(curSortMode);
                     // 更新tabLayout的数据，回调在onStarCountLoaded
                     presenter.loadTitles(curSortMode);
                     break;
                 case 1:// number
                     curSortMode = GdbConstants.STAR_SORT_RECORDS;
-                    if (sideBar.getVisibility() == View.VISIBLE) {
-                        sideBar.setVisibility(View.GONE);
-                    }
-                    pagerAdapter.getItem(viewpager.getCurrentItem()).reloadStarList(curSortMode);
+                    pagerAdapter.getItem(viewpager.getCurrentItem()).updateSortType(curSortMode);
                     // 更新tabLayout的数据，回调在onStarCountLoaded
                     presenter.loadTitles(curSortMode);
                     break;
                 case 2:// rating
                     curSortMode = GdbConstants.STAR_SORT_RATING;
-                    if (sideBar.getVisibility() == View.VISIBLE) {
-                        sideBar.setVisibility(View.GONE);
-                    }
-                    pagerAdapter.getItem(viewpager.getCurrentItem()).reloadStarList(curSortMode);
+                    pagerAdapter.getItem(viewpager.getCurrentItem()).updateSortType(curSortMode);
                     // 更新tabLayout的数据，回调在onStarCountLoaded
                     presenter.loadTitles(curSortMode);
                     break;
@@ -287,21 +255,13 @@ public class StarPadActivity extends FavorPopupMvpActivity<StarPadPresenter> imp
     public void showTitles(int all, int top, int bottom, int half) {
         if (pagerAdapter == null) {
             pagerAdapter = new StarListPagerAdapter(getSupportFragmentManager());
-            StarListFragment fragmentAll = new StarListFragment();
-            fragmentAll.setStarMode(DataConstants.STAR_MODE_ALL);
-            fragmentAll.setSortMode(curSortMode);
+            StarListFragment fragmentAll = StarListFragment.newInstance(DataConstants.STAR_MODE_ALL);
             pagerAdapter.addFragment(fragmentAll, titles[0] + "(" + all + ")");
-            StarListFragment fragment1 = new StarListFragment();
-            fragment1.setStarMode(DataConstants.STAR_MODE_TOP);
-            fragment1.setSortMode(curSortMode);
+            StarListFragment fragment1 = StarListFragment.newInstance(DataConstants.STAR_MODE_TOP);
             pagerAdapter.addFragment(fragment1, titles[1] + "(" + top + ")");
-            StarListFragment fragment0 = new StarListFragment();
-            fragment0.setStarMode(DataConstants.STAR_MODE_BOTTOM);
-            fragment0.setSortMode(curSortMode);
+            StarListFragment fragment0 = StarListFragment.newInstance(DataConstants.STAR_MODE_BOTTOM);
             pagerAdapter.addFragment(fragment0, titles[2] + "(" + bottom + ")");
-            StarListFragment fragment05 = new StarListFragment();
-            fragment05.setStarMode(DataConstants.STAR_MODE_HALF);
-            fragment05.setSortMode(curSortMode);
+            StarListFragment fragment05 = StarListFragment.newInstance(DataConstants.STAR_MODE_HALF);
             pagerAdapter.addFragment(fragment05, titles[3] + "(" + half + ")");
             viewpager.setAdapter(pagerAdapter);
             tabLayout.addTab(tabLayout.newTab().setText(titles[0]));
@@ -376,17 +336,11 @@ public class StarPadActivity extends FavorPopupMvpActivity<StarPadPresenter> imp
                 break;
             case R.id.iv_icon_search:
                 if (groupSearch.getVisibility() != View.VISIBLE) {
-                    if (curSortMode == GdbConstants.STAR_SORT_NAME) {
-                        sideBar.setVisibility(View.GONE);
-                    }
                     showSearchLayout();
                     tabLayout.setVisibility(View.GONE);
                 }
                 break;
             case R.id.iv_icon_close:
-                if (curSortMode == GdbConstants.STAR_SORT_NAME) {
-                    sideBar.setVisibility(View.VISIBLE);
-                }
                 etSearch.setText("");
                 closeSearch();
                 break;

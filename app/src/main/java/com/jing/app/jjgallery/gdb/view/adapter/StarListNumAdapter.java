@@ -26,6 +26,7 @@ import java.util.List;
  * Created by Administrator on 2016/11/27 0027.
  */
 
+@Deprecated
 public class StarListNumAdapter extends RecyclerView.Adapter<StarListNumAdapter.ViewHolder> implements View.OnClickListener {
 
     private OnStarClickListener onStarClickListener;

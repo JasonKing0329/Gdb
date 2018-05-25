@@ -58,4 +58,16 @@
         <attr name="starNumber" format="integer" />
         <attr name="checkNumber" format="float" />
     </declare-styleable>
+
+    <declare-styleable name="FitSideBar">
+        <attr name="android:gravity" />
+        <attr name="indexTextColor" format="color"/>
+        <attr name="indexTextSize" format="dimension"/>
+        <attr name="indexTextColorFocus" format="color"/>
+        <attr name="indexTextSizeFocus" format="dimension"/>
+        <attr name="minHorizontalPadding" format="dimension"/>
+        <attr name="minWidth" format="dimension"/>
+        <attr name="maxWidth" format="dimension"/>
+    </declare-styleable>
+
 </resources>
