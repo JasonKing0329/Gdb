@@ -137,11 +137,26 @@ public class StarListPresenter extends BasePresenter<StarListView> {
             if (mSortType == GdbConstants.STAR_SORT_RECORDS) {// order by records number
                 Collections.sort(mList, new StarRecordsNumberComparator());
             }
-            else if (mSortType == GdbConstants.STAR_SORT_FAVOR) {// order by favor
-                Collections.sort(mList, new StarFavorComparator());
-            }
             else if (mSortType == GdbConstants.STAR_SORT_RATING) {// order by rating
-                Collections.sort(mList, new StarRatingComparator());
+                Collections.sort(mList, new StarRatingComparator(RatingType.COMPLEX));
+            }
+            else if (mSortType == GdbConstants.STAR_SORT_RATING_FACE) {// order by rating
+                Collections.sort(mList, new StarRatingComparator(RatingType.FACE));
+            }
+            else if (mSortType == GdbConstants.STAR_SORT_RATING_BODY) {// order by rating
+                Collections.sort(mList, new StarRatingComparator(RatingType.BODY));
+            }
+            else if (mSortType == GdbConstants.STAR_SORT_RATING_DK) {// order by rating
+                Collections.sort(mList, new StarRatingComparator(RatingType.DK));
+            }
+            else if (mSortType == GdbConstants.STAR_SORT_RATING_SEXUALITY) {// order by rating
+                Collections.sort(mList, new StarRatingComparator(RatingType.SEXUALITY));
+            }
+            else if (mSortType == GdbConstants.STAR_SORT_RATING_PASSION) {// order by rating
+                Collections.sort(mList, new StarRatingComparator(RatingType.PASSION));
+            }
+            else if (mSortType == GdbConstants.STAR_SORT_RATING_VIDEO) {// order by rating
+                Collections.sort(mList, new StarRatingComparator(RatingType.VIDEO));
             }
             else {
                 // order by name
@@ -211,11 +226,11 @@ public class StarListPresenter extends BasePresenter<StarListView> {
                 case GdbConstants.SCENE_SORT_NUMBER:
                     indexEmitter.createRecordsIndex(e, mList);
                     break;
-                case GdbConstants.STAR_SORT_RATING:
-                    indexEmitter.createRatingIndex(e, mList);
+                case GdbConstants.SCENE_SORT_NAME:
+                    indexEmitter.createNameIndex(e, mList);
                     break;
                 default:
-                    indexEmitter.createNameIndex(e, mList);
+                    indexEmitter.createRatingIndex(e, mList, mSortType);
                     break;
             }
             e.onComplete();
@@ -414,28 +429,58 @@ public class StarListPresenter extends BasePresenter<StarListView> {
         }
     }
 
+    public enum RatingType {
+        COMPLEX, FACE, BODY, DK, SEXUALITY, PASSION, VIDEO
+    }
+
     /**
      * order by rating
      */
     public class StarRatingComparator implements Comparator<StarProxy> {
+
+        private RatingType type;
+
+        public StarRatingComparator(RatingType type) {
+            this.type = type;
+        }
+
+        private float getCompareValue(StarProxy proxy) {
+            float result = 0;
+            try {
+                switch (type) {
+                    case COMPLEX:
+                        result = proxy.getStar().getRatings().get(0).getComplex();
+                        break;
+                    case FACE:
+                        result = proxy.getStar().getRatings().get(0).getFace();
+                        break;
+                    case BODY:
+                        result = proxy.getStar().getRatings().get(0).getBody();
+                        break;
+                    case DK:
+                        result = proxy.getStar().getRatings().get(0).getDk();
+                        break;
+                    case SEXUALITY:
+                        result = proxy.getStar().getRatings().get(0).getSexuality();
+                        break;
+                    case PASSION:
+                        result = proxy.getStar().getRatings().get(0).getPassion();
+                        break;
+                    case VIDEO:
+                        result = proxy.getStar().getRatings().get(0).getVideo();
+                        break;
+                }
+            } catch (Exception e) {}
+            return result;
+        }
 
         @Override
         public int compare(StarProxy l, StarProxy r) {
             if (l == null || r == null) {
                 return 0;
             }
-            float left;
-            try {
-                left = l.getStar().getRatings().get(0).getComplex();
-            } catch (Exception e) {
-                left = 0;
-            }
-            float right;
-            try {
-                right = r.getStar().getRatings().get(0).getComplex();
-            } catch (Exception e) {
-                right = 0;
-            }
+            float left = getCompareValue(l);
+            float right = getCompareValue(r);
 
             if (right - left < 0) {
                 return -1;

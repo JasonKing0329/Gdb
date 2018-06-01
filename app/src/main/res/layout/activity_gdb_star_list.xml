@@ -72,7 +72,19 @@
                 app:popupTheme="@style/StarListTheme.PopupOverlay"
                 app:contentInsetStart="0dp"
                 app:contentInsetLeft="0dp">
-                <include layout="@layout/actionbar_l"/>
+                <com.king.app.jactionbar.JActionbar
+                    android:id="@+id/actionbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/actionbar_height"
+                    android:background="@color/actionbar_bk_light"
+                    android:theme="@style/EtActionSearch"
+                    app:title="Stars"
+                    app:maxShowIcon="5"
+                    app:supportSearch="true"
+                    app:showIconBack="true"
+                    app:menu="@menu/player_list"
+                    app:iconColor="@color/colorPrimary"
+                    app:titleColor="@color/colorPrimary"/>
             </android.support.v7.widget.Toolbar>
         </android.support.design.widget.CollapsingToolbarLayout>
 

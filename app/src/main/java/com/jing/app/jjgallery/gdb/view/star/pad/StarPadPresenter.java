@@ -32,17 +32,14 @@ public class StarPadPresenter extends BasePresenter<StarPadView> {
 
     }
 
-    public void loadTitles(final int curSortMode) {
-        Observable.create(new ObservableOnSubscribe<List<Integer>>() {
-            @Override
-            public void subscribe(ObservableEmitter<List<Integer>> e) throws Exception {
-                List<Integer> countList = new ArrayList<>();
-                countList.add((int) queryStarCount(DataConstants.STAR_MODE_ALL, curSortMode == GdbConstants.STAR_SORT_FAVOR));
-                countList.add((int) queryStarCount(DataConstants.STAR_MODE_TOP, curSortMode == GdbConstants.STAR_SORT_FAVOR));
-                countList.add((int) queryStarCount(DataConstants.STAR_MODE_BOTTOM, curSortMode == GdbConstants.STAR_SORT_FAVOR));
-                countList.add((int) queryStarCount(DataConstants.STAR_MODE_HALF, curSortMode == GdbConstants.STAR_SORT_FAVOR));
-                e.onNext(countList);
-            }
+    public void loadTitles() {
+        Observable.create((ObservableOnSubscribe<List<Integer>>) e -> {
+            List<Integer> countList = new ArrayList<>();
+            countList.add((int) queryStarCount(DataConstants.STAR_MODE_ALL));
+            countList.add((int) queryStarCount(DataConstants.STAR_MODE_TOP));
+            countList.add((int) queryStarCount(DataConstants.STAR_MODE_BOTTOM));
+            countList.add((int) queryStarCount(DataConstants.STAR_MODE_HALF));
+            e.onNext(countList);
         }).observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Observer<List<Integer>>() {
@@ -69,7 +66,7 @@ public class StarPadPresenter extends BasePresenter<StarPadView> {
                 });
     }
 
-    private long queryStarCount(String mode, boolean isFavor) {
+    private long queryStarCount(String mode) {
         StarDao dao = GdbApplication.getInstance().getDaoSession().getStarDao();
         QueryBuilder<Star> builder = dao.queryBuilder();
 
@@ -87,9 +84,6 @@ public class StarPadPresenter extends BasePresenter<StarPadView> {
         else if (DataConstants.STAR_MODE_HALF.equals(mode)) {
             builder.where(StarDao.Properties.Bebottom.gt(0)
                     , StarDao.Properties.Betop.gt(0));
-        }
-        if (isFavor) {
-            builder.where(StarDao.Properties.Favor.gt(0));
         }
         return builder.buildCount().count();
     }

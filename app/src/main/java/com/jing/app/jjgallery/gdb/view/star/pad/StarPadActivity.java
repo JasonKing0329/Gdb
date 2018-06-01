@@ -256,7 +256,7 @@ public class StarPadActivity extends FavorPopupMvpActivity<StarPadPresenter> imp
     @Override
     protected void initData() {
         curSortMode = GdbConstants.STAR_SORT_NAME;
-        presenter.loadTitles(curSortMode);
+        presenter.loadTitles();
     }
 
     public void showSideBar() {
@@ -282,19 +282,19 @@ public class StarPadActivity extends FavorPopupMvpActivity<StarPadPresenter> imp
                     showSideBar();
                     pagerAdapter.getItem(viewpager.getCurrentItem()).updateSortType(curSortMode);
                     // 更新tabLayout的数据，回调在onStarCountLoaded
-                    presenter.loadTitles(curSortMode);
+                    presenter.loadTitles();
                     break;
                 case 2:// number
                     curSortMode = GdbConstants.STAR_SORT_RECORDS;
                     pagerAdapter.getItem(viewpager.getCurrentItem()).updateSortType(curSortMode);
                     // 更新tabLayout的数据，回调在onStarCountLoaded
-                    presenter.loadTitles(curSortMode);
+                    presenter.loadTitles();
                     break;
                 case 3:// rating
                     curSortMode = GdbConstants.STAR_SORT_RATING;
                     pagerAdapter.getItem(viewpager.getCurrentItem()).updateSortType(curSortMode);
                     // 更新tabLayout的数据，回调在onStarCountLoaded
-                    presenter.loadTitles(curSortMode);
+                    presenter.loadTitles();
                     break;
                 case 4:// go top
                     pagerAdapter.getItem(viewpager.getCurrentItem()).goTop();

@@ -14,8 +14,13 @@ public class GdbConstants {
 
     public static final int STAR_SORT_NAME = 0;
     public static final int STAR_SORT_RECORDS = 1;
-    public static final int STAR_SORT_FAVOR = 2;
-    public static final int STAR_SORT_RATING = 3;
+    public static final int STAR_SORT_RATING = 2;
+    public static final int STAR_SORT_RATING_FACE = 3;
+    public static final int STAR_SORT_RATING_BODY = 4;
+    public static final int STAR_SORT_RATING_DK = 5;
+    public static final int STAR_SORT_RATING_SEXUALITY = 6;
+    public static final int STAR_SORT_RATING_PASSION = 7;
+    public static final int STAR_SORT_RATING_VIDEO = 8;
 
     public static final int SCENE_SORT_NAME = 0;
     public static final int SCENE_SORT_NUMBER = 1;

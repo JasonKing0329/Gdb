@@ -4,11 +4,9 @@ import android.content.Context;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -24,16 +22,15 @@ import com.jing.app.jjgallery.gdb.MvpActivity;
 import com.jing.app.jjgallery.gdb.R;
 import com.jing.app.jjgallery.gdb.model.GdbImageProvider;
 import com.jing.app.jjgallery.gdb.model.SettingProperties;
-import com.jing.app.jjgallery.gdb.model.conf.PreferenceValue;
 import com.jing.app.jjgallery.gdb.util.GlideUtil;
 import com.jing.app.jjgallery.gdb.util.LMBannerViewUtil;
-import com.jing.app.jjgallery.gdb.view.pub.ActionBar;
 import com.jing.app.jjgallery.gdb.view.pub.BannerAnimDialogFragment;
 import com.jing.app.jjgallery.gdb.view.star.IStarListHolder;
 import com.jing.app.jjgallery.gdb.view.star.StarListFragment;
 import com.jing.app.jjgallery.gdb.view.star.StarListPagerAdapter;
 import com.king.app.gdb.data.entity.Star;
 import com.king.app.gdb.data.param.DataConstants;
+import com.king.app.jactionbar.JActionbar;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,6 +55,8 @@ public class StarPhoneActivity extends MvpActivity<StarPhonePresenter> implement
             "All", "1", "0", "0.5"
     };
 
+    @BindView(R.id.actionbar)
+    JActionbar actionbar;
     @BindView(R.id.lmbanner)
     LMBanners lmBanners;
     @BindView(R.id.progress)
@@ -71,10 +70,7 @@ public class StarPhoneActivity extends MvpActivity<StarPhonePresenter> implement
 
     private StarListPagerAdapter pagerAdapter;
 
-    private ActionBar actionBar;
     private BannerAnimDialogFragment bannerSettingDialog;
-
-    private int curSortMode;
 
     /**
      * 控制detail index显示的timer
@@ -92,6 +88,7 @@ public class StarPhoneActivity extends MvpActivity<StarPhonePresenter> implement
     protected void initView() {
         initActionbar();
         initBanner();
+        initRecommend();
 
         viewpager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -101,7 +98,7 @@ public class StarPhoneActivity extends MvpActivity<StarPhonePresenter> implement
 
             @Override
             public void onPageSelected(int position) {
-                pagerAdapter.getItem(position).onRefresh(curSortMode);
+                pagerAdapter.getItem(position).onRefresh(presenter.getSortMode());
             }
 
             @Override
@@ -118,26 +115,85 @@ public class StarPhoneActivity extends MvpActivity<StarPhonePresenter> implement
 
     @Override
     protected void initData() {
-        curSortMode = GdbConstants.STAR_SORT_NAME;
-        // load favor list for banner, 回调在onFavorListLoaded
-        presenter.loadFavorList();
         // 查询tabLayout的数据，回调在onStarCountLoaded
-        presenter.loadTitles(curSortMode);
+        presenter.loadTitles();
     }
 
     private void initActionbar() {
-        actionBar = new ActionBar(this, findViewById(R.id.group_actionbar));
-        actionBar.setActionIconListener(iconListener);
-        actionBar.setActionMenuListener(menuListener);
-        actionBar.setActionSearchListener(searchListener);
-        actionBar.clearActionIcon();
-        actionBar.addMenuIcon();
-        actionBar.addSearchIcon();
-        actionBar.addBackIcon();
-        actionBar.addSortByNumIcon();
-        actionBar.addFavorIcon();
-        actionBar.addIndexIcon();
-        actionBar.setTitle(getString(R.string.gdb_title_star));
+        actionbar.setOnBackListener(() -> onBackPressed());
+        actionbar.setOnSearchListener(words -> pagerAdapter.getItem(viewpager.getCurrentItem()).filterStar(words));
+        actionbar.registerPopupMenu(R.id.menu_sort);
+        actionbar.setPopupMenuProvider((iconMenuId, anchorView) -> {
+            if (iconMenuId == R.id.menu_sort) {
+                return createSortPopup(anchorView);
+            }
+            return null;
+        });
+        actionbar.setOnMenuItemListener(menuId -> {
+            switch (menuId) {
+                case R.id.menu_index:
+                    changeSideBarVisible();
+                    break;
+                case R.id.menu_gdb_view_mode:
+                    presenter.toggleViewMode(getResources());
+                    pagerAdapter.onViewModeChanged();
+                    break;
+                case R.id.menu_gdb_expand_all:
+                    pagerAdapter.getItem(viewpager.getCurrentItem()).setExpandAll(true);
+                    break;
+                case R.id.menu_gdb_collapse_all:
+                    pagerAdapter.getItem(viewpager.getCurrentItem()).setExpandAll(false);
+                    break;
+            }
+        });
+    }
+
+    @Override
+    public void updateMenuViewMode(String title) {
+        actionbar.updateMenuText(R.id.menu_gdb_view_mode, title);
+    }
+
+    private PopupMenu createSortPopup(View anchorView) {
+        PopupMenu menu = new PopupMenu(this, anchorView);
+        menu.getMenuInflater().inflate(R.menu.player_sort, menu.getMenu());
+        menu.setOnMenuItemClickListener(item -> {
+            switch (item.getItemId()) {
+                case R.id.menu_sort_name:
+                    presenter.setSortMode(GdbConstants.STAR_SORT_NAME);
+                    break;
+                case R.id.menu_sort_records:
+                    presenter.setSortMode(GdbConstants.STAR_SORT_RECORDS);
+                    break;
+                case R.id.menu_sort_rating:
+                    presenter.setSortMode(GdbConstants.STAR_SORT_RATING);
+                    break;
+                case R.id.menu_sort_rating_face:
+                    presenter.setSortMode(GdbConstants.STAR_SORT_RATING_FACE);
+                    break;
+                case R.id.menu_sort_rating_body:
+                    presenter.setSortMode(GdbConstants.STAR_SORT_RATING_BODY);
+                    break;
+                case R.id.menu_sort_rating_dk:
+                    presenter.setSortMode(GdbConstants.STAR_SORT_RATING_DK);
+                    break;
+                case R.id.menu_sort_rating_sexuality:
+                    presenter.setSortMode(GdbConstants.STAR_SORT_RATING_SEXUALITY);
+                    break;
+                case R.id.menu_sort_rating_passion:
+                    presenter.setSortMode(GdbConstants.STAR_SORT_RATING_PASSION);
+                    break;
+                case R.id.menu_sort_rating_video:
+                    presenter.setSortMode(GdbConstants.STAR_SORT_RATING_VIDEO);
+                    break;
+            }
+            return false;
+        });
+        return menu;
+    }
+
+    @Override
+    public StarListFragment getCurrentPage() {
+        return pagerAdapter.getItem(viewpager.getCurrentItem());
     }
 
     private void initBanner() {
@@ -157,12 +213,7 @@ public class StarPhoneActivity extends MvpActivity<StarPhonePresenter> implement
         }
     }
 
-    @Override
-    public void onFavorListLoaded() {
-
-        progress.setVisibility(View.GONE);
-
-        // show banner
+    private void initRecommend() {
 
         // 采用getView时生成随机推荐，这里初始化3个item就够了（LMBanner内部也是根据view pager设置下标
         // 来循环的）
@@ -173,9 +224,10 @@ public class StarPhoneActivity extends MvpActivity<StarPhonePresenter> implement
         HeadBannerAdapter adapter = new HeadBannerAdapter();
         lmBanners.setAdapter(adapter, list);
 
+        progress.setVisibility(View.GONE);
         // 这里一定要加载完后再设置可见，因为LMBanners的内部代码里有一个btnStart，本来是受isGuide的控制
         // 但是1.0.8版本里只在onPageScroll里面判断了这个属性。导致如果一开始LMBanners处于可见状态，
-        // adapter里还没有数据，btnStart就会一直显示在那里，知道开始触发onPageScroll才会隐藏
+        // adapter里还没有数据，btnStart就会一直显示在那里，直到开始触发onPageScroll才会隐藏
         // 本来引入library，在setGuide把btnStart的visibility置为gone就可以了，但是这个项目已经引入了很多module了，就不再引入了
         lmBanners.setVisibility(View.VISIBLE);
     }
@@ -261,100 +313,6 @@ public class StarPhoneActivity extends MvpActivity<StarPhonePresenter> implement
         }
     }
 
-    private ActionBar.ActionIconListener iconListener = new ActionBar.ActionIconListener() {
-        @Override
-        public void onBack() {
-            finish();
-        }
-
-        @Override
-        public void onIconClick(View view) {
-            switch (view.getId()) {
-                case R.id.actionbar_sort_by_num:
-                    if (view.isSelected()) {
-                        view.setSelected(false);
-                        curSortMode = GdbConstants.STAR_SORT_NAME;
-                    } else {
-                        view.setSelected(true);
-                        findViewById(R.id.actionbar_favor).setSelected(false);
-                        curSortMode = GdbConstants.STAR_SORT_RECORDS;
-                    }
-                    pagerAdapter.getItem(viewpager.getCurrentItem()).updateSortType(curSortMode);
-                    // 更新tabLayout的数据，回调在onStarCountLoaded
-                    presenter.loadTitles(curSortMode);
-                    break;
-                case R.id.actionbar_index:
-                    changeSideBarVisible();
-                    break;
-                case R.id.actionbar_favor:
-                    if (view.isSelected()) {
-                        view.setSelected(false);
-                        curSortMode = GdbConstants.STAR_SORT_NAME;
-                    } else {
-                        view.setSelected(true);
-                        findViewById(R.id.actionbar_sort_by_num).setSelected(false);
-                        curSortMode = GdbConstants.STAR_SORT_RATING;
-                    }
-                    pagerAdapter.getItem(viewpager.getCurrentItem()).updateSortType(curSortMode);
-                    // 更新tabLayout的数据，回调在onStarCountLoaded
-                    presenter.loadTitles(curSortMode);
-                    break;
-            }
-        }
-    };
-
-    private ActionBar.ActionMenuListener menuListener = new ActionBar.ActionMenuListener() {
-        @Override
-        public void createMenu(MenuInflater menuInflater, Menu menu) {
-            loadMenu(menuInflater, menu);
-        }
-
-        @Override
-        public void onPrepareMenu(MenuInflater menuInflater, Menu menu) {
-            loadMenu(menuInflater, menu);
-        }
-
-        private void loadMenu(MenuInflater menuInflater, Menu menu) {
-            menu.clear();
-            menuInflater.inflate(R.menu.gdb_star_list, menu);
-            if (SettingProperties.getStarListViewMode() == PreferenceValue.STAR_LIST_VIEW_RICH) {
-                menu.findItem(R.id.menu_gdb_view_mode).setTitle(R.string.menu_view_mode_circle);
-            }
-            else {
-                menu.findItem(R.id.menu_gdb_view_mode).setTitle(R.string.menu_view_mode_rich);
-            }
-        }
-
-        @Override
-        public boolean onMenuItemClick(MenuItem item) {
-            switch (item.getItemId()) {
-                case R.id.menu_gdb_view_mode:
-                    if (item.getTitle().toString().equals(getString(R.string.menu_view_mode_rich))) {
-                        SettingProperties.setStarListViewMode(PreferenceValue.STAR_LIST_VIEW_RICH);
-                    }
-                    else {
-                        SettingProperties.setStarListViewMode(PreferenceValue.STAR_LIST_VIEW_CIRCLE);
-                    }
-                    pagerAdapter.onViewModeChanged();
-                    break;
-                case R.id.menu_gdb_expand_all:
-                    pagerAdapter.getItem(viewpager.getCurrentItem()).setExpandAll(true);
-                    break;
-                case R.id.menu_gdb_collapse_all:
-                    pagerAdapter.getItem(viewpager.getCurrentItem()).setExpandAll(false);
-                    break;
-            }
-            return false;
-        }
-    };
-
-    private ActionBar.ActionSearchListener searchListener = new ActionBar.ActionSearchListener() {
-        @Override
-        public void onTextChanged(String text, int start, int before, int count) {
-            pagerAdapter.getItem(viewpager.getCurrentItem()).filterStar(text);
-        }
-    };
-
     @Override
     public void hideDetailIndex() {
         tvIndex.setVisibility(View.GONE);
@@ -393,15 +351,6 @@ public class StarPhoneActivity extends MvpActivity<StarPhonePresenter> implement
 
     public void changeSideBarVisible() {
         pagerAdapter.getItem(viewpager.getCurrentItem()).toggleSidebar();
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (actionBar != null && actionBar.isSearchVisible()) {
-            actionBar.closeSearch();
-        } else {
-            super.onBackPressed();
-        }
     }
 
     @OnClick({R.id.group_setting})

@@ -70,6 +70,8 @@ public class StarRichAdapter extends BaseRecyclerAdapter<StarRichAdapter.RichHol
         updateScore(holder.tvScore, star);
         updateScoreC(holder.tvScoreC, star);
 
+        holder.tvIndex.setText(String.valueOf(position + 1));
+
         if (star.getRatings().size() > 0) {
             StarRating rating = star.getRatings().get(0);
 
@@ -211,6 +213,8 @@ public class StarRichAdapter extends BaseRecyclerAdapter<StarRichAdapter.RichHol
         ImageView ivPlayer;
         @BindView(R.id.tv_name)
         TextView tvName;
+        @BindView(R.id.tv_index)
+        TextView tvIndex;
         @BindView(R.id.tv_videos)
         TextView tvVideos;
         @BindView(R.id.tv_type)

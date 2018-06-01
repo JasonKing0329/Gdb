@@ -1,6 +1,7 @@
 package com.jing.app.jjgallery.gdb.view.star.phone;
 
 import com.jing.app.jjgallery.gdb.BaseView;
+import com.jing.app.jjgallery.gdb.view.star.StarListFragment;
 
 /**
  * @desc
@@ -11,5 +12,7 @@ import com.jing.app.jjgallery.gdb.BaseView;
 public interface StarPhoneView extends BaseView {
     void showTitles(int all, int top, int bottom, int half);
 
-    void onFavorListLoaded();
+    StarListFragment getCurrentPage();
+
+    void updateMenuViewMode(String title);
 }

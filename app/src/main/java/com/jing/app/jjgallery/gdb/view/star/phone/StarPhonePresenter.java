@@ -1,8 +1,15 @@
 package com.jing.app.jjgallery.gdb.view.star.phone;
 
+import android.content.res.Resources;
+
 import com.jing.app.jjgallery.gdb.BasePresenter;
 import com.jing.app.jjgallery.gdb.GdbApplication;
 import com.jing.app.jjgallery.gdb.GdbConstants;
+import com.jing.app.jjgallery.gdb.R;
+import com.jing.app.jjgallery.gdb.model.SettingProperties;
+import com.jing.app.jjgallery.gdb.model.conf.PreferenceValue;
+import com.jing.app.jjgallery.gdb.model.db.StarExtendDao;
+import com.jing.app.jjgallery.gdb.util.StarRatingUtil;
 import com.king.app.gdb.data.entity.Star;
 import com.king.app.gdb.data.entity.StarDao;
 import com.king.app.gdb.data.param.DataConstants;
@@ -11,16 +18,12 @@ import org.greenrobot.greendao.query.QueryBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import io.reactivex.Observable;
-import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -31,26 +34,51 @@ import io.reactivex.schedulers.Schedulers;
 
 public class StarPhonePresenter extends BasePresenter<StarPhoneView> {
 
-    private Random random;
+    private int mViewMode;
 
-    private List<Star> favorList;
+    private int mSortMode;
+
+    private StarExtendDao extendDao;
 
     @Override
     public void onCreate() {
-        random = new Random();
+        mSortMode = GdbConstants.STAR_SORT_NAME;
+        mViewMode = SettingProperties.getStarListViewMode();
+        extendDao = new StarExtendDao();
     }
 
-    public void loadTitles(final int curSortMode) {
-        Observable.create(new ObservableOnSubscribe<List<Integer>>() {
-            @Override
-            public void subscribe(ObservableEmitter<List<Integer>> e) throws Exception {
-                List<Integer> countList = new ArrayList<>();
-                countList.add((int) queryStarCount(DataConstants.STAR_MODE_ALL, curSortMode == GdbConstants.STAR_SORT_FAVOR));
-                countList.add((int) queryStarCount(DataConstants.STAR_MODE_TOP, curSortMode == GdbConstants.STAR_SORT_FAVOR));
-                countList.add((int) queryStarCount(DataConstants.STAR_MODE_BOTTOM, curSortMode == GdbConstants.STAR_SORT_FAVOR));
-                countList.add((int) queryStarCount(DataConstants.STAR_MODE_HALF, curSortMode == GdbConstants.STAR_SORT_FAVOR));
-                e.onNext(countList);
-            }
+    public void toggleViewMode(Resources resources) {
+        String title;
+        if (mViewMode == PreferenceValue.STAR_LIST_VIEW_CIRCLE) {
+            SettingProperties.setStarListViewMode(PreferenceValue.STAR_LIST_VIEW_RICH);
+            title = resources.getString(R.string.menu_view_mode_circle);
+        }
+        else {
+            SettingProperties.setStarListViewMode(PreferenceValue.STAR_LIST_VIEW_CIRCLE);
+            title = resources.getString(R.string.menu_view_mode_rich);
+        }
+        view.updateMenuViewMode(title);
+    }
+
+    public void setSortMode(int sortMode) {
+        if (sortMode != mSortMode) {
+            mSortMode = sortMode;
+            view.getCurrentPage().updateSortType(mSortMode);
+        }
+    }
+
+    public int getSortMode() {
+        return mSortMode;
+    }
+
+    public void loadTitles() {
+        Observable.create((ObservableOnSubscribe<List<Integer>>) e -> {
+            List<Integer> countList = new ArrayList<>();
+            countList.add((int) queryStarCount(DataConstants.STAR_MODE_ALL));
+            countList.add((int) queryStarCount(DataConstants.STAR_MODE_TOP));
+            countList.add((int) queryStarCount(DataConstants.STAR_MODE_BOTTOM));
+            countList.add((int) queryStarCount(DataConstants.STAR_MODE_HALF));
+            e.onNext(countList);
         }).observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Observer<List<Integer>>() {
@@ -77,7 +105,7 @@ public class StarPhonePresenter extends BasePresenter<StarPhoneView> {
                 });
     }
 
-    private long queryStarCount(String mode, boolean isFavor) {
+    private long queryStarCount(String mode) {
         StarDao dao = GdbApplication.getInstance().getDaoSession().getStarDao();
         QueryBuilder<Star> builder = dao.queryBuilder();
 
@@ -96,45 +124,13 @@ public class StarPhonePresenter extends BasePresenter<StarPhoneView> {
             builder.where(StarDao.Properties.Bebottom.gt(0)
                     , StarDao.Properties.Betop.gt(0));
         }
-        if (isFavor) {
-            builder.where(StarDao.Properties.Favor.gt(0));
-        }
         return builder.buildCount().count();
     }
 
-
-    public void loadFavorList() {
-        Observable.create(new ObservableOnSubscribe<List<Star>>() {
-            @Override
-            public void subscribe(@NonNull ObservableEmitter<List<Star>> subscriber) throws Exception {
-                StarDao dao = GdbApplication.getInstance().getDaoSession().getStarDao();
-                favorList = dao.queryBuilder()
-                        .where(StarDao.Properties.Favor.gt(0)
-                                // don't show star without records
-                            , StarDao.Properties.Records.gt("0"))
-                        .build().list();
-
-                subscriber.onNext(favorList);
-            }
-        }).subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<List<Star>>() {
-                    @Override
-                    public void accept(List<Star> list) throws Exception {
-                        view.onFavorListLoaded();
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception {
-                        throwable.printStackTrace();
-                    }
-                });
-    }
-
     public Star nextFavorStar() {
-        if (favorList != null && favorList.size() > 0) {
-            return favorList.get(Math.abs(random.nextInt() % favorList.size()));
-        }
+        try {
+            return extendDao.getRandomRatingAbove(StarRatingUtil.RATING_VALUE_CP, 1).get(0);
+        } catch (Exception e) {}
         return null;
     }
 

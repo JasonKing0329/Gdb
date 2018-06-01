@@ -1,5 +1,6 @@
 package com.jing.app.jjgallery.gdb.view.star;
 
+import com.jing.app.jjgallery.gdb.GdbConstants;
 import com.jing.app.jjgallery.gdb.model.bean.StarProxy;
 import com.jing.app.jjgallery.gdb.util.StarRatingUtil;
 
@@ -102,18 +103,43 @@ public class IndexEmitter {
         endCreate(mList.size() - 1);
     }
 
-    public void createRatingIndex(ObservableEmitter<String> e, List<StarProxy> mList) {
+    public void createRatingIndex(ObservableEmitter<String> e, List<StarProxy> mList, int type) {
         // list查询出来已经是有序的
         for (int i = 0; i < mList.size(); i ++) {
-            String rating;
-            try {
-                rating = StarRatingUtil.getRatingValue(mList.get(i).getStar().getRatings().get(0).getComplex());
-            } catch (Exception e1) {
-                rating = StarRatingUtil.NON_RATING;
-            }
+            String rating = StarRatingUtil.getRatingValue(getRatingValue(mList.get(i), type));
             addIndex(e, rating, i);
         }
         endCreate(mList.size() - 1);
+    }
+
+    private float getRatingValue(StarProxy proxy, int type) {
+        float value = 0;
+        try {
+            switch (type) {
+                case GdbConstants.STAR_SORT_RATING:
+                    value = proxy.getStar().getRatings().get(0).getComplex();
+                    break;
+                case GdbConstants.STAR_SORT_RATING_FACE:
+                    value = proxy.getStar().getRatings().get(0).getFace();
+                    break;
+                case GdbConstants.STAR_SORT_RATING_BODY:
+                    value = proxy.getStar().getRatings().get(0).getBody();
+                    break;
+                case GdbConstants.STAR_SORT_RATING_DK:
+                    value = proxy.getStar().getRatings().get(0).getDk();
+                    break;
+                case GdbConstants.STAR_SORT_RATING_SEXUALITY:
+                    value = proxy.getStar().getRatings().get(0).getSexuality();
+                    break;
+                case GdbConstants.STAR_SORT_RATING_PASSION:
+                    value = proxy.getStar().getRatings().get(0).getPassion();
+                    break;
+                case GdbConstants.STAR_SORT_RATING_VIDEO:
+                    value = proxy.getStar().getRatings().get(0).getVideo();
+                    break;
+            }
+        } catch (Exception e) {}
+        return value;
     }
 
     public void createNameIndex(ObservableEmitter<String> e, List<StarProxy> mList) {

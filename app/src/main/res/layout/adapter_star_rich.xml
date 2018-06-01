@@ -35,6 +35,20 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
+            android:id="@+id/tv_index"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="5dp"
+            android:layout_marginBottom="0dp"
+            android:padding="5dp"
+            android:gravity="center"
+            android:text="135"
+            android:textColor="@color/gdb_record_text_normal_light"
+            android:textSize="12dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
             android:id="@+id/tv_videos"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -67,7 +81,6 @@
             android:text="B+"
             app:layout_constraintBottom_toTopOf="@+id/iv_more"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="1.0" />
 
         <ImageView

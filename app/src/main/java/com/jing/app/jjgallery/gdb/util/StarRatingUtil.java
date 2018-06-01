@@ -39,6 +39,9 @@ public class StarRatingUtil {
     };
 
     public static String getRatingValue(float rating) {
+        if (rating == 0) {
+            return NON_RATING;
+        }
         for (int i = 0; i < rateFactors.length; i ++) {
             if (rating <= rateFactors[i]) {
                 return rateValues[i];

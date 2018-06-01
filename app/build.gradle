@@ -1,7 +1,7 @@
 apply plugin: 'com.android.application'
 
-ext.appVersionName = "4.4.1"
-ext.appVersionCode = 74
+ext.appVersionName = "4.5"
+ext.appVersionCode = 75
 ext.appReleaseDir = "E:/temp/release/gdb"
 
 android {
@@ -33,7 +33,7 @@ android {
     buildTypes {
         debug {
             signingConfig signingConfigs.debugConfig
-            buildConfigField("boolean", "checkUser", "false")
+            buildConfigField("boolean", "checkUser", "true")
         }
         release {
             minifyEnabled false
@@ -103,7 +103,7 @@ dependencies {
 
     implementation 'com.yanzhenjie:recyclerview-swipe:1.1.4'
 
-    implementation 'com.king.lib:jactionbar:1.0.2'
+    implementation 'com.king.lib:jactionbar:1.0.3'
 
     implementation project(':libresmanager')
     implementation project(':shapimageview')

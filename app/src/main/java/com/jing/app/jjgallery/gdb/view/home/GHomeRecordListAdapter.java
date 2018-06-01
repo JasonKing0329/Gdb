@@ -180,7 +180,7 @@ public class GHomeRecordListAdapter extends HeaderFooterRecyclerAdapter<Record> 
     public static class ItemHolder extends RecyclerView.ViewHolder {
 
         ViewGroup groupItem;
-        RoundedImageView ivRecord;
+        ImageView ivRecord;
         TextView tvDate;
         TextView tvStar;
         TextView tvDeprecated;
@@ -188,7 +188,7 @@ public class GHomeRecordListAdapter extends HeaderFooterRecyclerAdapter<Record> 
 
         public ItemHolder(View itemView) {
             super(itemView);
-            ivRecord = (RoundedImageView) itemView.findViewById(R.id.iv_record_image);
+            ivRecord = itemView.findViewById(R.id.iv_record_image);
             groupItem = (ViewGroup) itemView.findViewById(R.id.group_item);
             tvDate = (TextView) itemView.findViewById(R.id.tv_record_date);
             tvStar = (TextView) itemView.findViewById(R.id.tv_record_star);

@@ -1,6 +1,5 @@
 package com.jing.app.jjgallery.gdb.view.star;
 
-import android.content.DialogInterface;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;

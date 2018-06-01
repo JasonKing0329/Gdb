@@ -63,7 +63,7 @@ public class StarListBehavior extends AppBarLayout.ScrollingViewBehavior {
     private void updateToolbar(View dependency) {
         DebugLog.e("dependency top=" + dependency.getTop());
         CollapsingToolbarLayout ctl = (CollapsingToolbarLayout) dependency.findViewById(R.id.ctl_toolbar);
-        View view = dependency.findViewById(R.id.actionbar_content);
+        View view = dependency.findViewById(R.id.actionbar);
         view.setBackgroundColor(getColor(dependency.getTop()));
     }
 
