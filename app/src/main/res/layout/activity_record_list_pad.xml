@@ -68,6 +68,12 @@
                     android:layout_marginLeft="10dp"
                     android:text="Multi"
                     android:button="@null" />
+                <RadioButton
+                    android:id="@+id/rb_tag_together"
+                    style="@style/TvStarTag"
+                    android:layout_marginLeft="10dp"
+                    android:text="Together"
+                    android:button="@null" />
             </RadioGroup>
             <RelativeLayout
                 android:id="@+id/group_search"

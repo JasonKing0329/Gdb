@@ -135,6 +135,10 @@ public class RecordListPadActivity extends FavorPopupMvpActivity<RecordListPadPr
                         ftScene.loadByType(DataConstants.VALUE_RECORD_TYPE_MULTI);
                         ftRecords.setRecordType(DataConstants.VALUE_RECORD_TYPE_MULTI);
                         break;
+                    case R.id.rb_tag_together:
+                        ftScene.loadByType(DataConstants.VALUE_RECORD_TYPE_TOGETHER);
+                        ftRecords.setRecordType(DataConstants.VALUE_RECORD_TYPE_TOGETHER);
+                        break;
                 }
                 ftRecords.loadNewRecords();
             }
