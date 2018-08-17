@@ -223,6 +223,20 @@ public class GdbApplication extends Application {
                 case 2:
                     StarRatingDao.createTable(db, true);
                     break;
+                case 3:
+                    db.execSQL("ALTER TABLE " + FavorRecordOrderDao.TABLENAME + " ADD COLUMN "
+                            + FavorRecordOrderDao.Properties.ParentId.columnName + " INTEGER DEFAULT 0");
+                    db.execSQL("ALTER TABLE " + FavorRecordDao.TABLENAME + " ADD COLUMN "
+                            + FavorRecordOrderDao.Properties.CreateTime.columnName + " INTEGER DEFAULT 0");
+                    db.execSQL("ALTER TABLE " + FavorRecordDao.TABLENAME + " ADD COLUMN "
+                            + FavorRecordOrderDao.Properties.UpdateTime.columnName + " INTEGER DEFAULT 0");
+                    db.execSQL("ALTER TABLE " + FavorStarOrderDao.TABLENAME + " ADD COLUMN "
+                            + FavorStarOrderDao.Properties.ParentId.columnName + " INTEGER DEFAULT 0");
+                    db.execSQL("ALTER TABLE " + FavorStarOrderDao.TABLENAME + " ADD COLUMN "
+                            + FavorStarOrderDao.Properties.CreateTime.columnName + " INTEGER DEFAULT 0");
+                    db.execSQL("ALTER TABLE " + FavorStarOrderDao.TABLENAME + " ADD COLUMN "
+                            + FavorStarOrderDao.Properties.UpdateTime.columnName + " INTEGER DEFAULT 0");
+                    break;
             }
         }
     }

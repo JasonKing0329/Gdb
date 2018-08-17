@@ -7,6 +7,8 @@ import org.greenrobot.greendao.annotation.ToOne;
 import org.greenrobot.greendao.DaoException;
 import org.greenrobot.greendao.annotation.NotNull;
 
+import java.util.Date;
+
 /**
  * 描述:
  * <p/>作者：景阳
@@ -22,6 +24,10 @@ public class FavorRecord {
 
     private long recordId;
 
+    private Date createTime;
+
+    private Date updateTime;
+
     @ToOne(joinProperty = "orderId")
     private FavorRecordOrder order;
 
@@ -36,17 +42,14 @@ public class FavorRecord {
     @Generated(hash = 135813522)
     private transient FavorRecordDao myDao;
 
-    @Generated(hash = 219913283)
-    private transient Long order__resolvedKey;
-
-    @Generated(hash = 818274295)
-    private transient Long record__resolvedKey;
-
-    @Generated(hash = 1642135258)
-    public FavorRecord(Long id, long orderId, long recordId) {
+    @Generated(hash = 1099620174)
+    public FavorRecord(Long id, long orderId, long recordId, Date createTime,
+            Date updateTime) {
         this.id = id;
         this.orderId = orderId;
         this.recordId = recordId;
+        this.createTime = createTime;
+        this.updateTime = updateTime;
     }
 
     @Generated(hash = 62988512)
@@ -76,6 +79,25 @@ public class FavorRecord {
     public void setRecordId(long recordId) {
         this.recordId = recordId;
     }
+
+    public Date getCreateTime() {
+        return this.createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public Date getUpdateTime() {
+        return this.updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
+    }
+
+    @Generated(hash = 219913283)
+    private transient Long order__resolvedKey;
 
     /** To-one relationship, resolved on first access. */
     @Generated(hash = 1259933469)
@@ -109,6 +131,9 @@ public class FavorRecord {
             order__resolvedKey = orderId;
         }
     }
+
+    @Generated(hash = 818274295)
+    private transient Long record__resolvedKey;
 
     /** To-one relationship, resolved on first access. */
     @Generated(hash = 987546320)
@@ -185,4 +210,5 @@ public class FavorRecord {
         this.daoSession = daoSession;
         myDao = daoSession != null ? daoSession.getFavorRecordDao() : null;
     }
+
 }
